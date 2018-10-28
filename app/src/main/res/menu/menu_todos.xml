@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="com.github.jnuutinen.functional.presentation.TodosActivity">
+    <item android:id="@+id/action_edit_list"
+          android:title="@string/action_edit_list"
+          android:orderInCategory="100"
+          app:showAsAction="never" />
+    <item android:id="@+id/action_delete_list"
+          android:title="@string/action_delete_list"
+          android:orderInCategory="101"
+          app:showAsAction="never" />
+</menu>

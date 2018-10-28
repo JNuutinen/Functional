@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tuumasta Todo</string>
+    <string name="text_no_todos">Ei todoja</string>
+    <string name="action_add_todo">Lisää</string>
+    <string name="message_add_todo">Lisää Todo</string>
+    <string name="alert_todo_deleted">Todo poistettu</string>
+    <string name="action_undo">Kumoa</string>
+    <string name="action_add_list">Lisää uusi lista</string>
+    <string name="message_delete_list">Poista tämä lista?</string>
+    <string name="action_delete">Poista</string>
+    <string name="group_default_name">Minun listani</string>
+</resources>
