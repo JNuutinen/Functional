@@ -15,7 +15,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
-        versionName "1.0"
+        versionName "0.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         javaCompileOptions {
@@ -66,5 +66,5 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:input:2.0.0-beta4'
 
     // OSS licences
-    implementation 'com.google.android.gms:play-services-oss-licenses:16.0.0'
+    implementation 'com.google.android.gms:play-services-oss-licenses:16.0.1'
 }

@@ -13,9 +13,12 @@
                 android:title="@string/action_add_list"/>
     </group>
 
-    <group
-            android:id="@+id/group_lists"
-            android:checkableBehavior="single">
-    </group>
+    <item android:title="@string/menu_title_lists" android:id="@+id/item_lists">
+        <menu>
+            <group
+                    android:id="@+id/group_lists">
+            </group>
+        </menu>
+    </item>
 
 </menu>
