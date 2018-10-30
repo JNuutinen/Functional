@@ -21,4 +21,7 @@
     <string name="nav_header_subtitle">Tehtävienhallintaohjelma</string>
     <string name="hint_list_name">Listan nimi</string>
     <string name="hint_todo">Tehtävä</string>
+    <string name="text_app_version">Versio: %1$s</string>
+    <string name="action_about">Tietoja</string>
+    <string name="text_licenses">Avoimen lähdekoodin lisenssit</string>
 </resources>

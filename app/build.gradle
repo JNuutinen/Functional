@@ -6,6 +6,8 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
+apply plugin: 'com.google.android.gms.oss-licenses-plugin'
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -62,4 +64,7 @@ dependencies {
     // Material dialogs
     implementation 'com.afollestad.material-dialogs:core:2.0.0-beta4'
     implementation 'com.afollestad.material-dialogs:input:2.0.0-beta4'
+
+    // OSS licences
+    implementation 'com.google.android.gms:play-services-oss-licenses:16.0.0'
 }

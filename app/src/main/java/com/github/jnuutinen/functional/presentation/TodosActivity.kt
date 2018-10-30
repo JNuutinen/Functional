@@ -1,6 +1,7 @@
 package com.github.jnuutinen.functional.presentation
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -97,6 +98,10 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             }
             R.id.action_delete_list -> {
                 deleteList()
+                true
+            }
+            R.id.action_about -> {
+                startActivity(Intent(this, AboutActivity::class.java))
                 true
             }
             else -> super.onOptionsItemSelected(item)
