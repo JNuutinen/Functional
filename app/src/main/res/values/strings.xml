@@ -3,7 +3,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title" translatable="false">Functional</string>
-    <string name="nav_header_subtitle">Todo</string>
+    <string name="nav_header_subtitle">A functional to-do app</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="text_no_todos">No todos in this list</string>
     <string name="action_add_todo">Add</string>
@@ -21,5 +21,5 @@
     <string name="alert_list_name_empty">List name cannot be empty</string>
     <string name="alert_todo_empty">Todo cannot be empty</string>
     <string name="hint_list_name">List name</string>
-    <string name="hint_todo" translatable="false">Todo</string>
+    <string name="hint_todo">Todo</string>
 </resources>
