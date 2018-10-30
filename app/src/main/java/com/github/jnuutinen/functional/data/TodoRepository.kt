@@ -10,18 +10,10 @@ class TodoRepository private constructor(
     private val todoDao: TodoDao,
     private val todoGroupDao: TodoGroupDao
 ) {
-    fun getTodos() = todoDao.getTodos()
-
-    fun getTodosInGroup(groupId: Int) = todoDao.getTodosInGroup(groupId)
-
-    fun getTodoGroups() = todoGroupDao.getTodoGroups()
+    fun getGroupsWithTodos() = todoGroupDao.getGroupsWithTodos()
 
     fun deleteTodo(todo: Todo) {
         runOnIoThread { todoDao.deleteTodo(todo) }
-    }
-
-    fun deleteTodoGroup(todoGroup: TodoGroup) {
-        runOnIoThread { todoGroupDao.deleteTodoGroup(todoGroup) }
     }
 
     fun deleteTodoGroup(groupId: Int) {
@@ -36,7 +28,12 @@ class TodoRepository private constructor(
         runOnIoThread { todoGroupDao.insertTodoGroup(todoGroup) }
     }
 
+    fun updateTodoGroup(groupId: Int, updatedName: String) {
+        runOnIoThread { todoGroupDao.updateTodoGroup(groupId, updatedName) }
+    }
+
     companion object {
+        @Suppress("unused")
         private val TAG by lazy { TodoRepository::class.java.simpleName }
         @Volatile private var instance: TodoRepository? = null
 

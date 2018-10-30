@@ -12,8 +12,9 @@ import com.github.jnuutinen.functional.data.db.entity.Todo
 import kotlinx.android.synthetic.main.item_todo.view.*
 
 class TodoAdapter(private val resources: Resources) : RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
+    @Suppress("PrivatePropertyName", "unused")
     private val TAG by lazy { TodoAdapter::class.java.simpleName }
-    private var todos: MutableList<Todo>? = null
+    private var todos: List<Todo>? = null
 
     inner class TodoViewHolder(itemView: View)  : RecyclerView.ViewHolder(itemView)
 
@@ -34,23 +35,14 @@ class TodoAdapter(private val resources: Resources) : RecyclerView.Adapter<TodoA
         }
     }
 
+
     override fun getItemCount() = todos?.size ?: 0
 
     fun getItem(position: Int): Todo {
         return todos!![position]
     }
 
-    fun removeTodo(position: Int) {
-        todos?.removeAt(position) ?: return
-        notifyItemRemoved(position)
-    }
-
-    fun restoreTodo(todo: Todo, position: Int) {
-        todos?.add(position, todo)
-        notifyItemInserted(position)
-    }
-
-    fun setTodos(todos: MutableList<Todo>) {
+    fun setTodos(todos: List<Todo>) {
         if (this.todos == null) {
             this.todos = todos
             notifyItemRangeInserted(0, todos.size)

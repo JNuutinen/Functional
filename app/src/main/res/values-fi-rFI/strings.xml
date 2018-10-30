@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Tuumasta Todo</string>
-    <string name="text_no_todos">Ei todoja</string>
+    <string name="text_no_todos">Ei todoja tässä listassa</string>
     <string name="action_add_todo">Lisää</string>
     <string name="message_add_todo">Lisää Todo</string>
     <string name="alert_todo_deleted">Todo poistettu</string>
@@ -10,4 +9,15 @@
     <string name="message_delete_list">Poista tämä lista?</string>
     <string name="action_delete">Poista</string>
     <string name="group_default_name">Minun listani</string>
+    <string name="action_edit_list">Muokkaa listaa</string>
+    <string name="action_delete_list">Poista lista</string>
+    <string name="message_edit_list">Muokkaa listaa</string>
+    <string name="action_save">Tallenna</string>
+    <string name="alert_list_name_empty">Listan nimi ei voi olla tyhjä</string>
+    <string name="alert_todo_empty">Todo ei voi olla tyhjä</string>
+    <string name="navigation_drawer_open">Avaa valikko</string>
+    <string name="navigation_drawer_close">Sulje valikko</string>
+    <string name="nav_header_desc">Valikon otsake</string>
+    <string name="nav_header_subtitle">Todo</string>
+    <string name="hint_list_name">Listan nimi</string>
 </resources>
