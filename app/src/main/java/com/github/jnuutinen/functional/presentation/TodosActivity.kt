@@ -192,8 +192,13 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         nav_view.menu.findItem(group.id).isChecked = true
         viewModel.activeGroup = group.id
         viewAdapter.setTodos(todos)
-        if (todos.isEmpty()) text_no_todos.visibility = View.VISIBLE
-        else text_no_todos.visibility = View.INVISIBLE
+        if (todos.isEmpty()) {
+            //image_no_todos.visibility = View.VISIBLE
+            text_no_todos.visibility = View.VISIBLE
+        } else {
+            //image_no_todos.visibility = View.INVISIBLE
+            text_no_todos.visibility = View.INVISIBLE
+        }
     }
 
     private fun setupItemTouchHelper() {
