@@ -35,6 +35,12 @@ android {
     sourceSets {
         androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
+
+    // Needed by introduction library
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 }
 
 dependencies {
@@ -67,4 +73,7 @@ dependencies {
 
     // OSS licences
     implementation 'com.google.android.gms:play-services-oss-licenses:16.0.1'
+
+    // Introduction
+    implementation 'com.github.rubengees:introduction:2.0.0'
 }

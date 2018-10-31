@@ -121,7 +121,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 .customView(R.layout.dialog_add_group, scrollable = true)
                 .positiveButton(R.string.action_add_todo) { dialog ->
                     val customView = dialog.getCustomView()!!
-                    val name = customView.findViewById<TextInputEditText>(R.id.add_group_text).text.toString().trim().capitalize()
+                    val name = customView.findViewById<TextInputEditText>(R.id.add_group_text).text.toString().trim()
                     if (name.isEmpty()) {
                         Snackbar.make(main_coordinator, R.string.alert_list_name_empty, Snackbar.LENGTH_SHORT).show()
                     } else {
@@ -149,7 +149,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             .positiveButton(R.string.action_add_todo) { dialog ->
                 val customView = dialog.getCustomView()!!
                 val date = Calendar.getInstance().time
-                val content = customView.findViewById<TextInputEditText>(R.id.add_todo_text).text.toString().trim().capitalize()
+                val content = customView.findViewById<TextInputEditText>(R.id.add_todo_text).text.toString().trim()
                 if (content.isEmpty()) {
                     Snackbar.make(main_coordinator, R.string.alert_todo_empty, Snackbar.LENGTH_SHORT).show()
                 } else {
@@ -181,7 +181,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             .customView(view = view)
             .positiveButton(R.string.action_save) { dialog ->
                 val customView = dialog.getCustomView()!!
-                val name = customView.findViewById<TextInputEditText>(R.id.edit_group_text).text.toString().trim().capitalize()
+                val name = customView.findViewById<TextInputEditText>(R.id.edit_group_text).text.toString().trim()
                 if (name.isEmpty()) {
                     Snackbar.make(main_coordinator, R.string.alert_list_name_empty, Snackbar.LENGTH_SHORT).show()
                 } else {
