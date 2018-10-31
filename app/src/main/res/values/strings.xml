@@ -24,7 +24,7 @@
     <string name="text_app_version">Version: %1$s</string>
     <string name="action_about">About</string>
     <string name="text_licenses">Open source notice</string>
-    <string name="text_repo_url" translatable="false">https://github.com/JNuutinen/Functional</string>
+    <string name="text_repo_url" translatable="false">https://jnuutinen.github.io/Functional/</string>
     <string name="menu_title_lists">Todo lists</string>
     <string name="hint_todo">Todo</string>
 </resources>
