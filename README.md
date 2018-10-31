@@ -2,6 +2,13 @@
     <img src="assets/banner.png" alt="Functional app banner">
 </p>
 
+<a href="https://play.google.com/store/apps/details?id=com.github.jnuutinen.tuumastatodo">
+    <img alt="Get it on Google Play"
+        height="80"
+        align="center"
+        src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" />
+</a>
+
 ## Functional is a simple, no non-sense to-do (task) app for Android.
 
 * Quickly add new tasks
