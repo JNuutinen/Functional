@@ -2,7 +2,7 @@
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto">
+        android:layout_height="match_parent">
 
     <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -10,8 +10,7 @@
             android:id="@+id/field_add_group"
             android:layout_margin="@dimen/activity_horizontal_margin"
             android:hint="@string/hint_list_name"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
-            app:boxBackgroundColor="@color/mainBackgroundColor">
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
 
         <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
