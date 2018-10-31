@@ -1,9 +1,7 @@
-<!--
 <p align="center">
-    <img src="images/ic_launcher-web.png" alt="To-do checkmark icon" width="200" hspace="10" vspace="10">
+    <img src="assets/banner.png" alt="Functional app banner">
 </p>
-<h1 align="center">Functional</h1>
--->
+
 ## Functional is a simple, no non-sense to-do (task) app for Android.
 
 * Quickly add new tasks
