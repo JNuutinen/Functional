@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="text_no_todos">Ei tehtäviä tässä listassa</string>
+    <string name="text_no_todos">Tämä tehtävälista on tyhjä</string>
     <string name="action_add_todo">Lisää</string>
-    <string name="message_add_todo">Lisää tehtävä</string>
-    <string name="alert_todo_deleted">Tehtävä poistettu</string>
+    <string name="message_add_todo">Lisää uusi tehtävä</string>
+    <string name="alert_todo_deleted">Tehtävä poistettiin</string>
     <string name="action_undo">Kumoa</string>
-    <string name="action_add_list">Lisää uusi lista</string>
-    <string name="message_delete_list">Poista tämä lista?</string>
+    <string name="action_add_list">Lisää uusi tehtävälista</string>
+    <string name="message_delete_list">Haluatko poistaa tämän tehtävälistan?</string>
     <string name="action_delete">Poista</string>
-    <string name="group_default_name">Minun listani</string>
     <string name="action_edit_list">Muokkaa listaa</string>
     <string name="action_delete_list">Poista lista</string>
-    <string name="message_edit_list">Muokkaa listaa</string>
+    <string name="message_edit_list">Muokkaa tehtävälistaa</string>
     <string name="action_save">Tallenna</string>
     <string name="alert_list_name_empty">Listan nimi ei voi olla tyhjä</string>
-    <string name="alert_todo_empty">Todo ei voi olla tyhjä</string>
+    <string name="alert_todo_empty">Tehtävä ei voi olla tyhjä</string>
     <string name="navigation_drawer_open">Avaa valikko</string>
     <string name="navigation_drawer_close">Sulje valikko</string>
     <string name="nav_header_desc">Valikon otsake</string>
-    <string name="nav_header_subtitle">Tehtävienhallintaohjelma</string>
+    <string name="nav_header_subtitle">Tehtävälistaohjelma</string>
     <string name="hint_list_name">Listan nimi</string>
     <string name="hint_todo">Tehtävä</string>
     <string name="text_app_version">Versio: %1$s</string>
     <string name="action_about">Tietoja</string>
     <string name="text_licenses">Avoimen lähdekoodin lisenssit</string>
     <string name="menu_title_lists">Tehtävälistat</string>
+    <string name="group_default_name">Tehtävälistani</string>
 </resources>

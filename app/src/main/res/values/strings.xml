@@ -5,26 +5,26 @@
     <string name="nav_header_title" translatable="false">Functional</string>
     <string name="nav_header_subtitle">A functional to-do app</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="text_no_todos">No todos in this list</string>
     <string name="action_add_todo">Add</string>
-    <string name="message_add_todo">Add a Todo</string>
-    <string name="alert_todo_deleted">Deleted Todo</string>
+    <string name="message_add_todo">Add a to-do</string>
     <string name="action_undo">Undo</string>
-    <string name="action_add_list">Add a list</string>
+    <string name="action_add_list">Add a to-do list</string>
     <string name="action_edit_list">Edit list</string>
     <string name="action_delete_list">Delete list</string>
-    <string name="message_delete_list">Delete this list?</string>
+    <string name="message_delete_list">Delete this to-do list?</string>
     <string name="action_delete">Delete</string>
-    <string name="group_default_name">My list</string>
-    <string name="message_edit_list">Edit list</string>
+    <string name="group_default_name">My to-do list</string>
+    <string name="message_edit_list">Edit to-do list</string>
     <string name="action_save">Save</string>
     <string name="alert_list_name_empty">List name cannot be empty</string>
-    <string name="alert_todo_empty">Todo cannot be empty</string>
-    <string name="hint_list_name">List name</string>
+    <string name="alert_todo_empty">To-do cannot be empty</string>
     <string name="text_app_version">Version: %1$s</string>
     <string name="action_about">About</string>
     <string name="text_licenses">Open source notice</string>
     <string name="text_repo_url" translatable="false">https://jnuutinen.github.io/Functional/</string>
-    <string name="menu_title_lists">Todo lists</string>
-    <string name="hint_todo">Todo</string>
+    <string name="menu_title_lists">To-do lists</string>
+    <string name="hint_todo">To-do</string>
+    <string name="text_no_todos">This to-do list is empty</string>
+    <string name="alert_todo_deleted">To-do deleted</string>
+    <string name="hint_list_name">List name</string>
 </resources>

@@ -11,9 +11,9 @@
 
 ## Functional is a simple, no non-sense to-do (task) app for Android.
 
-* Quickly add new tasks
-* Organize tasks into lists
-* Swipe a task off-screen to delete it
+* Quickly add new to-dos
+* Organize to-dos into lists
+* Swipe a to-do off-screen to delete it
 
 <img align="center" src="assets/screenshots.png" alt="screenshots">
 
