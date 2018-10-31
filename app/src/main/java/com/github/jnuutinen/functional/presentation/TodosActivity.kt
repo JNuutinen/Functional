@@ -2,6 +2,7 @@ package com.github.jnuutinen.functional.presentation
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.color.colorChooser
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
 import com.github.jnuutinen.functional.R
@@ -29,6 +31,7 @@ import com.github.jnuutinen.functional.data.db.dao.GroupWithTodos
 import com.github.jnuutinen.functional.data.db.entity.Todo
 import com.github.jnuutinen.functional.data.db.entity.TodoGroup
 import com.github.jnuutinen.functional.util.*
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
@@ -43,6 +46,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     private val TAG by lazy { TodosActivity::class.java.simpleName }
     private lateinit var viewModel: TodosViewModel
     private lateinit var viewAdapter: TodoAdapter
+    lateinit var colorValues: IntArray
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,6 +82,9 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         setUpItemTouchHelper()
         setUpAnimationDecoratorHelper()
         subscribeUi()
+
+        // Build an IntArray with all available circle colors as int values.
+        colorValues = IntArray(colors.size) { i -> ContextCompat.getColor(this, colors[i]) }
     }
 
     override fun onDestroy() {
@@ -148,17 +155,32 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     }
 
     private fun addTodo() {
+        val customView = layoutInflater.inflate(R.layout.dialog_add_todo, main_coordinator, false)
+        val colorButton = customView.findViewById<MaterialButton>(R.id.button_select_color)
+        var selectedColor = ContextCompat.getColor(this, getRandomColor())
+        colorButton.iconTint = ColorStateList.valueOf(selectedColor)
+        colorButton.setOnClickListener {
+            MaterialDialog(this)
+                //.message(R.string.message_select_color)
+                .colorChooser(colorValues, initialSelection = selectedColor) { _, color ->
+                    selectedColor = color
+                    colorButton.iconTint = ColorStateList.valueOf(color)
+                }
+                .positiveButton(R.string.action_select)
+                .negativeButton(android.R.string.cancel)
+                .show()
+        }
         MaterialDialog(this)
             .message(R.string.message_add_todo)
-            .customView(R.layout.dialog_add_todo, scrollable = true)
+            .customView(view = customView, scrollable = true)
             .positiveButton(R.string.action_add_todo) { dialog ->
-                val customView = dialog.getCustomView()!!
+                val v = dialog.getCustomView()!!
                 val date = Calendar.getInstance().time
-                val content = customView.findViewById<TextInputEditText>(R.id.add_todo_text).text.toString().trim()
+                val content = v.findViewById<TextInputEditText>(R.id.add_todo_text).text.toString().trim()
                 if (content.isEmpty()) {
                     Snackbar.make(main_coordinator, R.string.alert_todo_empty, Snackbar.LENGTH_SHORT).show()
                 } else {
-                    viewModel.insertTodo(Todo(0, content, date.time, getRandomColor(), viewModel.activeGroup))
+                    viewModel.insertTodo(Todo(0, content, date.time, selectedColor, viewModel.activeGroup))
                 }
             }
             .negativeButton(android.R.string.cancel)
@@ -176,17 +198,17 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     }
 
     private fun editList() {
-        val view = layoutInflater.inflate(R.layout.dialog_edit_group, main_coordinator, false)
-        val textInput = view.findViewById<TextInputEditText>(R.id.edit_group_text)
-        val textLayout = view.findViewById<TextInputLayout>(R.id.field_edit_group)
+        val customView = layoutInflater.inflate(R.layout.dialog_edit_group, main_coordinator, false)
+        val textInput = customView.findViewById<TextInputEditText>(R.id.edit_group_text)
+        val textLayout = customView.findViewById<TextInputLayout>(R.id.field_edit_group)
         textLayout.hint = getString(R.string.hint_list_name)
         textInput.setText(title.toString())
         MaterialDialog(this)
             .message(R.string.message_edit_list)
-            .customView(view = view)
+            .customView(view = customView)
             .positiveButton(R.string.action_save) { dialog ->
-                val customView = dialog.getCustomView()!!
-                val name = customView.findViewById<TextInputEditText>(R.id.edit_group_text).text.toString().trim()
+                val v = dialog.getCustomView()!!
+                val name = v.findViewById<TextInputEditText>(R.id.edit_group_text).text.toString().trim()
                 if (name.isEmpty()) {
                     Snackbar.make(main_coordinator, R.string.alert_list_name_empty, Snackbar.LENGTH_SHORT).show()
                 } else {

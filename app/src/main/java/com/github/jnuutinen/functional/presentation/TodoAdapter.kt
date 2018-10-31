@@ -28,7 +28,8 @@ class TodoAdapter(private val resources: Resources) : RecyclerView.Adapter<TodoA
         if (todo != null) {
             val circle = ResourcesCompat.getDrawable(resources, R.drawable.circle, null)!!
             val color = todo.color
-            circle.setTint(ResourcesCompat.getColor(resources, color, null))
+            //circle.setTint(ResourcesCompat.getColor(resources, color, null))
+            circle.setTint(color)
             holder.itemView.item_letter.background = circle
             holder.itemView.item_letter.text = todo.contents[0].toString()
             holder.itemView.item_text.text = todo.contents

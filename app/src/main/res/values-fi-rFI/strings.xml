@@ -25,4 +25,7 @@
     <string name="text_licenses">Avoimen lähdekoodin lisenssit</string>
     <string name="menu_title_lists">Tehtävälistat</string>
     <string name="group_default_name">Tehtävälistani</string>
+    <string name="action_select_color">Väri</string>
+    <string name="action_select">Valitse</string>
+    <string name="message_select_color">Valitse väri</string>
 </resources>

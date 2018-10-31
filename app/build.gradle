@@ -70,6 +70,7 @@ dependencies {
     // Material dialogs
     implementation 'com.afollestad.material-dialogs:core:2.0.0-beta4'
     implementation 'com.afollestad.material-dialogs:input:2.0.0-beta4'
+    implementation 'com.afollestad.material-dialogs:color:2.0.0-beta4'
 
     // OSS licences
     implementation 'com.google.android.gms:play-services-oss-licenses:16.0.1'

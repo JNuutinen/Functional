@@ -27,4 +27,7 @@
     <string name="text_no_todos">This to-do list is empty</string>
     <string name="alert_todo_deleted">To-do deleted</string>
     <string name="hint_list_name">List name</string>
+    <string name="action_select_color">Color</string>
+    <string name="action_select">Select</string>
+    <string name="message_select_color">Select a color</string>
 </resources>
