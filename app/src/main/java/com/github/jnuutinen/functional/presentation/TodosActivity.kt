@@ -2,6 +2,9 @@ package com.github.jnuutinen.functional.presentation
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -9,6 +12,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.core.view.GravityCompat
 import androidx.core.view.get
@@ -71,7 +75,8 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         }
 
         readListPrefs()
-        setupItemTouchHelper()
+        setUpItemTouchHelper()
+        setUpAnimationDecoratorHelper()
         subscribeUi()
     }
 
@@ -215,8 +220,63 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         }
     }
 
-    private fun setupItemTouchHelper() {
+    /**
+     * Adapted from here:
+     *
+     * https://stackoverflow.com/a/34740127/10518087
+     * https://github.com/nemanja-kovacevic/recycler-view-swipe-to-delete/
+     */
+    private fun setUpItemTouchHelper() {
         val simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT.or(ItemTouchHelper.RIGHT)) {
+            private val deletionBackground = ColorDrawable(Color.RED)
+            private val deleteIcon = ContextCompat.getDrawable(this@TodosActivity, R.drawable.ic_delete_white_24dp)!!
+            val deleteIconMargin = resources.getDimension(R.dimen.item_background_delete_icon_margin).toInt()
+
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                val itemView = viewHolder.itemView
+                val itemHeight = itemView.height
+                val intrinsicWidth = deleteIcon.intrinsicWidth
+                val intrinsicHeight = deleteIcon.intrinsicHeight
+
+                if (dX < 0) { // Item is being dragged to the left.
+                    deletionBackground.setBounds(
+                        itemView.right + dX.toInt(),
+                        itemView.top,
+                        itemView.right,
+                        itemView.bottom
+                    )
+                    val deleteIconLeft = itemView.right - deleteIconMargin - intrinsicWidth
+                    val deleteIconRight = itemView.right - deleteIconMargin
+                    val deleteIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
+                    val deleteIconBottom = deleteIconTop + intrinsicHeight
+                    deleteIcon.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
+                } else { // Item is being dragged to the right.
+                    deletionBackground.setBounds(
+                        itemView.left + dX.toInt(),
+                        itemView.top,
+                        itemView.left,
+                        itemView.bottom
+                    )
+                    val deleteIconLeft = itemView.left + deleteIconMargin
+                    val deleteIconRight = itemView.left + deleteIconMargin + intrinsicWidth
+                    val deleteIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
+                    val deleteIconBottom = deleteIconTop + intrinsicHeight
+                    deleteIcon.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
+                }
+                deletionBackground.draw(c)
+                deleteIcon.draw(c)
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+            }
+
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -234,6 +294,63 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             }
         }
         ItemTouchHelper(simpleItemTouchCallback).attachToRecyclerView(todo_recycler)
+    }
+
+    /**
+     * Adapted from here:
+     *
+     * https://stackoverflow.com/a/34740127/10518087
+     * https://github.com/nemanja-kovacevic/recycler-view-swipe-to-delete/
+     */
+    private fun setUpAnimationDecoratorHelper() {
+        todo_recycler.addItemDecoration(object : RecyclerView.ItemDecoration() {
+            private val background = ColorDrawable(Color.RED)
+
+            override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+                if (parent.itemAnimator?.isRunning == true) {
+                    var lastViewComingDown: View? = null
+                    var firstViewComingUp: View? = null
+
+                    val left = 0
+                    val right = parent.width
+
+                    var top = 0
+                    var bottom = 0
+
+                    val childCount = parent.layoutManager?.childCount ?: 0
+                    for (i in 0 until childCount) {
+                        val child = parent.layoutManager?.getChildAt(i)
+                        if (child != null && child.translationY < 0) {
+                            // View is coming down.
+                            lastViewComingDown = child
+                        } else if (child != null && child.translationY > 0) {
+                            // View is coming up.
+                            if (firstViewComingUp == null) {
+                                firstViewComingUp = child
+                            }
+                        }
+                    }
+
+                    if (lastViewComingDown != null && firstViewComingUp != null) {
+                        // Views are going up and down to fill the void.
+                        //top = lastViewComingDown.bottom + lastViewComingDown.translationY.toInt()
+                        //bottom = firstViewComingUp.top + firstViewComingUp.translationY.toInt()
+                    } else if (lastViewComingDown != null) {
+                        // Views are going down to fill the void.
+                        //top = lastViewComingDown.bottom + lastViewComingDown.translationY.toInt()
+                        //bottom = lastViewComingDown.bottom
+                    } else if (firstViewComingUp != null) {
+                        // Views are going up to fill the void.
+                        top = firstViewComingUp.top
+                        bottom = firstViewComingUp.top + firstViewComingUp.translationY.toInt()
+                    }
+
+                    background.setBounds(left, top, right, bottom)
+                    background.draw(c)
+                }
+                super.onDraw(c, parent, state)
+            }
+        })
     }
 
     private fun subscribeUi() {

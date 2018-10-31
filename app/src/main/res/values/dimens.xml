@@ -11,4 +11,5 @@
     <dimen name="item_image_side">56dp</dimen>
     <dimen name="item_image_vertical_margin">8dp</dimen>
     <dimen name="item_horizontal_margin">16dp</dimen>
+    <dimen name="item_background_delete_icon_margin">32dp</dimen>
 </resources>
