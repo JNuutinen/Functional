@@ -13,8 +13,8 @@ import kotlinx.android.synthetic.main.item_todo.view.*
 
 class TodoAdapter(private val resources: Resources) : RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
     @Suppress("PrivatePropertyName", "unused")
-    private val TAG by lazy { TodoAdapter::class.java.simpleName }
-    private var todos: List<Todo>? = null
+    private val mTAG by lazy { TodoAdapter::class.java.simpleName }
+    private var mTodos: List<Todo>? = null
 
     inner class TodoViewHolder(itemView: View)  : RecyclerView.ViewHolder(itemView)
 
@@ -24,10 +24,11 @@ class TodoAdapter(private val resources: Resources) : RecyclerView.Adapter<TodoA
     }
 
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
-        val todo = todos?.get(position)
+        val todo = mTodos?.get(position)
         if (todo != null) {
             val circle = ResourcesCompat.getDrawable(resources, R.drawable.circle, null)!!
             val color = todo.color
+            // TODO: test this after upgrading from an old version
             //circle.setTint(ResourcesCompat.getColor(resources, color, null))
             circle.setTint(color)
             holder.itemView.item_letter.background = circle
@@ -37,27 +38,23 @@ class TodoAdapter(private val resources: Resources) : RecyclerView.Adapter<TodoA
     }
 
 
-    override fun getItemCount() = todos?.size ?: 0
+    override fun getItemCount() = mTodos?.size ?: 0
 
     fun getItem(position: Int): Todo {
-        return todos!![position]
+        return mTodos!![position]
     }
 
     fun setTodos(todos: List<Todo>) {
-        if (this.todos == null) {
-            this.todos = todos
+        if (mTodos == null) {
+            mTodos = todos
             notifyItemRangeInserted(0, todos.size)
         } else {
-            val oldTodos = this.todos
+            val oldTodos = mTodos
             if (oldTodos != null) {
                 val result = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-                    override fun getOldListSize(): Int {
-                        return oldTodos.size
-                    }
+                    override fun getOldListSize() = oldTodos.size
 
-                    override fun getNewListSize(): Int {
-                        return todos.size
-                    }
+                    override fun getNewListSize() = todos.size
 
                     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
                         return oldTodos[oldItemPosition].id == todos[newItemPosition].id
@@ -72,7 +69,7 @@ class TodoAdapter(private val resources: Resources) : RecyclerView.Adapter<TodoA
                                 && old.todoGroupId == new.todoGroupId
                     }
                 })
-                this.todos = todos
+                mTodos = todos
                 result.dispatchUpdatesTo(this)
             }
         }

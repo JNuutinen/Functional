@@ -28,11 +28,11 @@ import java.util.concurrent.TimeUnit
 @SmallTest
 @RunWith(AndroidJUnit4::class)
 class DatabaseTest {
-    private lateinit var todoDatabase: TodoDatabase
-    private lateinit var todoDao: TodoDao
-    private lateinit var todoGroupDao: TodoGroupDao
+    private lateinit var mTodoDatabase: TodoDatabase
+    private lateinit var mTodoDao: TodoDao
+    private lateinit var mTodoGroupDao: TodoGroupDao
 
-    @get:Rule var instantTaskExecutorRule = InstantTaskExecutorRule()
+    @get:Rule var mInstantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Throws(InterruptedException::class)
     fun <T> LiveData<T>.getValueBlocking(): T? {
@@ -49,9 +49,9 @@ class DatabaseTest {
 
     @Before fun createDb() {
         val context = ApplicationProvider.getApplicationContext<Context>()
-        todoDatabase = Room.inMemoryDatabaseBuilder(context, TodoDatabase::class.java).build()
-        todoDao = todoDatabase.todoDao()
-        todoGroupDao = todoDatabase.todoGroupDao()
+        mTodoDatabase = Room.inMemoryDatabaseBuilder(context, TodoDatabase::class.java).build()
+        mTodoDao = mTodoDatabase.todoDao()
+        mTodoGroupDao = mTodoDatabase.todoGroupDao()
 
         val calendar = Calendar.getInstance()
 
@@ -59,38 +59,38 @@ class DatabaseTest {
         val todo1 = Todo(1, "Todo 1", calendar.time.time, 0, 1)
         val todo2 = Todo(2, "Todo 2", calendar.time.time, 0, 1)
 
-        todoGroupDao.insertTodoGroup(myGroup)
-        todoDao.insertTodo(todo1)
-        todoDao.insertTodo(todo2)
+        mTodoGroupDao.insertTodoGroup(myGroup)
+        mTodoDao.insertTodo(todo1)
+        mTodoDao.insertTodo(todo2)
     }
 
     @After fun closeDb() {
-        todoDatabase.close()
+        mTodoDatabase.close()
     }
 
     @Test fun deleteGroup() {
-        todoGroupDao.deleteTodoGroup(todoGroupDao.getTodoGroups().getValueBlocking()!![0])
+        mTodoGroupDao.deleteTodoGroup(mTodoGroupDao.getTodoGroups().getValueBlocking()!![0])
 
-        val groups = todoGroupDao.getTodoGroups().getValueBlocking()!!
+        val groups = mTodoGroupDao.getTodoGroups().getValueBlocking()!!
         assertThat(groups, empty())
 
-        val groupsWithTodos = todoGroupDao.getGroupsWithTodos().getValueBlocking()!!
+        val groupsWithTodos = mTodoGroupDao.getGroupsWithTodos().getValueBlocking()!!
         assertThat(groupsWithTodos, empty())
 
-        val todos = todoDao.getTodos().getValueBlocking()!!
+        val todos = mTodoDao.getTodos().getValueBlocking()!!
         assertThat(todos, empty())
     }
 
     @Test fun deleteTodo() {
-        var todos = todoDao.getTodos().getValueBlocking()!!
+        var todos = mTodoDao.getTodos().getValueBlocking()!!
         assertThat(todos.size, `is`(2))
 
         var todo = todos[0]
         assertThat(todo.contents, `is`("Todo 1"))
 
-        todoDao.deleteTodo(todo)
+        mTodoDao.deleteTodo(todo)
 
-        todos = todoDao.getTodos().getValueBlocking()!!
+        todos = mTodoDao.getTodos().getValueBlocking()!!
         assertThat(todos.size, `is`(1))
 
         todo = todos[0]
@@ -98,15 +98,15 @@ class DatabaseTest {
     }
 
     @Test fun editGroup() {
-        var group = todoGroupDao.getTodoGroups().getValueBlocking()!![0]
+        var group = mTodoGroupDao.getTodoGroups().getValueBlocking()!![0]
         assertThat(group.name, `is`("My group"))
         group.name = "Edited"
-        todoGroupDao.updateTodoGroup(group)
+        mTodoGroupDao.updateTodoGroup(group)
 
-        group = todoGroupDao.getTodoGroups().getValueBlocking()!![0]
+        group = mTodoGroupDao.getTodoGroups().getValueBlocking()!![0]
         assertThat(group.name, `is`("Edited"))
 
-        val groupWithTodos = todoGroupDao.getGroupsWithTodos().getValueBlocking()!![0]
+        val groupWithTodos = mTodoGroupDao.getGroupsWithTodos().getValueBlocking()!![0]
         assertThat(groupWithTodos.todoGroup.name, `is`("Edited"))
         assertThat(groupWithTodos.todos.size, `is`(2))
     }

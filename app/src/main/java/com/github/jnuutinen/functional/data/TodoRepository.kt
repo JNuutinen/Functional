@@ -7,39 +7,39 @@ import com.github.jnuutinen.functional.data.db.entity.TodoGroup
 import com.github.jnuutinen.functional.util.runOnIoThread
 
 class TodoRepository private constructor(
-    private val todoDao: TodoDao,
-    private val todoGroupDao: TodoGroupDao
+    private val mTodoDao: TodoDao,
+    private val mTodoGroupDao: TodoGroupDao
 ) {
-    fun getGroupsWithTodos() = todoGroupDao.getGroupsWithTodos()
+    fun getGroupsWithTodos() = mTodoGroupDao.getGroupsWithTodos()
 
     fun deleteTodo(todo: Todo) {
-        runOnIoThread { todoDao.deleteTodo(todo) }
+        runOnIoThread { mTodoDao.deleteTodo(todo) }
     }
 
     fun deleteTodoGroup(groupId: Int) {
-        runOnIoThread { todoGroupDao.deleteTodoGroup(groupId) }
+        runOnIoThread { mTodoGroupDao.deleteTodoGroup(groupId) }
     }
 
     fun insertTodo(todo: Todo) {
-        runOnIoThread { todoDao.insertTodo(todo) }
+        runOnIoThread { mTodoDao.insertTodo(todo) }
     }
 
     fun insertTodoGroup(todoGroup: TodoGroup) {
-        runOnIoThread { todoGroupDao.insertTodoGroup(todoGroup) }
+        runOnIoThread { mTodoGroupDao.insertTodoGroup(todoGroup) }
     }
 
     fun updateTodoGroup(groupId: Int, updatedName: String) {
-        runOnIoThread { todoGroupDao.updateTodoGroup(groupId, updatedName) }
+        runOnIoThread { mTodoGroupDao.updateTodoGroup(groupId, updatedName) }
     }
 
     companion object {
         @Suppress("unused")
         private val TAG by lazy { TodoRepository::class.java.simpleName }
-        @Volatile private var instance: TodoRepository? = null
+        @Volatile private var mInstance: TodoRepository? = null
 
         fun getInstance(todoDao: TodoDao, todoGroupDao: TodoGroupDao) =
-            instance ?: synchronized(this) {
-                instance ?: TodoRepository(todoDao, todoGroupDao).also { instance = it }
+            mInstance ?: synchronized(this) {
+                mInstance ?: TodoRepository(todoDao, todoGroupDao).also { mInstance = it }
             }
     }
 }

@@ -6,10 +6,13 @@ import com.github.jnuutinen.functional.data.TodoRepository
 import com.github.jnuutinen.functional.data.db.dao.GroupWithTodos
 import com.github.jnuutinen.functional.data.db.entity.Todo
 import com.github.jnuutinen.functional.data.db.entity.TodoGroup
+import com.github.jnuutinen.functional.util.PREF_VALUE_DOES_NOT_EXIST_INT
 
 class TodosViewModel internal constructor(private val todoRepository: TodoRepository) : ViewModel() {
+
+    // Use MediatorLiveData so that we can force update it from TodosActivity with setValue(getValue).
     val groupsWithTodos = MediatorLiveData<List<GroupWithTodos>>()
-    var activeGroup = -1
+    var activeGroup = PREF_VALUE_DOES_NOT_EXIST_INT
 
     init {
         groupsWithTodos.addSource(todoRepository.getGroupsWithTodos()) { value -> groupsWithTodos.value = value }

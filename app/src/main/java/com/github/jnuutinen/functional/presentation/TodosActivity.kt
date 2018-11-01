@@ -43,10 +43,10 @@ import java.util.*
 
 class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     @Suppress("PrivatePropertyName", "PrivatePropertyName", "unused")
-    private val TAG by lazy { TodosActivity::class.java.simpleName }
-    private lateinit var viewModel: TodosViewModel
-    private lateinit var viewAdapter: TodoAdapter
-    lateinit var colorValues: IntArray
+    private val mTAG by lazy { TodosActivity::class.java.simpleName }
+    private lateinit var mViewModel: TodosViewModel
+    private lateinit var mViewAdapter: TodoAdapter
+    private lateinit var mColorValues: IntArray
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +54,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         setSupportActionBar(toolbar)
 
         val factory = InjectorUtils.provideTodosViewModelFactory(this)
-        viewModel = ViewModelProviders.of(this, factory).get(TodosViewModel::class.java)
+        mViewModel = ViewModelProviders.of(this, factory).get(TodosViewModel::class.java)
 
         button_add_todo.setOnClickListener { addTodo() }
 
@@ -69,13 +69,13 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         nav_view.setNavigationItemSelectedListener(this)
 
         val viewManager = LinearLayoutManager(this)
-        viewAdapter  = TodoAdapter(resources)
+        mViewAdapter  = TodoAdapter(resources)
         val itemDivider = TodoItemDivider(this)
         todo_recycler.apply {
             addItemDecoration(itemDivider)
             setHasFixedSize(true)
             layoutManager = viewManager
-            adapter = viewAdapter
+            adapter = mViewAdapter
         }
 
         readListPrefs()
@@ -84,7 +84,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         subscribeUi()
 
         // Build an IntArray with all available circle colors as int values.
-        colorValues = IntArray(colors.size) { i -> ContextCompat.getColor(this, colors[i]) }
+        mColorValues = IntArray(colors.size) { i -> ContextCompat.getColor(this, colors[i]) }
     }
 
     override fun onDestroy() {
@@ -138,16 +138,16 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                         Snackbar.make(main_coordinator, R.string.alert_list_name_empty, Snackbar.LENGTH_SHORT).show()
                     } else {
                         val group = TodoGroup(0, name, Calendar.getInstance().time.time)
-                        viewModel.insertTodoGroup(group)
+                        mViewModel.insertTodoGroup(group)
                         // If active group is 0, then the most recent group will be set active in subscribeUi().
-                        viewModel.activeGroup = 0
+                        mViewModel.activeGroup = 0
                     }
                 }
                 .negativeButton(android.R.string.cancel)
                 .show()
         } else {
-            viewModel.activeGroup = item.itemId
-            viewModel.groupsWithTodos.value = viewModel.groupsWithTodos.value
+            mViewModel.activeGroup = item.itemId
+            mViewModel.groupsWithTodos.value = mViewModel.groupsWithTodos.value
         }
 
         drawer_layout.closeDrawer(GravityCompat.START)
@@ -162,7 +162,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         colorButton.setOnClickListener {
             MaterialDialog(this)
                 //.message(R.string.message_select_color)
-                .colorChooser(colorValues, initialSelection = selectedColor) { _, color ->
+                .colorChooser(mColorValues, initialSelection = selectedColor) { _, color ->
                     selectedColor = color
                     colorButton.iconTint = ColorStateList.valueOf(color)
                 }
@@ -180,7 +180,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 if (content.isEmpty()) {
                     Snackbar.make(main_coordinator, R.string.alert_todo_empty, Snackbar.LENGTH_SHORT).show()
                 } else {
-                    viewModel.insertTodo(Todo(0, content, date.time, selectedColor, viewModel.activeGroup))
+                    mViewModel.insertTodo(Todo(0, content, date.time, selectedColor, mViewModel.activeGroup))
                 }
             }
             .negativeButton(android.R.string.cancel)
@@ -191,7 +191,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         MaterialDialog(this)
             .message(R.string.message_delete_list)
             .positiveButton(R.string.action_delete) {
-                viewModel.deleteTodoGroup(viewModel.activeGroup)
+                mViewModel.deleteTodoGroup(mViewModel.activeGroup)
             }
             .negativeButton(android.R.string.cancel)
             .show()
@@ -212,7 +212,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 if (name.isEmpty()) {
                     Snackbar.make(main_coordinator, R.string.alert_list_name_empty, Snackbar.LENGTH_SHORT).show()
                 } else {
-                    viewModel.updateTodoGroup(viewModel.activeGroup, name)
+                    mViewModel.updateTodoGroup(mViewModel.activeGroup, name)
                 }
             }
             .negativeButton(android.R.string.cancel)
@@ -221,11 +221,8 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     private fun readListPrefs() {
         val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val id = prefs.getInt(PREF_KEY_ACTIVE_LIST_ID, -1)
-        val name = prefs.getString(PREF_KEY_ACTIVE_LIST_NAME, "")
-        if (id != -1 && name != null && name.isNotBlank()) {
-            viewModel.activeGroup = id
-        }
+        val id = prefs.getInt(PREF_KEY_ACTIVE_LIST_ID, PREF_VALUE_DOES_NOT_EXIST_INT)
+        if (id != PREF_VALUE_DOES_NOT_EXIST_INT) mViewModel.activeGroup = id
     }
 
     private fun setGroup(groupWithTodos: GroupWithTodos) {
@@ -233,13 +230,10 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         val todos = groupWithTodos.todos
         title = group.name
         nav_view.menu.findItem(group.id).isChecked = true
-        viewModel.activeGroup = group.id
-        viewAdapter.setTodos(todos)
-        if (todos.isEmpty()) {
-            text_no_todos.visibility = View.VISIBLE
-        } else {
-            text_no_todos.visibility = View.INVISIBLE
-        }
+        mViewModel.activeGroup = group.id
+        mViewAdapter.setTodos(todos)
+        if (todos.isEmpty()) text_no_todos.visibility = View.VISIBLE
+        else text_no_todos.visibility = View.INVISIBLE
     }
 
     /**
@@ -308,10 +302,10 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val deletedTodo = viewAdapter.getItem(viewHolder.adapterPosition)
-                viewModel.deleteTodo(deletedTodo)
+                val deletedTodo = mViewAdapter.getItem(viewHolder.adapterPosition)
+                mViewModel.deleteTodo(deletedTodo)
                 val undoSnackbar = Snackbar.make(main_coordinator, R.string.alert_todo_deleted, Snackbar.LENGTH_LONG)
-                undoSnackbar.setAction(R.string.action_undo) { viewModel.insertTodo(deletedTodo) }
+                undoSnackbar.setAction(R.string.action_undo) { mViewModel.insertTodo(deletedTodo) }
                 undoSnackbar.show()
             }
         }
@@ -376,7 +370,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     }
 
     private fun subscribeUi() {
-        viewModel.groupsWithTodos.observe(this, Observer { groupsWithTodos ->
+        mViewModel.groupsWithTodos.observe(this, Observer { groupsWithTodos ->
             // Groups will be in date order, from oldest to newest.
 
             // The lists menu is inside the main drawer menu.
@@ -395,12 +389,12 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                         counter.findViewById<TextView>(R.id.text_counter).text = groupWithTodos.todos.size.toString()
                         listsMenu[i].actionView = counter
 
-                        if (viewModel.activeGroup == 0 && i == groupsWithTodos.size - 1) {
+                        if (mViewModel.activeGroup == 0 && i == groupsWithTodos.size - 1) {
                             // If active group is set to 0, then the most recent group must be set as active, in order
                             // to activate the newly added group.
                             setGroup(groupWithTodos)
                             groupIsSet = true
-                        } else if (viewModel.activeGroup == -1 || group.id == viewModel.activeGroup) {
+                        } else if (mViewModel.activeGroup == -1 || group.id == mViewModel.activeGroup) {
                             // Alternatively, if active group is not set or it is set to this group, set it as active.
                             setGroup(groupWithTodos)
                             groupIsSet = true
@@ -412,7 +406,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 } else {
                     // No groups; create an empty group.
                     val group = TodoGroup(1, resources.getString(R.string.group_default_name), Calendar.getInstance().time.time)
-                    viewModel.insertTodoGroup(group)
+                    mViewModel.insertTodoGroup(group)
                 }
 
                 // Finally set the created nav drawer list group as exclusively checkable.
@@ -425,7 +419,6 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     private fun writeListPrefs() {
         val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        prefs.edit { putInt(PREF_KEY_ACTIVE_LIST_ID, viewModel.activeGroup) }
-        prefs.edit { putString(PREF_KEY_ACTIVE_LIST_NAME, title.toString()) }
+        prefs.edit { putInt(PREF_KEY_ACTIVE_LIST_ID, mViewModel.activeGroup) }
     }
 }

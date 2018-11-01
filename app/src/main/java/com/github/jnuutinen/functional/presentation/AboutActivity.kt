@@ -7,7 +7,6 @@ import com.github.jnuutinen.functional.R
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import kotlinx.android.synthetic.main.activity_about.*
 
-
 class AboutActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
