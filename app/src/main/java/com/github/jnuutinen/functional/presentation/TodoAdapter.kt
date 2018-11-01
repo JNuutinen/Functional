@@ -34,9 +34,9 @@ class TodoAdapter(private val resources: Resources) : RecyclerView.Adapter<TodoA
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
         val todo = mTodos?.get(position)
         if (todo != null) {
-            val circle = ResourcesCompat.getDrawable(resources, R.drawable.circle, null)!!
+            val circle = ResourcesCompat.getDrawable(resources, R.drawable.circle, null)
             val color = todo.color
-            circle.setTint(color)
+            circle?.setTint(color)
             holder.itemView.item_letter.background = circle
             holder.itemView.item_letter.text = todo.contents[0].toString()
             holder.itemView.item_text.text = todo.contents
@@ -47,7 +47,7 @@ class TodoAdapter(private val resources: Resources) : RecyclerView.Adapter<TodoA
     override fun getItemCount() = mTodos?.size ?: 0
 
     fun getItem(position: Int): Todo {
-        return mTodos!![position]
+        return mTodos?.get(position) ?: Todo(0, "", 0, 0, 1)
     }
 
     fun setTodos(todos: List<Todo>) {

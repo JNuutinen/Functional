@@ -132,8 +132,8 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 .message(R.string.action_add_list)
                 .customView(R.layout.dialog_add_group, scrollable = true)
                 .positiveButton(R.string.action_add_todo) { dialog ->
-                    val customView = dialog.getCustomView()!!
-                    val name = customView.findViewById<TextInputEditText>(R.id.add_group_text).text.toString().trim()
+                    val customView = dialog.getCustomView()
+                    val name = customView?.findViewById<TextInputEditText>(R.id.add_group_text)?.text.toString().trim()
                     if (name.isEmpty()) {
                         Snackbar.make(main_coordinator, R.string.alert_list_name_empty, Snackbar.LENGTH_SHORT).show()
                     } else {
@@ -173,9 +173,9 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             .message(R.string.message_add_todo)
             .customView(view = customView, scrollable = true)
             .positiveButton(R.string.action_add_todo) { dialog ->
-                val v = dialog.getCustomView()!!
+                val v = dialog.getCustomView()
                 val date = Calendar.getInstance().time
-                val content = v.findViewById<TextInputEditText>(R.id.add_todo_text).text.toString().trim()
+                val content = v?.findViewById<TextInputEditText>(R.id.add_todo_text)?.text.toString().trim()
                 if (content.isEmpty()) {
                     Snackbar.make(main_coordinator, R.string.alert_todo_empty, Snackbar.LENGTH_SHORT).show()
                 } else {
@@ -207,8 +207,8 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             .message(R.string.message_edit_list)
             .customView(view = customView)
             .positiveButton(R.string.action_save) { dialog ->
-                val v = dialog.getCustomView()!!
-                val name = v.findViewById<TextInputEditText>(R.id.edit_group_text).text.toString().trim()
+                val v = dialog.getCustomView()
+                val name = v?.findViewById<TextInputEditText>(R.id.edit_group_text)?.text.toString().trim()
                 if (name.isEmpty()) {
                     Snackbar.make(main_coordinator, R.string.alert_list_name_empty, Snackbar.LENGTH_SHORT).show()
                 } else {
@@ -243,8 +243,8 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             .message(R.string.message_edit_todo)
             .customView(view = customView, scrollable = true)
             .positiveButton(R.string.action_save) { dialog ->
-                val v = dialog.getCustomView()!!
-                val content = v.findViewById<TextInputEditText>(R.id.add_todo_text).text.toString().trim()
+                val v = dialog.getCustomView()
+                val content = v?.findViewById<TextInputEditText>(R.id.add_todo_text)?.text.toString().trim()
                 if (content.isEmpty()) {
                     Snackbar.make(main_coordinator, R.string.alert_todo_empty, Snackbar.LENGTH_SHORT).show()
                 } else {
@@ -294,7 +294,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     private fun setUpItemTouchHelper() {
         val simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT.or(ItemTouchHelper.RIGHT)) {
             private val deletionBackground = ColorDrawable(ContextCompat.getColor(this@TodosActivity, R.color.negativeColor))
-            private val deleteIcon = ContextCompat.getDrawable(this@TodosActivity, R.drawable.ic_delete_white_24dp)!!
+            private val deleteIcon = ContextCompat.getDrawable(this@TodosActivity, R.drawable.ic_delete_white_24dp)
             val deleteIconMargin = resources.getDimension(R.dimen.item_background_delete_icon_margin).toInt()
 
             override fun onChildDraw(
@@ -308,8 +308,8 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             ) {
                 val itemView = viewHolder.itemView
                 val itemHeight = itemView.height
-                val intrinsicWidth = deleteIcon.intrinsicWidth
-                val intrinsicHeight = deleteIcon.intrinsicHeight
+                val intrinsicWidth = deleteIcon?.intrinsicWidth ?: 0
+                val intrinsicHeight = deleteIcon?.intrinsicHeight ?: 0
 
                 if (dX < 0) { // Item is being dragged to the left.
                     deletionBackground.setBounds(
@@ -322,7 +322,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                     val deleteIconRight = itemView.right - deleteIconMargin
                     val deleteIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
                     val deleteIconBottom = deleteIconTop + intrinsicHeight
-                    deleteIcon.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
+                    deleteIcon?.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
                 } else { // Item is being dragged to the right.
                     deletionBackground.setBounds(
                         itemView.left + dX.toInt(),
@@ -334,10 +334,10 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                     val deleteIconRight = itemView.left + deleteIconMargin + intrinsicWidth
                     val deleteIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
                     val deleteIconBottom = deleteIconTop + intrinsicHeight
-                    deleteIcon.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
+                    deleteIcon?.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
                 }
                 deletionBackground.draw(c)
-                deleteIcon.draw(c)
+                deleteIcon?.draw(c)
 
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
             }
