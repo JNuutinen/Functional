@@ -12,9 +12,9 @@ class TodoItemDivider(context: Context) : RecyclerView.ItemDecoration() {
         for (i in 0 until parent.childCount) {
             val child = parent.getChildAt(i)
 
-            val left = if (child.translationX > 0) child.left + child.translationX.toInt() else child.left - child.translationX.toInt()
-            val top = if (child.translationY > 0) child.bottom + child.translationY.toInt() else child.bottom - child.translationY.toInt()
-            val right = if (child.translationX > 0) child.right - child.translationX.toInt() else child.right + child.translationX.toInt()
+            val left = child.left + child.translationX.toInt()
+            val top = child.bottom + child.translationY.toInt()
+            val right = child.right + child.translationX.toInt()
             val bottom = top + mDivider.intrinsicHeight
 
             mDivider.setBounds(left, top, right, bottom)
