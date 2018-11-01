@@ -343,7 +343,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                     val childCount = parent.layoutManager?.childCount ?: 0
                     for (i in 0 until childCount) {
                         val child = parent.layoutManager?.getChildAt(i)
-                        if (child != null && child.translationY < 0) {
+                        if (child != null && i < childCount - 1 && child.translationY < 0) {
                             // View is coming down.
                             lastViewComingDown = child
                         } else if (child != null && child.translationY > 0) {
@@ -356,12 +356,12 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
                     if (lastViewComingDown != null && firstViewComingUp != null) {
                         // Views are going up and down to fill the void.
-                        //top = lastViewComingDown.bottom + lastViewComingDown.translationY.toInt()
-                        //bottom = firstViewComingUp.top + firstViewComingUp.translationY.toInt()
+                        top = lastViewComingDown.bottom + lastViewComingDown.translationY.toInt()
+                        bottom = firstViewComingUp.top + firstViewComingUp.translationY.toInt()
                     } else if (lastViewComingDown != null) {
                         // Views are going down to fill the void.
-                        //top = lastViewComingDown.bottom + lastViewComingDown.translationY.toInt()
-                        //bottom = lastViewComingDown.bottom
+                        top = lastViewComingDown.bottom + lastViewComingDown.translationY.toInt()
+                        bottom = lastViewComingDown.bottom
                     } else if (firstViewComingUp != null) {
                         // Views are going up to fill the void.
                         top = firstViewComingUp.top
