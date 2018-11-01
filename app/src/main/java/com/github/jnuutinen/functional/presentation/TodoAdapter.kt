@@ -15,8 +15,16 @@ class TodoAdapter(private val resources: Resources) : RecyclerView.Adapter<TodoA
     @Suppress("PrivatePropertyName", "unused")
     private val mTAG by lazy { TodoAdapter::class.java.simpleName }
     private var mTodos: List<Todo>? = null
+    var onItemClick: ((Todo) -> Unit)? = null
 
-    inner class TodoViewHolder(itemView: View)  : RecyclerView.ViewHolder(itemView)
+    inner class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        init {
+            itemView.setOnClickListener {
+                val todo = mTodos?.get(adapterPosition)
+                if (todo != null) onItemClick?.invoke(todo)
+            }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_todo, parent, false)

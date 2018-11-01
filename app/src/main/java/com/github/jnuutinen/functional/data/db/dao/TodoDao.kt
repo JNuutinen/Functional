@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
 import com.github.jnuutinen.functional.data.db.entity.Todo
 
@@ -15,7 +16,7 @@ interface TodoDao {
     @Query("SELECT * FROM todo WHERE todo_group_id = :groupId ORDER BY todo_date")
     fun getTodosInGroup(groupId: Int): LiveData<List<Todo>>
 
-    @Insert
+    @Insert(onConflict = REPLACE)
     fun insertTodo(todo: Todo)
 
     @Delete

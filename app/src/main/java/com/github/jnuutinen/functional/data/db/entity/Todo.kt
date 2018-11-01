@@ -14,9 +14,9 @@ import androidx.room.PrimaryKey
     onDelete = CASCADE)])
 data class Todo(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "todo_id") val id: Int,
-    @ColumnInfo(name = "todo_contents") val contents: String,
+    @ColumnInfo(name = "todo_contents") var contents: String,
     @ColumnInfo(name = "todo_date") val date: Long,
-    @ColumnInfo(name = "todo_color") val color: Int,
+    @ColumnInfo(name = "todo_color") var color: Int,
     @ColumnInfo(name = "todo_group_id") val todoGroupId: Int)
 {
     override fun toString() = contents

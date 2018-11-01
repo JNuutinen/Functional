@@ -69,6 +69,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
         val viewManager = LinearLayoutManager(this)
         mViewAdapter  = TodoAdapter(resources)
+        mViewAdapter.onItemClick = { todo -> editTodo(todo) }
         val itemDivider = TodoItemDivider(this)
         todo_recycler.apply {
             addItemDecoration(itemDivider)
@@ -146,7 +147,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 .show()
         } else {
             mViewModel.activeGroup = item.itemId
-            mViewModel.groupsWithTodos.value = mViewModel.groupsWithTodos.value
+            forceViewModelLiveDataUpdate()
         }
 
         drawer_layout.closeDrawer(GravityCompat.START)
@@ -160,7 +161,6 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         colorButton.iconTint = ColorStateList.valueOf(selectedColor)
         colorButton.setOnClickListener {
             MaterialDialog(this)
-                //.message(R.string.message_select_color)
                 .colorChooser(mColorValues, initialSelection = selectedColor) { _, color ->
                     selectedColor = color
                     colorButton.iconTint = ColorStateList.valueOf(color)
@@ -202,6 +202,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         val textLayout = customView.findViewById<TextInputLayout>(R.id.field_edit_group)
         textLayout.hint = getString(R.string.hint_list_name)
         textInput.setText(title.toString())
+        textInput.setSelection(title.length)
         MaterialDialog(this)
             .message(R.string.message_edit_list)
             .customView(view = customView)
@@ -216,6 +217,47 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             }
             .negativeButton(android.R.string.cancel)
             .show()
+    }
+
+    private fun editTodo(todo: Todo) {
+        val customView = layoutInflater.inflate(R.layout.dialog_add_todo, main_coordinator, false)
+        val textInput = customView.findViewById<TextInputEditText>(R.id.add_todo_text)
+        val textLayout = customView.findViewById<TextInputLayout>(R.id.field_add_todo)
+        textLayout.hint = getString(R.string.hint_todo)
+        textInput.setText(todo.contents)
+        textInput.setSelection(todo.contents.length)
+        val colorButton = customView.findViewById<MaterialButton>(R.id.button_select_color)
+        var selectedColor = todo.color
+        colorButton.iconTint = ColorStateList.valueOf(selectedColor)
+        colorButton.setOnClickListener {
+            MaterialDialog(this)
+                .colorChooser(mColorValues, initialSelection = selectedColor) { _, color ->
+                    selectedColor = color
+                    colorButton.iconTint = ColorStateList.valueOf(color)
+                }
+                .positiveButton(R.string.action_select)
+                .negativeButton(android.R.string.cancel)
+                .show()
+        }
+        MaterialDialog(this)
+            .message(R.string.message_edit_todo)
+            .customView(view = customView, scrollable = true)
+            .positiveButton(R.string.action_save) { dialog ->
+                val v = dialog.getCustomView()!!
+                val content = v.findViewById<TextInputEditText>(R.id.add_todo_text).text.toString().trim()
+                if (content.isEmpty()) {
+                    Snackbar.make(main_coordinator, R.string.alert_todo_empty, Snackbar.LENGTH_SHORT).show()
+                } else {
+                    val updatedTodo = Todo(todo.id, content, todo.date, selectedColor, todo.todoGroupId)
+                    mViewModel.insertTodo(updatedTodo)
+                }
+            }
+            .negativeButton(android.R.string.cancel)
+            .show()
+    }
+
+    private fun forceViewModelLiveDataUpdate() {
+        mViewModel.groupsWithTodos.value = mViewModel.groupsWithTodos.value
     }
 
     private fun readListPrefs() {

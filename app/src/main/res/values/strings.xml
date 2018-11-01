@@ -30,4 +30,5 @@
     <string name="action_select_color">Color</string>
     <string name="action_select">Select</string>
     <string name="message_select_color">Select a color</string>
+    <string name="message_edit_todo">Edit to-do</string>
 </resources>

@@ -8,33 +8,33 @@ import com.github.jnuutinen.functional.data.db.entity.Todo
 import com.github.jnuutinen.functional.data.db.entity.TodoGroup
 import com.github.jnuutinen.functional.util.PREF_VALUE_DOES_NOT_EXIST_INT
 
-class TodosViewModel internal constructor(private val todoRepository: TodoRepository) : ViewModel() {
+class TodosViewModel internal constructor(private val mTodoRepository: TodoRepository) : ViewModel() {
 
     // Use MediatorLiveData so that we can force update it from TodosActivity with setValue(getValue).
     val groupsWithTodos = MediatorLiveData<List<GroupWithTodos>>()
     var activeGroup = PREF_VALUE_DOES_NOT_EXIST_INT
 
     init {
-        groupsWithTodos.addSource(todoRepository.getGroupsWithTodos()) { value -> groupsWithTodos.value = value }
+        groupsWithTodos.addSource(mTodoRepository.getGroupsWithTodos()) { value -> groupsWithTodos.value = value }
     }
 
     fun deleteTodo(todo: Todo) {
-        todoRepository.deleteTodo(todo)
+        mTodoRepository.deleteTodo(todo)
     }
 
     fun deleteTodoGroup(groupId: Int) {
-        todoRepository.deleteTodoGroup(groupId)
+        mTodoRepository.deleteTodoGroup(groupId)
     }
 
     fun insertTodo(todo: Todo) {
-        todoRepository.insertTodo(todo)
+        mTodoRepository.insertTodo(todo)
     }
 
     fun insertTodoGroup(todoGroup: TodoGroup) {
-        todoRepository.insertTodoGroup(todoGroup)
+        mTodoRepository.insertTodoGroup(todoGroup)
     }
 
     fun updateTodoGroup(groupId: Int, updatedName: String) {
-        todoRepository.updateTodoGroup(groupId, updatedName)
+        mTodoRepository.updateTodoGroup(groupId, updatedName)
     }
 }
