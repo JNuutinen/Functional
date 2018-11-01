@@ -2,9 +2,11 @@ package com.github.jnuutinen.functional.presentation
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.Canvas
+import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -158,12 +160,12 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         val customView = layoutInflater.inflate(R.layout.dialog_add_todo, main_coordinator, false)
         val colorButton = customView.findViewById<MaterialButton>(R.id.button_select_color)
         var selectedColor = ContextCompat.getColor(this, getRandomColor())
-        colorButton.iconTint = ColorStateList.valueOf(selectedColor)
+        setVersionAwareDrawableTint(colorButton.icon, selectedColor)
         colorButton.setOnClickListener {
             MaterialDialog(this)
                 .colorChooser(mColorValues, initialSelection = selectedColor) { _, color ->
                     selectedColor = color
-                    colorButton.iconTint = ColorStateList.valueOf(color)
+                    setVersionAwareDrawableTint(colorButton.icon, color)
                 }
                 .positiveButton(R.string.action_select)
                 .negativeButton(android.R.string.cancel)
@@ -228,12 +230,12 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         textInput.setSelection(todo.contents.length)
         val colorButton = customView.findViewById<MaterialButton>(R.id.button_select_color)
         var selectedColor = todo.color
-        colorButton.iconTint = ColorStateList.valueOf(selectedColor)
+        setVersionAwareDrawableTint(colorButton.icon, selectedColor)
         colorButton.setOnClickListener {
             MaterialDialog(this)
                 .colorChooser(mColorValues, initialSelection = selectedColor) { _, color ->
                     selectedColor = color
-                    colorButton.iconTint = ColorStateList.valueOf(color)
+                    setVersionAwareDrawableTint(colorButton.icon, color)
                 }
                 .positiveButton(R.string.action_select)
                 .negativeButton(android.R.string.cancel)
@@ -416,6 +418,14 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 super.onDraw(c, parent, state)
             }
         })
+    }
+
+    private fun setVersionAwareDrawableTint(drawable: Drawable?, color: Int) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            drawable?.setTint(color)
+        } else {
+            drawable?.mutate()?.setColorFilter(color, PorterDuff.Mode.SRC_IN)
+        }
     }
 
     private fun subscribeUi() {
