@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Menu
@@ -252,7 +251,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
      */
     private fun setUpItemTouchHelper() {
         val simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT.or(ItemTouchHelper.RIGHT)) {
-            private val deletionBackground = ColorDrawable(Color.RED)
+            private val deletionBackground = ColorDrawable(ContextCompat.getColor(this@TodosActivity, R.color.negativeColor))
             private val deleteIcon = ContextCompat.getDrawable(this@TodosActivity, R.drawable.ic_delete_white_24dp)!!
             val deleteIconMargin = resources.getDimension(R.dimen.item_background_delete_icon_margin).toInt()
 
@@ -328,7 +327,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
      */
     private fun setUpAnimationDecoratorHelper() {
         todo_recycler.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            private val background = ColorDrawable(Color.RED)
+            private val background = ColorDrawable(ContextCompat.getColor(this@TodosActivity, R.color.negativeColor))
 
             override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
                 if (parent.itemAnimator?.isRunning == true) {
