@@ -228,12 +228,20 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     private fun setGroup(groupWithTodos: GroupWithTodos) {
         val group = groupWithTodos.todoGroup
         val todos = groupWithTodos.todos
-        title = group.name
-        nav_view.menu.findItem(group.id).isChecked = true
         mViewModel.activeGroup = group.id
         mViewAdapter.setTodos(todos)
+        title = group.name
         if (todos.isEmpty()) text_no_todos.visibility = View.VISIBLE
         else text_no_todos.visibility = View.INVISIBLE
+
+        // Set selected Navigation Drawer to-do list.
+        val navItem = nav_view.menu.findItem(group.id)
+        navItem.isChecked = true
+        val counter = navItem.actionView.findViewById<TextView>(R.id.text_counter)
+
+        // The list name color is automatically set to primaryColor when isChecked == true, but the counter ActionView
+        // must be set manually.
+        counter.setTextColor(ContextCompat.getColor(this, R.color.primaryColor))
     }
 
     /**
