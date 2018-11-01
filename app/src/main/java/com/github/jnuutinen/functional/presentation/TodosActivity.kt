@@ -313,31 +313,27 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 val intrinsicWidth = deleteIcon?.intrinsicWidth ?: 0
                 val intrinsicHeight = deleteIcon?.intrinsicHeight ?: 0
 
-                if (dX < 0) { // Item is being dragged to the left.
-                    deletionBackground.setBounds(
-                        itemView.right + dX.toInt(),
-                        itemView.top,
-                        itemView.right,
-                        itemView.bottom
-                    )
+                if (dX < 0) {
+                    // Item is being dragged to the left.
                     val deleteIconLeft = itemView.right - deleteIconMargin - intrinsicWidth
                     val deleteIconRight = itemView.right - deleteIconMargin
                     val deleteIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
                     val deleteIconBottom = deleteIconTop + intrinsicHeight
                     deleteIcon?.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
-                } else { // Item is being dragged to the right.
-                    deletionBackground.setBounds(
-                        itemView.left + dX.toInt(),
-                        itemView.top,
-                        itemView.left,
-                        itemView.bottom
-                    )
+                } else {
+                    // Item is being dragged to the right.
                     val deleteIconLeft = itemView.left + deleteIconMargin
                     val deleteIconRight = itemView.left + deleteIconMargin + intrinsicWidth
                     val deleteIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
                     val deleteIconBottom = deleteIconTop + intrinsicHeight
                     deleteIcon?.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
                 }
+                deletionBackground.setBounds(
+                    itemView.left,
+                    itemView.top,
+                    itemView.right,
+                    itemView.bottom
+                )
                 deletionBackground.draw(c)
                 deleteIcon?.draw(c)
 
