@@ -5,7 +5,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="@dimen/item_height"
-        android:background="@drawable/ripple_light">
+        android:foreground="?attr/selectableItemBackground"
+        android:background="@android:color/background_light">
 
     <TextView
             android:id="@+id/item_letter"
