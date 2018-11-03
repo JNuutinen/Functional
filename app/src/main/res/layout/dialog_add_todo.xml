@@ -28,5 +28,6 @@
             android:text="@string/action_select_color"
             style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
             app:icon="@drawable/circle"
-            app:iconSize="24dp"/>
+            app:iconSize="24dp"
+            app:rippleColor="@color/rippleColor"/>
 </LinearLayout>
