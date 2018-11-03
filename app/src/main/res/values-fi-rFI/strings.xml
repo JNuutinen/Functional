@@ -17,7 +17,7 @@
     <string name="navigation_drawer_open">Avaa valikko</string>
     <string name="navigation_drawer_close">Sulje valikko</string>
     <string name="nav_header_desc">Valikon otsake</string>
-    <string name="nav_header_subtitle">Tehtävälistaohjelma</string>
+    <string name="nav_header_subtitle">Tehtävienhallinta</string>
     <string name="hint_list_name">Listan nimi</string>
     <string name="hint_todo">Tehtävä</string>
     <string name="text_app_version">Versio: %1$s</string>

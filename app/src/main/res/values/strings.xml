@@ -3,7 +3,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title" translatable="false">Functional</string>
-    <string name="nav_header_subtitle">A functional to-do app</string>
+    <string name="nav_header_subtitle">Simple to-dos</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_add_todo">Add</string>
     <string name="message_add_todo">Add a to-do</string>
