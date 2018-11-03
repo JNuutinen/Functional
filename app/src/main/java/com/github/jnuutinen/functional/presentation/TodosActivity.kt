@@ -20,6 +20,7 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.get
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -72,9 +73,11 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         val viewManager = LinearLayoutManager(this)
         mViewAdapter  = TodoAdapter(resources)
         mViewAdapter.onItemClick = { todo -> editTodo(todo) }
-        val itemDivider = TodoItemDivider(this)
+        val dividerItemDecoration = DividerItemDecoration(this, viewManager.orientation)
+        val dividerDrawable = ContextCompat.getDrawable(this, R.drawable.item_divider)
+        if (dividerDrawable != null) dividerItemDecoration.setDrawable(dividerDrawable)
         todo_recycler.apply {
-            addItemDecoration(itemDivider)
+            addItemDecoration(dividerItemDecoration)
             setHasFixedSize(true)
             layoutManager = viewManager
             adapter = mViewAdapter
@@ -297,7 +300,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         val simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT.or(ItemTouchHelper.RIGHT)) {
             private val deletionBackground = ColorDrawable(ContextCompat.getColor(this@TodosActivity, R.color.negativeColor))
             private val deleteIcon = ContextCompat.getDrawable(this@TodosActivity, R.drawable.ic_delete_white_24dp)
-            val deleteIconMargin = resources.getDimension(R.dimen.item_background_delete_icon_margin).toInt()
+            private val deleteIconMargin = resources.getDimension(R.dimen.item_background_delete_icon_margin).toInt()
 
             override fun onChildDraw(
                 c: Canvas,
