@@ -29,6 +29,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             tools:text="This is a to-do item"
+            android:textAppearance="@style/TodoItemText"
             android:maxLines="2"
             android:ellipsize="end"
             android:layout_marginStart="@dimen/item_horizontal_margin"

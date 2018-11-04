@@ -15,12 +15,14 @@
             android:layout_height="wrap_content"
             android:id="@+id/text_no_todos"
             android:text="@string/text_no_todos"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:textAlignment="center"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            tools:visibility="visible"/>
 
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
@@ -28,6 +30,7 @@
             android:id="@+id/todo_recycler"
             android:scrollbars="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:listitem="@layout/item_todo"/>
+            tools:listitem="@layout/item_todo"
+            tools:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

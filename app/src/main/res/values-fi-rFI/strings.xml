@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="text_no_todos">Tämä tehtävälista on tyhjä</string>
+    <string name="text_no_todos">Kaikki valmista!</string>
     <string name="action_add_todo">Luo</string>
     <string name="message_add_todo">Luo uusi tehtävä</string>
     <string name="alert_todo_deleted">Tehtävä poistettiin</string>
