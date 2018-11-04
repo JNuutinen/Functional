@@ -31,7 +31,7 @@
     <string name="action_select">Select</string>
     <string name="message_select_color">Select a color</string>
     <string name="message_edit_todo">Edit to-do</string>
-    <string name="intro_message_add_todo">Tap + to create a new to-do</string>
+    <string name="intro_message_add_todo">Click + to create a new to-do</string>
     <string name="intro_title_add_todo">Create to-dos</string>
     <string name="intro_message_delete_todo">Swipe a to-do to the left or right to delete it</string>
     <string name="intro_title_delete_todo">Delete to-dos</string>

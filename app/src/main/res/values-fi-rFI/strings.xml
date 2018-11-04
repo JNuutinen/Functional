@@ -32,11 +32,11 @@
     <string name="content_description_help">Infopainike</string>
     <string name="action_help">Ohjeet</string>
     <string name="intro_title_add_todo">Luo tehtäviä</string>
-    <string name="intro_message_add_todo">Paina plussanäppäintä luodaksesi tehtävän</string>
+    <string name="intro_message_add_todo">Klikkaa + luodaksesi tehtävän</string>
     <string name="intro_title_delete_todo">Poista tehtäviä</string>
     <string name="intro_message_delete_todo">Pyyhkäise tehtävä vasemmalle tai oikealle poistaaksesi sen</string>
     <string name="intro_title_edit_todo">Muokkaa tehtäviä</string>
-    <string name="intro_message_edit_todo">Paina tehtävää muokataksesi sitä</string>
+    <string name="intro_message_edit_todo">Klikkaa tehtävää muokataksesi sitä</string>
     <string name="intro_title_manage_lists">Järjestele tehtäväsi listoihin</string>
     <string name="intro_message_manage_lists">Voit luoda tai valita listoja vetovalikossa</string>
 </resources>
