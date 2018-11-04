@@ -28,6 +28,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.color.colorChooser
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
+import com.github.jnuutinen.functional.BuildConfig
 import com.github.jnuutinen.functional.R
 import com.github.jnuutinen.functional.data.db.dao.GroupWithTodos
 import com.github.jnuutinen.functional.data.db.entity.Todo
@@ -83,6 +84,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             adapter = mViewAdapter
         }
 
+        checkFirstRun()
         readListPrefs()
         setUpItemTouchHelper()
         setUpAnimationDecoratorHelper()
@@ -118,6 +120,10 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             }
             R.id.action_delete_list -> {
                 deleteList()
+                true
+            }
+            R.id.action_help -> {
+                startActivity(Intent(this, IntroActivity::class.java))
                 true
             }
             R.id.action_about -> {
@@ -189,6 +195,28 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             }
             .negativeButton(android.R.string.cancel)
             .show()
+    }
+
+    private fun checkFirstRun() {
+        val currentVersionCode = BuildConfig.VERSION_CODE
+        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val savedVersionCode = prefs.getInt(PREF_KEY_VERSION_CODE, PREF_VALUE_DOES_NOT_EXIST_INT)
+
+        when {
+            currentVersionCode == savedVersionCode -> return
+            savedVersionCode == PREF_VALUE_DOES_NOT_EXIST_INT -> {
+                // First install, show the introduction.
+                startActivity(Intent(this, IntroActivity::class.java))
+            }
+            currentVersionCode > savedVersionCode -> {
+                // Update.
+                if (savedVersionCode == 1) {
+                    // Show the introduction, if updating from version 1 (release 0.1.0).
+                    startActivity(Intent(this, IntroActivity::class.java))
+                }
+            }
+        }
+        prefs.edit().putInt(PREF_KEY_VERSION_CODE, currentVersionCode).apply()
     }
 
     private fun deleteList() {
@@ -475,6 +503,9 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         })
     }
 
+    /**
+     * Save the current active group to shared preferences, so that it will be opened when the user returns.
+     */
     private fun writeListPrefs() {
         val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         prefs.edit { putInt(PREF_KEY_ACTIVE_LIST_ID, mViewModel.activeGroup) }

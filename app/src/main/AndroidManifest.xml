@@ -26,6 +26,10 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="com.github.jnuutinen.functional.presentation.TodosActivity" />
         </activity>
+        <activity android:name=".presentation.IntroActivity"
+                  android:label="intro"
+                  android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

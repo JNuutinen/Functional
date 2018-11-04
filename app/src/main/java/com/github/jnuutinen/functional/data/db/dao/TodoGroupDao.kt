@@ -6,6 +6,7 @@ import com.github.jnuutinen.functional.data.db.entity.TodoGroup
 
 @Dao
 interface TodoGroupDao {
+    @Transaction
     @Query("SELECT * FROM todo_group ORDER BY group_date")
     fun getGroupsWithTodos(): LiveData<List<GroupWithTodos>>
 

@@ -5,10 +5,10 @@
     <string name="nav_header_title" translatable="false">Functional</string>
     <string name="nav_header_subtitle">Simple to-dos</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_add_todo">Add</string>
-    <string name="message_add_todo">Add a to-do</string>
+    <string name="action_add_todo">Create</string>
+    <string name="message_add_todo">Create a to-do</string>
     <string name="action_undo">Undo</string>
-    <string name="action_add_list">Add a to-do list</string>
+    <string name="action_add_list">Create a to-do list</string>
     <string name="action_edit_list">Edit list</string>
     <string name="action_delete_list">Delete list</string>
     <string name="message_delete_list">Delete this to-do list?</string>
@@ -31,4 +31,14 @@
     <string name="action_select">Select</string>
     <string name="message_select_color">Select a color</string>
     <string name="message_edit_todo">Edit to-do</string>
+    <string name="intro_message_add_todo">Tap the button with the plus sign to create a to-do</string>
+    <string name="intro_title_add_todo">Create to-dos</string>
+    <string name="intro_message_delete_todo">Swipe a to-do to the left or right to delete it</string>
+    <string name="intro_title_delete_todo">Delete to-dos</string>
+    <string name="intro_message_edit_todo">Tap a to-do to edit it</string>
+    <string name="intro_title_edit_todo">Edit to-dos</string>
+    <string name="intro_message_manage_lists">You can create and select lists from the navigation drawer</string>
+    <string name="content_description_help">Help button</string>
+    <string name="action_help">Help</string>
+    <string name="intro_title_manage_lists">Organize your to-dos with lists</string>
 </resources>

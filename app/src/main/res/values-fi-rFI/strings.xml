@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="text_no_todos">Tämä tehtävälista on tyhjä</string>
-    <string name="action_add_todo">Lisää</string>
-    <string name="message_add_todo">Lisää uusi tehtävä</string>
+    <string name="action_add_todo">Luo</string>
+    <string name="message_add_todo">Luo uusi tehtävä</string>
     <string name="alert_todo_deleted">Tehtävä poistettiin</string>
     <string name="action_undo">Kumoa</string>
-    <string name="action_add_list">Lisää uusi tehtävälista</string>
+    <string name="action_add_list">Luo tehtävälista</string>
     <string name="message_delete_list">Haluatko poistaa tämän tehtävälistan?</string>
     <string name="action_delete">Poista</string>
     <string name="action_edit_list">Muokkaa listaa</string>
@@ -29,4 +29,14 @@
     <string name="action_select">Valitse</string>
     <string name="message_select_color">Valitse väri</string>
     <string name="message_edit_todo">Muokkaa tehtävää</string>
+    <string name="content_description_help">Infopainike</string>
+    <string name="action_help">Ohjeet</string>
+    <string name="intro_title_add_todo">Luo tehtäviä</string>
+    <string name="intro_message_add_todo">Paina plussanäppäintä luodaksesi tehtävän</string>
+    <string name="intro_title_delete_todo">Poista tehtäviä</string>
+    <string name="intro_message_delete_todo">Pyyhkäise tehtävä vasemmalle tai oikealle poistaaksesi sen</string>
+    <string name="intro_title_edit_todo">Muokkaa tehtäviä</string>
+    <string name="intro_message_edit_todo">Paina tehtävää muokataksesi sitä</string>
+    <string name="intro_title_manage_lists">Järjestele tehtäväsi listoihin</string>
+    <string name="intro_message_manage_lists">Voit luoda tai valita listoja vetovalikossa</string>
 </resources>
