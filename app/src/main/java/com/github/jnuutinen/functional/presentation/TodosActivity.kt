@@ -2,9 +2,11 @@ package com.github.jnuutinen.functional.presentation
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.Canvas
+import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -18,6 +20,7 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.get
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,6 +28,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.color.colorChooser
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
+import com.github.jnuutinen.functional.BuildConfig
 import com.github.jnuutinen.functional.R
 import com.github.jnuutinen.functional.data.db.dao.GroupWithTodos
 import com.github.jnuutinen.functional.data.db.entity.Todo
@@ -70,14 +74,17 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         val viewManager = LinearLayoutManager(this)
         mViewAdapter  = TodoAdapter(resources)
         mViewAdapter.onItemClick = { todo -> editTodo(todo) }
-        val itemDivider = TodoItemDivider(this)
+        val dividerItemDecoration = DividerItemDecoration(this, viewManager.orientation)
+        val dividerDrawable = ContextCompat.getDrawable(this, R.drawable.item_divider)
+        if (dividerDrawable != null) dividerItemDecoration.setDrawable(dividerDrawable)
         todo_recycler.apply {
-            addItemDecoration(itemDivider)
+            addItemDecoration(dividerItemDecoration)
             setHasFixedSize(true)
             layoutManager = viewManager
             adapter = mViewAdapter
         }
 
+        checkFirstRun()
         readListPrefs()
         setUpItemTouchHelper()
         setUpAnimationDecoratorHelper()
@@ -115,6 +122,10 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 deleteList()
                 true
             }
+            R.id.action_help -> {
+                startActivity(Intent(this, IntroActivity::class.java))
+                true
+            }
             R.id.action_about -> {
                 startActivity(Intent(this, AboutActivity::class.java))
                 true
@@ -132,8 +143,8 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 .message(R.string.action_add_list)
                 .customView(R.layout.dialog_add_group, scrollable = true)
                 .positiveButton(R.string.action_add_todo) { dialog ->
-                    val customView = dialog.getCustomView()!!
-                    val name = customView.findViewById<TextInputEditText>(R.id.add_group_text).text.toString().trim()
+                    val customView = dialog.getCustomView()
+                    val name = customView?.findViewById<TextInputEditText>(R.id.add_group_text)?.text.toString().trim()
                     if (name.isEmpty()) {
                         Snackbar.make(main_coordinator, R.string.alert_list_name_empty, Snackbar.LENGTH_SHORT).show()
                     } else {
@@ -158,12 +169,12 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         val customView = layoutInflater.inflate(R.layout.dialog_add_todo, main_coordinator, false)
         val colorButton = customView.findViewById<MaterialButton>(R.id.button_select_color)
         var selectedColor = ContextCompat.getColor(this, getRandomColor())
-        colorButton.iconTint = ColorStateList.valueOf(selectedColor)
+        setVersionAwareDrawableTint(colorButton.icon, selectedColor)
         colorButton.setOnClickListener {
             MaterialDialog(this)
                 .colorChooser(mColorValues, initialSelection = selectedColor) { _, color ->
                     selectedColor = color
-                    colorButton.iconTint = ColorStateList.valueOf(color)
+                    setVersionAwareDrawableTint(colorButton.icon, color)
                 }
                 .positiveButton(R.string.action_select)
                 .negativeButton(android.R.string.cancel)
@@ -173,9 +184,9 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             .message(R.string.message_add_todo)
             .customView(view = customView, scrollable = true)
             .positiveButton(R.string.action_add_todo) { dialog ->
-                val v = dialog.getCustomView()!!
+                val v = dialog.getCustomView()
                 val date = Calendar.getInstance().time
-                val content = v.findViewById<TextInputEditText>(R.id.add_todo_text).text.toString().trim()
+                val content = v?.findViewById<TextInputEditText>(R.id.add_todo_text)?.text.toString().trim()
                 if (content.isEmpty()) {
                     Snackbar.make(main_coordinator, R.string.alert_todo_empty, Snackbar.LENGTH_SHORT).show()
                 } else {
@@ -184,6 +195,28 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             }
             .negativeButton(android.R.string.cancel)
             .show()
+    }
+
+    private fun checkFirstRun() {
+        val currentVersionCode = BuildConfig.VERSION_CODE
+        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val savedVersionCode = prefs.getInt(PREF_KEY_VERSION_CODE, PREF_VALUE_DOES_NOT_EXIST_INT)
+
+        when {
+            currentVersionCode == savedVersionCode -> return
+            savedVersionCode == PREF_VALUE_DOES_NOT_EXIST_INT -> {
+                // First install, show the introduction.
+                startActivity(Intent(this, IntroActivity::class.java))
+            }
+            currentVersionCode > savedVersionCode -> {
+                // Update.
+                if (savedVersionCode == 1) {
+                    // Show the introduction, if updating from version 1 (release 0.1.0).
+                    startActivity(Intent(this, IntroActivity::class.java))
+                }
+            }
+        }
+        prefs.edit().putInt(PREF_KEY_VERSION_CODE, currentVersionCode).apply()
     }
 
     private fun deleteList() {
@@ -207,8 +240,8 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             .message(R.string.message_edit_list)
             .customView(view = customView)
             .positiveButton(R.string.action_save) { dialog ->
-                val v = dialog.getCustomView()!!
-                val name = v.findViewById<TextInputEditText>(R.id.edit_group_text).text.toString().trim()
+                val v = dialog.getCustomView()
+                val name = v?.findViewById<TextInputEditText>(R.id.edit_group_text)?.text.toString().trim()
                 if (name.isEmpty()) {
                     Snackbar.make(main_coordinator, R.string.alert_list_name_empty, Snackbar.LENGTH_SHORT).show()
                 } else {
@@ -228,12 +261,12 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         textInput.setSelection(todo.contents.length)
         val colorButton = customView.findViewById<MaterialButton>(R.id.button_select_color)
         var selectedColor = todo.color
-        colorButton.iconTint = ColorStateList.valueOf(selectedColor)
+        setVersionAwareDrawableTint(colorButton.icon, selectedColor)
         colorButton.setOnClickListener {
             MaterialDialog(this)
                 .colorChooser(mColorValues, initialSelection = selectedColor) { _, color ->
                     selectedColor = color
-                    colorButton.iconTint = ColorStateList.valueOf(color)
+                    setVersionAwareDrawableTint(colorButton.icon, color)
                 }
                 .positiveButton(R.string.action_select)
                 .negativeButton(android.R.string.cancel)
@@ -243,8 +276,8 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             .message(R.string.message_edit_todo)
             .customView(view = customView, scrollable = true)
             .positiveButton(R.string.action_save) { dialog ->
-                val v = dialog.getCustomView()!!
-                val content = v.findViewById<TextInputEditText>(R.id.add_todo_text).text.toString().trim()
+                val v = dialog.getCustomView()
+                val content = v?.findViewById<TextInputEditText>(R.id.add_todo_text)?.text.toString().trim()
                 if (content.isEmpty()) {
                     Snackbar.make(main_coordinator, R.string.alert_todo_empty, Snackbar.LENGTH_SHORT).show()
                 } else {
@@ -294,8 +327,8 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     private fun setUpItemTouchHelper() {
         val simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT.or(ItemTouchHelper.RIGHT)) {
             private val deletionBackground = ColorDrawable(ContextCompat.getColor(this@TodosActivity, R.color.negativeColor))
-            private val deleteIcon = ContextCompat.getDrawable(this@TodosActivity, R.drawable.ic_delete_white_24dp)!!
-            val deleteIconMargin = resources.getDimension(R.dimen.item_background_delete_icon_margin).toInt()
+            private val deleteIcon = ContextCompat.getDrawable(this@TodosActivity, R.drawable.ic_delete_white_24dp)
+            private val deleteIconMargin = resources.getDimension(R.dimen.item_background_delete_icon_margin).toInt()
 
             override fun onChildDraw(
                 c: Canvas,
@@ -308,36 +341,32 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             ) {
                 val itemView = viewHolder.itemView
                 val itemHeight = itemView.height
-                val intrinsicWidth = deleteIcon.intrinsicWidth
-                val intrinsicHeight = deleteIcon.intrinsicHeight
+                val intrinsicWidth = deleteIcon?.intrinsicWidth ?: 0
+                val intrinsicHeight = deleteIcon?.intrinsicHeight ?: 0
 
-                if (dX < 0) { // Item is being dragged to the left.
-                    deletionBackground.setBounds(
-                        itemView.right + dX.toInt(),
-                        itemView.top,
-                        itemView.right,
-                        itemView.bottom
-                    )
+                if (dX < 0) {
+                    // Item is being dragged to the left.
                     val deleteIconLeft = itemView.right - deleteIconMargin - intrinsicWidth
                     val deleteIconRight = itemView.right - deleteIconMargin
                     val deleteIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
                     val deleteIconBottom = deleteIconTop + intrinsicHeight
-                    deleteIcon.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
-                } else { // Item is being dragged to the right.
-                    deletionBackground.setBounds(
-                        itemView.left + dX.toInt(),
-                        itemView.top,
-                        itemView.left,
-                        itemView.bottom
-                    )
+                    deleteIcon?.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
+                } else {
+                    // Item is being dragged to the right.
                     val deleteIconLeft = itemView.left + deleteIconMargin
                     val deleteIconRight = itemView.left + deleteIconMargin + intrinsicWidth
                     val deleteIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
                     val deleteIconBottom = deleteIconTop + intrinsicHeight
-                    deleteIcon.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
+                    deleteIcon?.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
                 }
+                deletionBackground.setBounds(
+                    itemView.left,
+                    itemView.top,
+                    itemView.right,
+                    itemView.bottom
+                )
                 deletionBackground.draw(c)
-                deleteIcon.draw(c)
+                deleteIcon?.draw(c)
 
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
             }
@@ -418,6 +447,14 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         })
     }
 
+    private fun setVersionAwareDrawableTint(drawable: Drawable?, color: Int) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            drawable?.setTint(color)
+        } else {
+            drawable?.mutate()?.setColorFilter(color, PorterDuff.Mode.SRC_IN)
+        }
+    }
+
     private fun subscribeUi() {
         mViewModel.groupsWithTodos.observe(this, Observer { groupsWithTodos ->
             // Groups will be in date order, from oldest to newest.
@@ -466,6 +503,9 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         })
     }
 
+    /**
+     * Save the current active group to shared preferences, so that it will be opened when the user returns.
+     */
     private fun writeListPrefs() {
         val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         prefs.edit { putInt(PREF_KEY_ACTIVE_LIST_ID, mViewModel.activeGroup) }

@@ -14,8 +14,8 @@ android {
         applicationId "com.github.jnuutinen.tuumastatodo"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 1
-        versionName "0.1.0"
+        versionCode 2
+        versionName "0.2.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         javaCompileOptions {
@@ -75,6 +75,6 @@ dependencies {
     // OSS licences
     implementation 'com.google.android.gms:play-services-oss-licenses:16.0.1'
 
-    // Introduction
-    implementation 'com.github.rubengees:introduction:2.0.0'
+    // AppIntro
+    implementation 'com.github.paolorotolo:appintro:v5.1.0'
 }

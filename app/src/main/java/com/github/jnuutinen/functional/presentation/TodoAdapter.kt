@@ -1,6 +1,8 @@
 package com.github.jnuutinen.functional.presentation
 
 import android.content.res.Resources
+import android.graphics.PorterDuff
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,9 +36,15 @@ class TodoAdapter(private val resources: Resources) : RecyclerView.Adapter<TodoA
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
         val todo = mTodos?.get(position)
         if (todo != null) {
-            val circle = ResourcesCompat.getDrawable(resources, R.drawable.circle, null)!!
+            val circle = ResourcesCompat.getDrawable(resources, R.drawable.circle, null)
             val color = todo.color
-            circle.setTint(color)
+
+            // setTint on drawable does not work on Lollipop (API level 21).
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                circle?.setTint(color)
+            } else {
+                circle?.mutate()?.setColorFilter(color, PorterDuff.Mode.SRC_IN)
+            }
             holder.itemView.item_letter.background = circle
             holder.itemView.item_letter.text = todo.contents[0].toString()
             holder.itemView.item_text.text = todo.contents
@@ -47,7 +55,7 @@ class TodoAdapter(private val resources: Resources) : RecyclerView.Adapter<TodoA
     override fun getItemCount() = mTodos?.size ?: 0
 
     fun getItem(position: Int): Todo {
-        return mTodos!![position]
+        return mTodos?.get(position) ?: Todo(0, "", 0, 0, 1)
     }
 
     fun setTodos(todos: List<Todo>) {
@@ -72,6 +80,7 @@ class TodoAdapter(private val resources: Resources) : RecyclerView.Adapter<TodoA
                         return old.id == new.id
                                 && old.contents == new.contents
                                 && old.date == new.date
+                                && old.color == new.color
                                 && old.todoGroupId == new.todoGroupId
                     }
                 })

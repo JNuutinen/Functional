@@ -7,8 +7,8 @@
     <color name="primaryDarkColor">#320b86</color>
     <color name="primaryTextColor">#ffffff</color>
 
-    <!-- Recycler item ripple colors. -->
-    <color name="rippleColor">#40000000</color>
+    <!-- Material button ripple color. -->
+    <color name="rippleColor">#0d000000</color>
 
     <!-- Other colors. -->
     <color name="mainBackgroundColor">#0d000000</color>
