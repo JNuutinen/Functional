@@ -18,6 +18,7 @@
 <img align="center" src="assets/screenshots.png" alt="screenshots">
 
 ## Credits
+* [AppIntro](https://github.com/paolorotolo/AppIntro) - Paolo Rotolo
 * [Google Open Source Notices Gradle Plugin](https://developers.google.com/android/guides/opensource) - Google
 * [Material Dialogs](https://github.com/afollestad/material-dialogs) - Aidan Follestad
 
