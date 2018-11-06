@@ -1,4 +1,4 @@
-package com.github.jnuutinen.functional.presentation
+package com.github.jnuutinen.functional.presentation.activity
 
 import android.content.Intent
 import android.os.Bundle

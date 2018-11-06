@@ -1,4 +1,4 @@
-package com.github.jnuutinen.functional.presentation
+package com.github.jnuutinen.functional.presentation.activity
 
 import android.content.Context
 import android.content.Intent
@@ -33,7 +33,9 @@ import com.github.jnuutinen.functional.R
 import com.github.jnuutinen.functional.data.db.dao.GroupWithTodos
 import com.github.jnuutinen.functional.data.db.entity.Todo
 import com.github.jnuutinen.functional.data.db.entity.TodoGroup
-import com.github.jnuutinen.functional.presentation.intro.IntroActivity
+import com.github.jnuutinen.functional.presentation.TodoAdapter
+import com.github.jnuutinen.functional.presentation.TodoItemDivider
+import com.github.jnuutinen.functional.presentation.viewmodel.TodosViewModel
 import com.github.jnuutinen.functional.util.*
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.navigation.NavigationView

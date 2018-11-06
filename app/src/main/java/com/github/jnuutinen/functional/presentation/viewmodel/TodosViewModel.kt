@@ -1,4 +1,4 @@
-package com.github.jnuutinen.functional.presentation
+package com.github.jnuutinen.functional.presentation.viewmodel
 
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel

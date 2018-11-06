@@ -6,7 +6,7 @@
         android:id="@+id/main_coordinator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.AboutActivity">
+        tools:context=".presentation.activity.AboutActivity">
 
     <com.google.android.material.appbar.AppBarLayout
             android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context="com.github.jnuutinen.functional.presentation.AboutActivity"
+            tools:context="com.github.jnuutinen.functional.presentation.activity.AboutActivity"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <ImageView

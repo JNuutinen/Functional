@@ -7,7 +7,7 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:showIn="@layout/app_bar_todos"
-        tools:context=".presentation.TodosActivity"
+        tools:context=".presentation.activity.TodosActivity"
         android:background="@color/mainBackgroundColor">
 
     <TextView
