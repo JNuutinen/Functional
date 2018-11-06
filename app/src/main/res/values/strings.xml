@@ -38,7 +38,6 @@
     <string name="intro_message_edit_todo">Click a to-do to edit it</string>
     <string name="intro_title_edit_todo">Edit to-dos</string>
     <string name="intro_message_manage_lists">You can create and select lists from the navigation drawer</string>
-    <string name="content_description_help">Help button</string>
     <string name="action_help">Help</string>
     <string name="intro_title_manage_lists">Organize your to-dos with lists</string>
     <string name="pref_title_deletion_background">Red to-do dismiss background</string>
@@ -53,6 +52,7 @@
     <string name="title_activity_settings">Settings</string>
     <string name="pref_key_deletion_background" translatable="false">deletionBackground</string>
     <string name="pref_key_default_list_name" translatable="false">defaultListName</string>
+    <string name="content_description_app_image">Functional application icon</string>
 
     <!-- Example settings for Notifications -->
 

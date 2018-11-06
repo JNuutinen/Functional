@@ -29,7 +29,6 @@
     <string name="action_select">Valitse</string>
     <string name="message_select_color">Valitse väri</string>
     <string name="message_edit_todo">Muokkaa tehtävää</string>
-    <string name="content_description_help">Infopainike</string>
     <string name="action_help">Ohjeet</string>
     <string name="intro_title_add_todo">Luo tehtäviä</string>
     <string name="intro_message_add_todo">Klikkaa + luodaksesi tehtävän</string>
@@ -47,4 +46,5 @@
     </string>
     <string name="action_settings">Asetukset</string>
     <string name="title_activity_settings">Asetukset</string>
+    <string name="content_description_app_image">Functional ohjelman ikoni</string>
 </resources>
