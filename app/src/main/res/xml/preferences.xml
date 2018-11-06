@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:title="@string/title_activity_settings">
+
+    <SwitchPreference
+        android:key="@string/pref_key_deletion_background"
+        android:title="@string/pref_title_deletion_background"
+        android:summary="@string/pref_description_deletion_background"
+        android:defaultValue="false"/>
+
+    <EditTextPreference
+        android:key="@string/pref_key_default_list_name"
+        android:title="@string/pref_title_default_list_name"
+        android:summary="@string/pref_description_default_list_name"
+        android:defaultValue="@string/group_default_name"
+        android:inputType="textCapSentences"
+        android:singleLine="true"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"/>
+
+</PreferenceScreen>

@@ -20,6 +20,7 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.get
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,6 +34,7 @@ import com.github.jnuutinen.functional.R
 import com.github.jnuutinen.functional.data.db.dao.GroupWithTodos
 import com.github.jnuutinen.functional.data.db.entity.Todo
 import com.github.jnuutinen.functional.data.db.entity.TodoGroup
+import com.github.jnuutinen.functional.presentation.intro.IntroActivity
 import com.github.jnuutinen.functional.util.*
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.navigation.NavigationView
@@ -50,11 +52,16 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     private lateinit var mViewModel: TodosViewModel
     private lateinit var mViewAdapter: TodoAdapter
     private lateinit var mColorValues: IntArray
+    private var mDeleteBgEnabled = true
+    private lateinit var mDefaultListName: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_todos)
         setSupportActionBar(toolbar)
+
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
+        mDefaultListName = getString(R.string.group_default_name)
 
         val factory = InjectorUtils.provideTodosViewModelFactory(this)
         mViewModel = ViewModelProviders.of(this, factory).get(TodosViewModel::class.java)
@@ -85,7 +92,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         }
 
         checkFirstRun()
-        readListPrefs()
+        readPrefs()
         setUpItemTouchHelper()
         setUpAnimationDecoratorHelper()
         subscribeUi()
@@ -122,6 +129,10 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 deleteList()
                 true
             }
+            R.id.action_settings -> {
+                startActivityForResult(Intent(this, SettingsActivity::class.java), SETTINGS_REQUEST)
+                true
+            }
             R.id.action_help -> {
                 startActivity(Intent(this, IntroActivity::class.java))
                 true
@@ -131,6 +142,14 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            SETTINGS_REQUEST -> {
+                readPrefs()
+            }
         }
     }
 
@@ -293,10 +312,14 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         mViewModel.groupsWithTodos.value = mViewModel.groupsWithTodos.value
     }
 
-    private fun readListPrefs() {
-        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    private fun readPrefs() {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         val id = prefs.getInt(PREF_KEY_ACTIVE_LIST_ID, PREF_VALUE_DOES_NOT_EXIST_INT)
         if (id != PREF_VALUE_DOES_NOT_EXIST_INT) mViewModel.activeGroup = id
+
+        mDeleteBgEnabled = prefs.getBoolean(getString(R.string.pref_key_deletion_background), true)
+        mDefaultListName = prefs.getString(getString(R.string.pref_key_default_list_name),
+            getString(R.string.group_default_name)) ?: "My to-do list"
     }
 
     private fun setGroup(groupWithTodos: GroupWithTodos) {
@@ -339,35 +362,36 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 actionState: Int,
                 isCurrentlyActive: Boolean
             ) {
-                val itemView = viewHolder.itemView
-                val itemHeight = itemView.height
-                val intrinsicWidth = deleteIcon?.intrinsicWidth ?: 0
-                val intrinsicHeight = deleteIcon?.intrinsicHeight ?: 0
+                if (mDeleteBgEnabled) {
+                    val itemView = viewHolder.itemView
+                    val itemHeight = itemView.height
+                    val intrinsicWidth = deleteIcon?.intrinsicWidth ?: 0
+                    val intrinsicHeight = deleteIcon?.intrinsicHeight ?: 0
 
-                if (dX < 0) {
-                    // Item is being dragged to the left.
-                    val deleteIconLeft = itemView.right - deleteIconMargin - intrinsicWidth
-                    val deleteIconRight = itemView.right - deleteIconMargin
-                    val deleteIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
-                    val deleteIconBottom = deleteIconTop + intrinsicHeight
-                    deleteIcon?.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
-                } else {
-                    // Item is being dragged to the right.
-                    val deleteIconLeft = itemView.left + deleteIconMargin
-                    val deleteIconRight = itemView.left + deleteIconMargin + intrinsicWidth
-                    val deleteIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
-                    val deleteIconBottom = deleteIconTop + intrinsicHeight
-                    deleteIcon?.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
+                    if (dX < 0) {
+                        // Item is being dragged to the left.
+                        val deleteIconLeft = itemView.right - deleteIconMargin - intrinsicWidth
+                        val deleteIconRight = itemView.right - deleteIconMargin
+                        val deleteIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
+                        val deleteIconBottom = deleteIconTop + intrinsicHeight
+                        deleteIcon?.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
+                    } else {
+                        // Item is being dragged to the right.
+                        val deleteIconLeft = itemView.left + deleteIconMargin
+                        val deleteIconRight = itemView.left + deleteIconMargin + intrinsicWidth
+                        val deleteIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
+                        val deleteIconBottom = deleteIconTop + intrinsicHeight
+                        deleteIcon?.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
+                    }
+                    deletionBackground.setBounds(
+                        itemView.left,
+                        itemView.top,
+                        itemView.right,
+                        itemView.bottom
+                    )
+                    deletionBackground.draw(c)
+                    deleteIcon?.draw(c)
                 }
-                deletionBackground.setBounds(
-                    itemView.left,
-                    itemView.top,
-                    itemView.right,
-                    itemView.bottom
-                )
-                deletionBackground.draw(c)
-                deleteIcon?.draw(c)
-
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
             }
 
@@ -401,7 +425,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             private val background = ColorDrawable(ContextCompat.getColor(this@TodosActivity, R.color.negativeColor))
 
             override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
-                if (parent.itemAnimator?.isRunning == true) {
+                if (parent.itemAnimator?.isRunning == true && mDeleteBgEnabled) {
                     var lastViewComingDown: View? = null
                     var firstViewComingUp: View? = null
 
@@ -490,8 +514,8 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                     // If group was not set during loop (active group was deleted), set it to the first group.
                     if (!groupIsSet) setGroup(groupsWithTodos[0])
                 } else {
-                    // No groups; create an empty group.
-                    val group = TodoGroup(1, resources.getString(R.string.group_default_name), Calendar.getInstance().time.time)
+                    // No groups; create an empty group with the default name from preferences.
+                    val group = TodoGroup(1, mDefaultListName, Calendar.getInstance().time.time)
                     mViewModel.insertTodoGroup(group)
                 }
 
@@ -507,7 +531,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
      * Save the current active group to shared preferences, so that it will be opened when the user returns.
      */
     private fun writeListPrefs() {
-        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         prefs.edit { putInt(PREF_KEY_ACTIVE_LIST_ID, mViewModel.activeGroup) }
     }
 }

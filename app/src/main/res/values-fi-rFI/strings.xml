@@ -39,4 +39,13 @@
     <string name="intro_message_edit_todo">Klikkaa tehtävää muokataksesi sitä</string>
     <string name="intro_title_manage_lists">Järjestele tehtäväsi listoihin</string>
     <string name="intro_message_manage_lists">Voit luoda tai valita listoja vetovalikossa</string>
+    <string name="pref_title_deletion_background">Punainen tausta tehtävää poistettaessa</string>
+    <string name="pref_description_deletion_background">Kun tehtävää poistetaan, näytä punainen tausta ja poistoikoni</string>
+    <string name="pref_title_default_list_name">Tehtävälistan vakionimi</string>
+    <string name="pref_description_default_list_name">Aseta nimi tehtävälistalle, joka luodaan kun viimeinen lista
+        poistetaan
+    </string>
+    <string name="action_settings">Asetukset</string>
+    <string name="title_activity_settings">Asetukset</string>
+    <string name="title_fragment_new_todo">Uusi tehtävä</string>
 </resources>

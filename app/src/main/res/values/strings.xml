@@ -41,4 +41,68 @@
     <string name="content_description_help">Help button</string>
     <string name="action_help">Help</string>
     <string name="intro_title_manage_lists">Organize your to-dos with lists</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+    <!-- Example settings for Data & Sync -->
+
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string-array name="list_preference_entries">
+        <item>Entry 1</item>
+        <item>Entry 2</item>
+        <item>Entry 3</item>
+    </string-array>
+
+    <string-array name="list_preference_entry_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="multi_select_list_preference_default_value"/>
+    <string name="pref_title_deletion_background">Red to-do dismiss background</string>
+    <string name="pref_description_deletion_background">When dismissing a to-do, show a red background and a delete
+        icon
+    </string>
+    <string name="pref_title_default_list_name">Default list name</string>
+    <string name="pref_description_default_list_name">Set the name for the default list that is created when the last
+        list is deleted
+    </string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="pref_key_deletion_background" translatable="false">deletionBackground</string>
+    <string name="pref_key_default_list_name" translatable="false">defaultListName</string>
+    <string name="title_fragment_new_todo">New to-do</string>
+
+    <!-- Example settings for Notifications -->
+
 </resources>

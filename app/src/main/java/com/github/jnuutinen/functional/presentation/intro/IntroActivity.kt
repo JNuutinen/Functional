@@ -1,4 +1,4 @@
-package com.github.jnuutinen.functional.presentation
+package com.github.jnuutinen.functional.presentation.intro
 
 import android.os.Bundle
 import androidx.core.content.ContextCompat
