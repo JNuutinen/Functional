@@ -21,7 +21,6 @@ import androidx.core.view.get
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.preference.PreferenceManager
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -81,9 +80,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         val viewManager = LinearLayoutManager(this)
         mViewAdapter  = TodoAdapter(resources)
         mViewAdapter.onItemClick = { todo -> editTodo(todo) }
-        val dividerItemDecoration = DividerItemDecoration(this, viewManager.orientation)
-        val dividerDrawable = ContextCompat.getDrawable(this, R.drawable.item_divider)
-        if (dividerDrawable != null) dividerItemDecoration.setDrawable(dividerDrawable)
+        val dividerItemDecoration = TodoItemDivider(this)
         todo_recycler.apply {
             addItemDecoration(dividerItemDecoration)
             setHasFixedSize(true)
