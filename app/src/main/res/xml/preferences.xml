@@ -7,7 +7,7 @@
         android:key="@string/pref_key_deletion_background"
         android:title="@string/pref_title_deletion_background"
         android:summary="@string/pref_description_deletion_background"
-        android:defaultValue="false"/>
+        android:defaultValue="true"/>
 
     <EditTextPreference
         android:key="@string/pref_key_default_list_name"
