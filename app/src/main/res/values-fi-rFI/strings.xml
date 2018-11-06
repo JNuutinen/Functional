@@ -47,5 +47,4 @@
     </string>
     <string name="action_settings">Asetukset</string>
     <string name="title_activity_settings">Asetukset</string>
-    <string name="title_fragment_new_todo">Uusi tehtävä</string>
 </resources>
