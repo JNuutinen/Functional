@@ -158,10 +158,10 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         // with the "Add list" item's id, because all the list item's ids are the same as their TodoGroup entities' ids
         // and the "Add list" item's id is defined in XML.
         if (item.groupId == R.id.group_add) {
-            MaterialDialog(this)
-                .message(R.string.action_add_list)
-                .customView(R.layout.dialog_add_group, scrollable = true)
-                .positiveButton(R.string.action_add_todo) { dialog ->
+            MaterialDialog(this).show {
+                message(R.string.action_add_list)
+                customView(R.layout.dialog_add_group, scrollable = true)
+                positiveButton(R.string.action_add_todo) { dialog ->
                     val customView = dialog.getCustomView()
                     val name = customView?.findViewById<TextInputEditText>(R.id.add_group_text)?.text.toString().trim()
                     if (name.isEmpty()) {
@@ -173,8 +173,8 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                         mViewModel.activeGroup = 0
                     }
                 }
-                .negativeButton(android.R.string.cancel)
-                .show()
+                negativeButton(android.R.string.cancel)
+            }
         } else {
             mViewModel.activeGroup = item.itemId
             forceViewModelLiveDataUpdate()
@@ -190,19 +190,19 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         var selectedColor = ContextCompat.getColor(this, getRandomColor())
         setVersionAwareDrawableTint(colorButton.icon, selectedColor)
         colorButton.setOnClickListener {
-            MaterialDialog(this)
-                .colorChooser(mColorValues, initialSelection = selectedColor) { _, color ->
+            MaterialDialog(this).show {
+                colorChooser(mColorValues, initialSelection = selectedColor) { _, color ->
                     selectedColor = color
                     setVersionAwareDrawableTint(colorButton.icon, color)
                 }
-                .positiveButton(R.string.action_select)
-                .negativeButton(android.R.string.cancel)
-                .show()
+                positiveButton(R.string.action_select)
+                negativeButton(android.R.string.cancel)
+            }
         }
-        MaterialDialog(this)
-            .message(R.string.message_add_todo)
-            .customView(view = customView, scrollable = true)
-            .positiveButton(R.string.action_add_todo) { dialog ->
+        MaterialDialog(this).show {
+            message(R.string.message_add_todo)
+            customView(view = customView, scrollable = true)
+            positiveButton(R.string.action_add_todo) { dialog ->
                 val v = dialog.getCustomView()
                 val date = Calendar.getInstance().time
                 val content = v?.findViewById<TextInputEditText>(R.id.add_todo_text)?.text.toString().trim()
@@ -212,8 +212,8 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                     mViewModel.insertTodo(Todo(0, content, date.time, selectedColor, mViewModel.activeGroup))
                 }
             }
-            .negativeButton(android.R.string.cancel)
-            .show()
+            negativeButton(android.R.string.cancel)
+        }
     }
 
     private fun checkFirstRun() {
@@ -239,13 +239,11 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     }
 
     private fun deleteList() {
-        MaterialDialog(this)
-            .message(R.string.message_delete_list)
-            .positiveButton(R.string.action_delete) {
-                mViewModel.deleteTodoGroup(mViewModel.activeGroup)
-            }
-            .negativeButton(android.R.string.cancel)
-            .show()
+        MaterialDialog(this).show {
+            message(R.string.message_delete_list)
+            positiveButton(R.string.action_delete) { mViewModel.deleteTodoGroup(mViewModel.activeGroup) }
+            negativeButton(android.R.string.cancel)
+        }
     }
 
     private fun editList() {
@@ -255,10 +253,10 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         textLayout.hint = getString(R.string.hint_list_name)
         textInput.setText(title.toString())
         textInput.setSelection(title.length)
-        MaterialDialog(this)
-            .message(R.string.message_edit_list)
-            .customView(view = customView)
-            .positiveButton(R.string.action_save) { dialog ->
+        MaterialDialog(this).show {
+            message(R.string.message_edit_list)
+            customView(view = customView)
+            positiveButton(R.string.action_save) { dialog ->
                 val v = dialog.getCustomView()
                 val name = v?.findViewById<TextInputEditText>(R.id.edit_group_text)?.text.toString().trim()
                 if (name.isEmpty()) {
@@ -267,8 +265,8 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                     mViewModel.updateTodoGroup(mViewModel.activeGroup, name)
                 }
             }
-            .negativeButton(android.R.string.cancel)
-            .show()
+            negativeButton(android.R.string.cancel)
+        }
     }
 
     private fun editTodo(todo: Todo) {
@@ -282,19 +280,19 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         var selectedColor = todo.color
         setVersionAwareDrawableTint(colorButton.icon, selectedColor)
         colorButton.setOnClickListener {
-            MaterialDialog(this)
-                .colorChooser(mColorValues, initialSelection = selectedColor) { _, color ->
+            MaterialDialog(this).show {
+                colorChooser(mColorValues, initialSelection = selectedColor) { _, color ->
                     selectedColor = color
                     setVersionAwareDrawableTint(colorButton.icon, color)
                 }
-                .positiveButton(R.string.action_select)
-                .negativeButton(android.R.string.cancel)
-                .show()
+                positiveButton(R.string.action_select)
+                negativeButton(android.R.string.cancel)
+            }
         }
-        MaterialDialog(this)
-            .message(R.string.message_edit_todo)
-            .customView(view = customView, scrollable = true)
-            .positiveButton(R.string.action_save) { dialog ->
+        MaterialDialog(this).show {
+            message(R.string.message_edit_todo)
+            customView(view = customView, scrollable = true)
+            positiveButton(R.string.action_save) { dialog ->
                 val v = dialog.getCustomView()
                 val content = v?.findViewById<TextInputEditText>(R.id.add_todo_text)?.text.toString().trim()
                 if (content.isEmpty()) {
@@ -304,8 +302,8 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                     mViewModel.insertTodo(updatedTodo)
                 }
             }
-            .negativeButton(android.R.string.cancel)
-            .show()
+            negativeButton(android.R.string.cancel)
+        }
     }
 
     private fun forceViewModelLiveDataUpdate() {
