@@ -147,6 +147,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             SETTINGS_REQUEST -> {
+                writeListPrefs()
                 readPrefs()
             }
         }
