@@ -518,9 +518,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 }
 
                 // Finally set the created nav drawer list group as exclusively checkable.
-                // Event though it is impossible that multiple lists would be checked at the same time even if this was
-                // not set, the items are highlighted more prominently when they are exclusively checkable.
-                listsMenu.setGroupCheckable(R.id.group_lists, true, false)
+                listsMenu.setGroupCheckable(R.id.group_lists, true, true)
             }
         })
     }
