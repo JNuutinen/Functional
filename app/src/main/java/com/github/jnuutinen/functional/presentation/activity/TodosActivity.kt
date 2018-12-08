@@ -163,7 +163,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 customView(R.layout.dialog_add_group, scrollable = true)
                 positiveButton(R.string.action_add_todo) { dialog ->
                     val customView = dialog.getCustomView()
-                    val name = customView?.findViewById<TextInputEditText>(R.id.add_group_text)?.text.toString().trim()
+                    val name = customView?.findViewById<TextInputEditText>(R.id.edit_group_add)?.text.toString().trim()
                     if (name.isEmpty()) {
                         Snackbar.make(main_coordinator, R.string.alert_list_name_empty, Snackbar.LENGTH_SHORT).show()
                     } else {
@@ -205,7 +205,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             positiveButton(R.string.action_add_todo) { dialog ->
                 val v = dialog.getCustomView()
                 val date = Calendar.getInstance().time
-                val content = v?.findViewById<TextInputEditText>(R.id.add_todo_text)?.text.toString().trim()
+                val content = v?.findViewById<TextInputEditText>(R.id.edit_todo_add)?.text.toString().trim()
                 if (content.isEmpty()) {
                     Snackbar.make(main_coordinator, R.string.alert_todo_empty, Snackbar.LENGTH_SHORT).show()
                 } else {
@@ -248,8 +248,8 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     private fun editList() {
         val customView = layoutInflater.inflate(R.layout.dialog_edit_group, main_coordinator, false)
-        val textInput = customView.findViewById<TextInputEditText>(R.id.edit_group_text)
-        val textLayout = customView.findViewById<TextInputLayout>(R.id.field_edit_group)
+        val textInput = customView.findViewById<TextInputEditText>(R.id.edit_group_edit)
+        val textLayout = customView.findViewById<TextInputLayout>(R.id.input_group_edit)
         textLayout.hint = getString(R.string.hint_list_name)
         textInput.setText(title.toString())
         textInput.setSelection(title.length)
@@ -258,7 +258,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             customView(view = customView)
             positiveButton(R.string.action_save) { dialog ->
                 val v = dialog.getCustomView()
-                val name = v?.findViewById<TextInputEditText>(R.id.edit_group_text)?.text.toString().trim()
+                val name = v?.findViewById<TextInputEditText>(R.id.edit_group_edit)?.text.toString().trim()
                 if (name.isEmpty()) {
                     Snackbar.make(main_coordinator, R.string.alert_list_name_empty, Snackbar.LENGTH_SHORT).show()
                 } else {
@@ -271,8 +271,8 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     private fun editTodo(todo: Todo) {
         val customView = layoutInflater.inflate(R.layout.dialog_add_todo, main_coordinator, false)
-        val textInput = customView.findViewById<TextInputEditText>(R.id.add_todo_text)
-        val textLayout = customView.findViewById<TextInputLayout>(R.id.field_add_todo)
+        val textInput = customView.findViewById<TextInputEditText>(R.id.edit_todo_add)
+        val textLayout = customView.findViewById<TextInputLayout>(R.id.input_todo_add)
         textLayout.hint = getString(R.string.hint_todo)
         textInput.setText(todo.contents)
         textInput.setSelection(todo.contents.length)
@@ -294,7 +294,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             customView(view = customView, scrollable = true)
             positiveButton(R.string.action_save) { dialog ->
                 val v = dialog.getCustomView()
-                val content = v?.findViewById<TextInputEditText>(R.id.add_todo_text)?.text.toString().trim()
+                val content = v?.findViewById<TextInputEditText>(R.id.edit_todo_add)?.text.toString().trim()
                 if (content.isEmpty()) {
                     Snackbar.make(main_coordinator, R.string.alert_todo_empty, Snackbar.LENGTH_SHORT).show()
                 } else {

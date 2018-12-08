@@ -10,7 +10,7 @@
     <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/field_add_todo"
+            android:id="@+id/input_todo_add"
             android:layout_margin="@dimen/activity_horizontal_margin"
             android:hint="@string/hint_todo"
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
@@ -18,7 +18,7 @@
         <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/add_todo_text"
+                android:id="@+id/edit_todo_add"
                 android:inputType="textCapSentences"/>
     </com.google.android.material.textfield.TextInputLayout>
 
