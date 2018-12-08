@@ -32,7 +32,8 @@ class DatabaseTest {
     private lateinit var mTodoDao: TodoDao
     private lateinit var mTodoGroupDao: TodoGroupDao
 
-    @get:Rule var mInstantTaskExecutorRule = InstantTaskExecutorRule()
+    @Rule @JvmField
+    var mInstantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Throws(InterruptedException::class)
     fun <T> LiveData<T>.getValueBlocking(): T? {
@@ -47,7 +48,8 @@ class DatabaseTest {
         return value
     }
 
-    @Before fun createDb() {
+    @Before
+    fun createDb() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         mTodoDatabase = Room.inMemoryDatabaseBuilder(context, TodoDatabase::class.java).build()
         mTodoDao = mTodoDatabase.todoDao()
@@ -64,11 +66,13 @@ class DatabaseTest {
         mTodoDao.insertTodo(todo2)
     }
 
-    @After fun closeDb() {
+    @After
+    fun closeDb() {
         mTodoDatabase.close()
     }
 
-    @Test fun deleteGroup() {
+    @Test
+    fun deleteGroup() {
         mTodoGroupDao.deleteTodoGroup(mTodoGroupDao.getTodoGroups().getValueBlocking()!![0])
 
         val groups = mTodoGroupDao.getTodoGroups().getValueBlocking()!!
@@ -81,7 +85,8 @@ class DatabaseTest {
         assertThat(todos, empty())
     }
 
-    @Test fun deleteTodo() {
+    @Test
+    fun deleteTodo() {
         var todos = mTodoDao.getTodos().getValueBlocking()!!
         assertThat(todos.size, `is`(2))
 
@@ -97,7 +102,8 @@ class DatabaseTest {
         assertThat(todo.contents, `is`("Todo 2"))
     }
 
-    @Test fun editGroup() {
+    @Test
+    fun editGroup() {
         var group = mTodoGroupDao.getTodoGroups().getValueBlocking()!![0]
         assertThat(group.name, `is`("My group"))
         group.name = "Edited"
