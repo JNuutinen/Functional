@@ -8,6 +8,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
+import androidx.test.uiautomator.UiDevice
 import com.github.jnuutinen.functional.R
 import com.github.jnuutinen.functional.helper.RecyclerItemCountAssert
 import com.github.jnuutinen.functional.helper.RecyclerViewMatcher
@@ -26,7 +27,8 @@ class DeleteTodoTest {
     @Rule
     @JvmField
     val mActivityTestRule = object : ActivityTestRule<TodosActivity>(
-        TodosActivity::class.java, false, false) {
+        TodosActivity::class.java, false, false
+    ) {
         override fun beforeActivityLaunched() {
             setActiveListSharedPref(InstrumentationRegistry.getInstrumentation().targetContext, 2)
             super.beforeActivityLaunched()
@@ -59,7 +61,23 @@ class DeleteTodoTest {
             .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(secondTodoName))))
 
         // The number of to-dos should now be 2.
-        Espresso.onView(ViewMatchers.withId(R.id.todo_recycler)).check(RecyclerItemCountAssert.hasSize(2))
+        Espresso.onView(ViewMatchers.withId(R.id.todo_recycler))
+            .check(RecyclerItemCountAssert.hasSize(2))
+
+        // Ensure state remains after orientation change and Activity restart.
+        with(UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())) {
+            setOrientationLeft()
+            setOrientationNatural()
+            Thread.sleep(2000)
+        }
+
+        // Make the same checks as before.
+        Espresso.onView(RecyclerViewMatcher.withRecyclerView(R.id.todo_recycler).atPosition(0))
+            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(secondTodoName))))
+
+        Espresso.onView(ViewMatchers.withId(R.id.todo_recycler))
+            .check(RecyclerItemCountAssert.hasSize(2))
+
     }
 
     @Test
@@ -81,7 +99,22 @@ class DeleteTodoTest {
             .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(thirdTodoName))))
 
         // The number of to-dos should now be 2.
-        Espresso.onView(ViewMatchers.withId(R.id.todo_recycler)).check(RecyclerItemCountAssert.hasSize(2))
+        Espresso.onView(ViewMatchers.withId(R.id.todo_recycler))
+            .check(RecyclerItemCountAssert.hasSize(2))
+
+        // Ensure state remains after orientation change and Activity restart.
+        with(UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())) {
+            setOrientationLeft()
+            setOrientationNatural()
+            Thread.sleep(2000)
+        }
+
+        // Make the same checks as before.
+        Espresso.onView(RecyclerViewMatcher.withRecyclerView(R.id.todo_recycler).atPosition(1))
+            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(thirdTodoName))))
+
+        Espresso.onView(ViewMatchers.withId(R.id.todo_recycler))
+            .check(RecyclerItemCountAssert.hasSize(2))
     }
 
     @Test
@@ -103,6 +136,21 @@ class DeleteTodoTest {
             .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(secondTodoName))))
 
         // The number of to-dos should now be 2.
-        Espresso.onView(ViewMatchers.withId(R.id.todo_recycler)).check(RecyclerItemCountAssert.hasSize(2))
+        Espresso.onView(ViewMatchers.withId(R.id.todo_recycler))
+            .check(RecyclerItemCountAssert.hasSize(2))
+
+        // Ensure state remains after orientation change and Activity restart.
+        with(UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())) {
+            setOrientationLeft()
+            setOrientationNatural()
+            Thread.sleep(2000)
+        }
+
+        // Make the same checks as before.
+        Espresso.onView(RecyclerViewMatcher.withRecyclerView(R.id.todo_recycler).atPosition(1))
+            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(secondTodoName))))
+
+        Espresso.onView(ViewMatchers.withId(R.id.todo_recycler))
+            .check(RecyclerItemCountAssert.hasSize(2))
     }
 }
