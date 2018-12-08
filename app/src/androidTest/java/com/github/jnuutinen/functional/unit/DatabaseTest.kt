@@ -32,7 +32,8 @@ class DatabaseTest {
     private lateinit var mTodoDao: TodoDao
     private lateinit var mTodoGroupDao: TodoGroupDao
 
-    @Rule @JvmField
+    @Rule
+    @JvmField
     var mInstantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Throws(InterruptedException::class)
