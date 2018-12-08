@@ -19,6 +19,12 @@ interface TodoDao {
     @Insert(onConflict = REPLACE)
     fun insertTodo(todo: Todo)
 
+    @Insert(onConflict = REPLACE)
+    fun insertAllTodos(todos: List<Todo>)
+
+    @Query("DELETE FROM todo")
+    fun deleteAllTodos()
+
     @Delete
     fun deleteTodo(todo: Todo)
 }

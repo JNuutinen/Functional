@@ -16,6 +16,12 @@ interface TodoGroupDao {
     @Insert
     fun insertTodoGroup(todoGroup: TodoGroup)
 
+    @Insert
+    fun insertAllTodoGroups(todoGroups: List<TodoGroup>)
+
+    @Query("DELETE FROM todo_group")
+    fun deleteAllTodoGroups()
+
     @Delete
     fun deleteTodoGroup(todoGroup: TodoGroup)
 
