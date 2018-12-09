@@ -1,8 +1,6 @@
 package com.github.jnuutinen.functional.suite
 
-import com.github.jnuutinen.functional.ui.CreateTodoTest
-import com.github.jnuutinen.functional.ui.DeleteTodoTest
-import com.github.jnuutinen.functional.ui.EditTodoTest
+import com.github.jnuutinen.functional.ui.*
 import org.junit.runner.RunWith
 import org.junit.runners.Suite
 
@@ -10,6 +8,8 @@ import org.junit.runners.Suite
 @Suite.SuiteClasses(
     CreateTodoTest::class,
     DeleteTodoTest::class,
-    EditTodoTest::class
+    EditTodoTest::class,
+    EditTodoListTest::class,
+    DeleteTodoListTest::class
 )
 class UiTestSuite
