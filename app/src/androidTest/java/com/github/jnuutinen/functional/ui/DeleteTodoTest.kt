@@ -40,6 +40,7 @@ class DeleteTodoTest {
     @Before
     fun setUp() {
         repopulateDb()
+        Thread.sleep(1000)
         mActivityTestRule.launchActivity(null)
         Thread.sleep(1000)
     }
@@ -49,7 +50,7 @@ class DeleteTodoTest {
         val secondTodoName = "First list, second to-do"
 
         // Delete the first to-do by swiping it.
-        deleteTodo(1)
+        deleteTodo(0)
 
         // The former second to-do should now be the first one.
         onView(withRecyclerView(R.id.todo_recycler).atPosition(0))
@@ -110,7 +111,7 @@ class DeleteTodoTest {
         val secondTodoName = "First list, second to-do"
 
         // Delete the third to-do by swiping it.
-        deleteTodo(1)
+        deleteTodo(2)
 
         // The former second to-do should still be the second one.
         onView(withRecyclerView(R.id.todo_recycler).atPosition(1))
