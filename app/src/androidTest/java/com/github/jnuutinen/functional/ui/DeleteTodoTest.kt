@@ -1,19 +1,25 @@
 package com.github.jnuutinen.functional.ui
 
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.swipeLeft
+import androidx.test.espresso.action.ViewActions.swipeRight
 import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import androidx.test.uiautomator.UiDevice
 import com.github.jnuutinen.functional.R
-import com.github.jnuutinen.functional.helper.RecyclerItemCountAssert
-import com.github.jnuutinen.functional.helper.RecyclerViewMatcher
+import com.github.jnuutinen.functional.helper.RecyclerItemCountAssert.Companion.hasSize
+import com.github.jnuutinen.functional.helper.RecyclerViewMatcher.Companion.withRecyclerView
 import com.github.jnuutinen.functional.helper.TestDatabaseHelper.Companion.repopulateDb
 import com.github.jnuutinen.functional.helper.TestDatabaseHelper.Companion.setActiveListSharedPref
+import com.github.jnuutinen.functional.helper.UiTestHelper
 import com.github.jnuutinen.functional.presentation.activity.TodosActivity
 import org.junit.Before
 import org.junit.Rule
@@ -47,22 +53,22 @@ class DeleteTodoTest {
         // Ensure the first and second to-dos are correct.
         val firstTodoName = "First list, first to-do"
         val secondTodoName = "First list, second to-do"
-        Espresso.onView(RecyclerViewMatcher.withRecyclerView(R.id.todo_recycler).atPosition(0))
-            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(firstTodoName))))
-        Espresso.onView(RecyclerViewMatcher.withRecyclerView(R.id.todo_recycler).atPosition(1))
-            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(secondTodoName))))
+        onView(withRecyclerView(R.id.todo_recycler).atPosition(0))
+            .check(ViewAssertions.matches(hasDescendant(withText(firstTodoName))))
+        onView(withRecyclerView(R.id.todo_recycler).atPosition(1))
+            .check(ViewAssertions.matches(hasDescendant(withText(secondTodoName))))
 
         // Delete the first to-do by swiping it.
-        Espresso.onView(RecyclerViewMatcher.withRecyclerView(R.id.todo_recycler).atPosition(0))
-            .perform(ViewActions.swipeRight())
+        onView(withRecyclerView(R.id.todo_recycler).atPosition(0))
+            .perform(swipeRight())
 
         // The former second to-do should now be the first one.
-        Espresso.onView(RecyclerViewMatcher.withRecyclerView(R.id.todo_recycler).atPosition(0))
-            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(secondTodoName))))
+        onView(withRecyclerView(R.id.todo_recycler).atPosition(0))
+            .check(matches(hasDescendant(withText(secondTodoName))))
 
         // The number of to-dos should now be 2.
-        Espresso.onView(ViewMatchers.withId(R.id.todo_recycler))
-            .check(RecyclerItemCountAssert.hasSize(2))
+        onView(withId(R.id.todo_recycler))
+            .check(hasSize(2))
 
         // Ensure state remains after orientation change and Activity restart.
         with(UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())) {
@@ -72,11 +78,11 @@ class DeleteTodoTest {
         }
 
         // Make the same checks as before.
-        Espresso.onView(RecyclerViewMatcher.withRecyclerView(R.id.todo_recycler).atPosition(0))
-            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(secondTodoName))))
+        onView(withRecyclerView(R.id.todo_recycler).atPosition(0))
+            .check(matches(hasDescendant(withText(secondTodoName))))
 
-        Espresso.onView(ViewMatchers.withId(R.id.todo_recycler))
-            .check(RecyclerItemCountAssert.hasSize(2))
+        onView(withId(R.id.todo_recycler))
+            .check(hasSize(2))
 
     }
 
@@ -85,22 +91,22 @@ class DeleteTodoTest {
         // Ensure the second (middle) and last (third) to-dos are correct.
         val secondTodoName = "First list, second to-do"
         val thirdTodoName = "First list, third to-do"
-        Espresso.onView(RecyclerViewMatcher.withRecyclerView(R.id.todo_recycler).atPosition(1))
-            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(secondTodoName))))
-        Espresso.onView(RecyclerViewMatcher.withRecyclerView(R.id.todo_recycler).atPosition(2))
-            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(thirdTodoName))))
+        onView(withRecyclerView(R.id.todo_recycler).atPosition(1))
+            .check(matches(hasDescendant(withText(secondTodoName))))
+        onView(withRecyclerView(R.id.todo_recycler).atPosition(2))
+            .check(matches(hasDescendant(withText(thirdTodoName))))
 
         // Delete the second to-do by swiping it.
-        Espresso.onView(RecyclerViewMatcher.withRecyclerView(R.id.todo_recycler).atPosition(1))
-            .perform(ViewActions.swipeLeft())
+        onView(withRecyclerView(R.id.todo_recycler).atPosition(1))
+            .perform(swipeLeft())
 
         // The former third to-do should now be the second one.
-        Espresso.onView(RecyclerViewMatcher.withRecyclerView(R.id.todo_recycler).atPosition(1))
-            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(thirdTodoName))))
+        onView(withRecyclerView(R.id.todo_recycler).atPosition(1))
+            .check(matches(hasDescendant(withText(thirdTodoName))))
 
         // The number of to-dos should now be 2.
-        Espresso.onView(ViewMatchers.withId(R.id.todo_recycler))
-            .check(RecyclerItemCountAssert.hasSize(2))
+        onView(withId(R.id.todo_recycler))
+            .check(hasSize(2))
 
         // Ensure state remains after orientation change and Activity restart.
         with(UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())) {
@@ -110,11 +116,11 @@ class DeleteTodoTest {
         }
 
         // Make the same checks as before.
-        Espresso.onView(RecyclerViewMatcher.withRecyclerView(R.id.todo_recycler).atPosition(1))
-            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(thirdTodoName))))
+        onView(withRecyclerView(R.id.todo_recycler).atPosition(1))
+            .check(matches(hasDescendant(withText(thirdTodoName))))
 
-        Espresso.onView(ViewMatchers.withId(R.id.todo_recycler))
-            .check(RecyclerItemCountAssert.hasSize(2))
+        onView(withId(R.id.todo_recycler))
+            .check(hasSize(2))
     }
 
     @Test
@@ -122,22 +128,22 @@ class DeleteTodoTest {
         // Ensure the second (middle) and last (third) to-dos are correct.
         val secondTodoName = "First list, second to-do"
         val thirdTodoName = "First list, third to-do"
-        Espresso.onView(RecyclerViewMatcher.withRecyclerView(R.id.todo_recycler).atPosition(1))
-            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(secondTodoName))))
-        Espresso.onView(RecyclerViewMatcher.withRecyclerView(R.id.todo_recycler).atPosition(2))
-            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(thirdTodoName))))
+        onView(withRecyclerView(R.id.todo_recycler).atPosition(1))
+            .check(matches(hasDescendant(withText(secondTodoName))))
+        onView(withRecyclerView(R.id.todo_recycler).atPosition(2))
+            .check(matches(hasDescendant(withText(thirdTodoName))))
 
         // Delete the third to-do by swiping it.
-        Espresso.onView(RecyclerViewMatcher.withRecyclerView(R.id.todo_recycler).atPosition(2))
-            .perform(ViewActions.swipeLeft())
+        onView(withRecyclerView(R.id.todo_recycler).atPosition(2))
+            .perform(swipeLeft())
 
         // The former second to-do should still be the second one.
-        Espresso.onView(RecyclerViewMatcher.withRecyclerView(R.id.todo_recycler).atPosition(1))
-            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(secondTodoName))))
+        onView(withRecyclerView(R.id.todo_recycler).atPosition(1))
+            .check(matches(hasDescendant(withText(secondTodoName))))
 
         // The number of to-dos should now be 2.
-        Espresso.onView(ViewMatchers.withId(R.id.todo_recycler))
-            .check(RecyclerItemCountAssert.hasSize(2))
+        onView(withId(R.id.todo_recycler))
+            .check(hasSize(2))
 
         // Ensure state remains after orientation change and Activity restart.
         with(UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())) {
@@ -147,10 +153,10 @@ class DeleteTodoTest {
         }
 
         // Make the same checks as before.
-        Espresso.onView(RecyclerViewMatcher.withRecyclerView(R.id.todo_recycler).atPosition(1))
-            .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withText(secondTodoName))))
+        onView(withRecyclerView(R.id.todo_recycler).atPosition(1))
+            .check(matches(hasDescendant(withText(secondTodoName))))
 
-        Espresso.onView(ViewMatchers.withId(R.id.todo_recycler))
-            .check(RecyclerItemCountAssert.hasSize(2))
+        onView(withId(R.id.todo_recycler))
+            .check(hasSize(2))
     }
 }
