@@ -42,17 +42,6 @@ class DeleteTodoTest {
         repopulateDb()
         mActivityTestRule.launchActivity(null)
         Thread.sleep(1000)
-
-        // Test the setup.
-        val firstTodoName = "First list, first to-do"
-        val secondTodoName = "First list, second to-do"
-        val thirdTodoName = "First list, third to-do"
-        onView(withRecyclerView(R.id.todo_recycler).atPosition(0))
-            .check(matches(hasDescendant(withText(firstTodoName))))
-        onView(withRecyclerView(R.id.todo_recycler).atPosition(1))
-            .check(matches(hasDescendant(withText(secondTodoName))))
-        onView(withRecyclerView(R.id.todo_recycler).atPosition(2))
-            .check(matches(hasDescendant(withText(thirdTodoName))))
     }
 
     @Test
