@@ -35,6 +35,7 @@ class EditTodoTest {
     @Before
     fun setUp() {
         repopulateDb()
+        Thread.sleep(1000)
         mActivityTestRule.launchActivity(null)
         Thread.sleep(1000)
     }
