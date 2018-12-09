@@ -25,7 +25,8 @@ class EditTodoTest {
     @Rule
     @JvmField
     val mActivityTestRule = object : ActivityTestRule<TodosActivity>(
-        TodosActivity::class.java, false, false) {
+        TodosActivity::class.java, false, false
+    ) {
         override fun beforeActivityLaunched() {
             setActiveListSharedPref(InstrumentationRegistry.getInstrumentation().targetContext, 2)
             super.beforeActivityLaunched()
