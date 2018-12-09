@@ -1,35 +1,35 @@
 package com.github.jnuutinen.functional.data
 
 import com.github.jnuutinen.functional.data.db.dao.TodoDao
-import com.github.jnuutinen.functional.data.db.dao.TodoGroupDao
+import com.github.jnuutinen.functional.data.db.dao.TodoListDao
 import com.github.jnuutinen.functional.data.db.entity.Todo
-import com.github.jnuutinen.functional.data.db.entity.TodoGroup
+import com.github.jnuutinen.functional.data.db.entity.TodoList
 import com.github.jnuutinen.functional.util.runOnIoThread
 
 class TodoRepository private constructor(
     private val mTodoDao: TodoDao,
-    private val mTodoGroupDao: TodoGroupDao
+    private val mTodoListDao: TodoListDao
 ) {
-    fun getGroupsWithTodos() = mTodoGroupDao.getGroupsWithTodos()
+    fun getListsWithTodos() = mTodoListDao.getAllListsWithTodos()
 
     fun deleteTodo(todo: Todo) {
-        runOnIoThread { mTodoDao.deleteTodo(todo) }
+        runOnIoThread { mTodoDao.delete(todo) }
     }
 
-    fun deleteTodoGroup(groupId: Int) {
-        runOnIoThread { mTodoGroupDao.deleteTodoGroup(groupId) }
+    fun deleteTodoList(listId: Int) {
+        runOnIoThread { mTodoListDao.delete(listId) }
     }
 
     fun insertTodo(todo: Todo) {
-        runOnIoThread { mTodoDao.insertTodo(todo) }
+        runOnIoThread { mTodoDao.insert(todo) }
     }
 
-    fun insertTodoGroup(todoGroup: TodoGroup) {
-        runOnIoThread { mTodoGroupDao.insertTodoGroup(todoGroup) }
+    fun insertTodoList(todoList: TodoList) {
+        runOnIoThread { mTodoListDao.insert(todoList) }
     }
 
-    fun updateTodoGroup(groupId: Int, updatedName: String) {
-        runOnIoThread { mTodoGroupDao.updateTodoGroup(groupId, updatedName) }
+    fun updateTodoList(listId: Int, updatedName: String) {
+        runOnIoThread { mTodoListDao.update(listId, updatedName) }
     }
 
     companion object {
@@ -37,9 +37,9 @@ class TodoRepository private constructor(
         private val TAG by lazy { TodoRepository::class.java.simpleName }
         @Volatile private var mInstance: TodoRepository? = null
 
-        fun getInstance(todoDao: TodoDao, todoGroupDao: TodoGroupDao) =
+        fun getInstance(todoDao: TodoDao, todoListDao: TodoListDao) =
             mInstance ?: synchronized(this) {
-                mInstance ?: TodoRepository(todoDao, todoGroupDao).also { mInstance = it }
+                mInstance ?: TodoRepository(todoDao, todoListDao).also { mInstance = it }
             }
     }
 }

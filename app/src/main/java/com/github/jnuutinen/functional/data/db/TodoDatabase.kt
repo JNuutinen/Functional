@@ -5,15 +5,15 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.github.jnuutinen.functional.data.db.dao.TodoDao
-import com.github.jnuutinen.functional.data.db.dao.TodoGroupDao
+import com.github.jnuutinen.functional.data.db.dao.TodoListDao
 import com.github.jnuutinen.functional.data.db.entity.Todo
-import com.github.jnuutinen.functional.data.db.entity.TodoGroup
+import com.github.jnuutinen.functional.data.db.entity.TodoList
 import com.github.jnuutinen.functional.util.DB_NAME
 
-@Database(entities = [Todo::class, TodoGroup::class], version = 1)
+@Database(entities = [Todo::class, TodoList::class], version = 1)
 abstract class TodoDatabase : RoomDatabase() {
     abstract fun todoDao(): TodoDao
-    abstract fun todoGroupDao(): TodoGroupDao
+    abstract fun todoListDao(): TodoListDao
 
     companion object {
         @Volatile

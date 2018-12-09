@@ -10,9 +10,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import com.github.jnuutinen.functional.data.db.TodoDatabase
 import com.github.jnuutinen.functional.data.db.dao.TodoDao
-import com.github.jnuutinen.functional.data.db.dao.TodoGroupDao
+import com.github.jnuutinen.functional.data.db.dao.TodoListDao
 import com.github.jnuutinen.functional.data.db.entity.Todo
-import com.github.jnuutinen.functional.data.db.entity.TodoGroup
+import com.github.jnuutinen.functional.data.db.entity.TodoList
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.collection.IsEmptyCollection.empty
@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit
 class DatabaseTest {
     private lateinit var mTodoDatabase: TodoDatabase
     private lateinit var mTodoDao: TodoDao
-    private lateinit var mTodoGroupDao: TodoGroupDao
+    private lateinit var mTodoListDao: TodoListDao
 
     @Rule
     @JvmField
@@ -54,17 +54,17 @@ class DatabaseTest {
         val context = ApplicationProvider.getApplicationContext<Context>()
         mTodoDatabase = Room.inMemoryDatabaseBuilder(context, TodoDatabase::class.java).build()
         mTodoDao = mTodoDatabase.todoDao()
-        mTodoGroupDao = mTodoDatabase.todoGroupDao()
+        mTodoListDao = mTodoDatabase.todoListDao()
 
         val calendar = Calendar.getInstance()
 
-        val myGroup = TodoGroup(1, "My group", calendar.time.time)
+        val myList = TodoList(1, "My list", calendar.time.time)
         val todo1 = Todo(1, "Todo 1", calendar.time.time, 0, 1)
         val todo2 = Todo(2, "Todo 2", calendar.time.time, 0, 1)
 
-        mTodoGroupDao.insertTodoGroup(myGroup)
-        mTodoDao.insertTodo(todo1)
-        mTodoDao.insertTodo(todo2)
+        mTodoListDao.insert(myList)
+        mTodoDao.insert(todo1)
+        mTodoDao.insert(todo2)
     }
 
     @After
@@ -73,30 +73,30 @@ class DatabaseTest {
     }
 
     @Test
-    fun deleteGroup() {
-        mTodoGroupDao.deleteTodoGroup(mTodoGroupDao.getTodoGroups().getValueBlocking()!![0])
+    fun deleteList() {
+        mTodoListDao.delete(mTodoListDao.getAll().getValueBlocking()!![0])
 
-        val groups = mTodoGroupDao.getTodoGroups().getValueBlocking()!!
-        assertThat(groups, empty())
+        val lists = mTodoListDao.getAll().getValueBlocking()!!
+        assertThat(lists, empty())
 
-        val groupsWithTodos = mTodoGroupDao.getGroupsWithTodos().getValueBlocking()!!
-        assertThat(groupsWithTodos, empty())
+        val listsWithTodos = mTodoListDao.getAllListsWithTodos().getValueBlocking()!!
+        assertThat(listsWithTodos, empty())
 
-        val todos = mTodoDao.getTodos().getValueBlocking()!!
+        val todos = mTodoDao.getAll().getValueBlocking()!!
         assertThat(todos, empty())
     }
 
     @Test
     fun deleteTodo() {
-        var todos = mTodoDao.getTodos().getValueBlocking()!!
+        var todos = mTodoDao.getAll().getValueBlocking()!!
         assertThat(todos.size, `is`(2))
 
         var todo = todos[0]
         assertThat(todo.contents, `is`("Todo 1"))
 
-        mTodoDao.deleteTodo(todo)
+        mTodoDao.delete(todo)
 
-        todos = mTodoDao.getTodos().getValueBlocking()!!
+        todos = mTodoDao.getAll().getValueBlocking()!!
         assertThat(todos.size, `is`(1))
 
         todo = todos[0]
@@ -104,17 +104,17 @@ class DatabaseTest {
     }
 
     @Test
-    fun editGroup() {
-        var group = mTodoGroupDao.getTodoGroups().getValueBlocking()!![0]
-        assertThat(group.name, `is`("My group"))
-        group.name = "Edited"
-        mTodoGroupDao.updateTodoGroup(group)
+    fun editList() {
+        var list = mTodoListDao.getAll().getValueBlocking()!![0]
+        assertThat(list.name, `is`("My list"))
+        list.name = "Edited"
+        mTodoListDao.update(list)
 
-        group = mTodoGroupDao.getTodoGroups().getValueBlocking()!![0]
-        assertThat(group.name, `is`("Edited"))
+        list = mTodoListDao.getAll().getValueBlocking()!![0]
+        assertThat(list.name, `is`("Edited"))
 
-        val groupWithTodos = mTodoGroupDao.getGroupsWithTodos().getValueBlocking()!![0]
-        assertThat(groupWithTodos.todoGroup.name, `is`("Edited"))
-        assertThat(groupWithTodos.todos.size, `is`(2))
+        val listWithTodos = mTodoListDao.getAllListsWithTodos().getValueBlocking()!![0]
+        assertThat(listWithTodos.todoList.name, `is`("Edited"))
+        assertThat(listWithTodos.todos.size, `is`(2))
     }
 }

@@ -13,7 +13,6 @@
     <string name="action_delete_list">Delete list</string>
     <string name="message_delete_list">Delete this to-do list?</string>
     <string name="action_delete">Delete</string>
-    <string name="group_default_name">My to-do list</string>
     <string name="message_edit_list">Edit to-do list</string>
     <string name="action_save">Save</string>
     <string name="alert_list_name_empty">List name cannot be empty</string>
@@ -53,6 +52,7 @@
     <string name="pref_key_deletion_background" translatable="false">deletionBackground</string>
     <string name="pref_key_default_list_name" translatable="false">defaultListName</string>
     <string name="content_description_app_image">Functional application icon</string>
+    <string name="list_default_name">To-dos</string>
 
     <!-- Example settings for Notifications -->
 

@@ -7,7 +7,7 @@ import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "todo", foreignKeys = [ForeignKey(
-    entity = TodoGroup::class,
+    entity = TodoList::class,
     parentColumns = ["group_id"],
     childColumns = ["todo_group_id"],
     onUpdate = CASCADE,
@@ -17,7 +17,7 @@ data class Todo(
     @ColumnInfo(name = "todo_contents") var contents: String,
     @ColumnInfo(name = "todo_date") val date: Long,
     @ColumnInfo(name = "todo_color") var color: Int,
-    @ColumnInfo(name = "todo_group_id") val todoGroupId: Int)
+    @ColumnInfo(name = "todo_group_id") val todoListId: Int)
 {
     override fun toString() = contents
 }

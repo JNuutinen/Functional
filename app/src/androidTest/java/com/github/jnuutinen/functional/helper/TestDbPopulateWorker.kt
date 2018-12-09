@@ -6,7 +6,7 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.github.jnuutinen.functional.data.db.TodoDatabase
 import com.github.jnuutinen.functional.data.db.entity.Todo
-import com.github.jnuutinen.functional.data.db.entity.TodoGroup
+import com.github.jnuutinen.functional.data.db.entity.TodoList
 import com.github.jnuutinen.functional.util.TEST_LIST_DATA_FILENAME
 import com.github.jnuutinen.functional.util.TEST_TODO_DATA_FILENAME
 import com.google.gson.Gson
@@ -18,21 +18,21 @@ class TestDbPopulateWorker(context: Context, workerParams: WorkerParameters): Wo
 
     override fun doWork():Result {
         val todoType = object : TypeToken<List<Todo>>() {}.type
-        val listType = object : TypeToken<List<TodoGroup>>() {}.type
+        val listType = object : TypeToken<List<TodoList>>() {}.type
         var jsonReader: JsonReader? = null
 
         return try {
             var inputStream = applicationContext.assets.open(TEST_LIST_DATA_FILENAME)
             jsonReader = JsonReader(inputStream.reader())
-            val lists: List<TodoGroup> = Gson().fromJson(jsonReader, listType)
+            val lists: List<TodoList> = Gson().fromJson(jsonReader, listType)
 
             inputStream = applicationContext.assets.open(TEST_TODO_DATA_FILENAME)
             jsonReader = JsonReader(inputStream.reader())
             val todos: List<Todo> = Gson().fromJson(jsonReader, todoType)
 
             val database = TodoDatabase.getInstance(applicationContext)
-            database.todoGroupDao().insertAllTodoGroups(lists)
-            database.todoDao().insertAllTodos(todos)
+            database.todoListDao().insertAll(lists)
+            database.todoDao().insertAll(todos)
             Result.SUCCESS
         } catch (ex: Exception) {
             Log.e(mTAG, "Error seeding test to-dos to database", ex)

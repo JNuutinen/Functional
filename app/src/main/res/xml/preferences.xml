@@ -13,7 +13,7 @@
         android:key="@string/pref_key_default_list_name"
         android:title="@string/pref_title_default_list_name"
         android:summary="@string/pref_description_default_list_name"
-        android:defaultValue="@string/group_default_name"
+        android:defaultValue="@string/list_default_name"
         android:inputType="textCapSentences"
         android:singleLine="true"
         android:maxLines="1"

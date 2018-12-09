@@ -11,20 +11,20 @@ import com.github.jnuutinen.functional.data.db.entity.Todo
 @Dao
 interface TodoDao {
     @Query("SELECT * FROM todo ORDER BY todo_date")
-    fun getTodos(): LiveData<List<Todo>>
+    fun getAll(): LiveData<List<Todo>>
 
-    @Query("SELECT * FROM todo WHERE todo_group_id = :groupId ORDER BY todo_date")
-    fun getTodosInGroup(groupId: Int): LiveData<List<Todo>>
-
-    @Insert(onConflict = REPLACE)
-    fun insertTodo(todo: Todo)
+    @Query("SELECT * FROM todo WHERE todo_group_id = :listId ORDER BY todo_date")
+    fun getAllInList(listId: Int): LiveData<List<Todo>>
 
     @Insert(onConflict = REPLACE)
-    fun insertAllTodos(todos: List<Todo>)
+    fun insert(todo: Todo)
+
+    @Insert(onConflict = REPLACE)
+    fun insertAll(todos: List<Todo>)
 
     @Query("DELETE FROM todo")
-    fun deleteAllTodos()
+    fun deleteAll()
 
     @Delete
-    fun deleteTodo(todo: Todo)
+    fun delete(todo: Todo)
 }

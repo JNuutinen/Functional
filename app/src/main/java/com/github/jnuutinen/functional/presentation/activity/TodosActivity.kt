@@ -30,9 +30,9 @@ import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
 import com.github.jnuutinen.functional.BuildConfig
 import com.github.jnuutinen.functional.R
-import com.github.jnuutinen.functional.data.db.dao.GroupWithTodos
+import com.github.jnuutinen.functional.data.db.dao.ListWithTodos
 import com.github.jnuutinen.functional.data.db.entity.Todo
-import com.github.jnuutinen.functional.data.db.entity.TodoGroup
+import com.github.jnuutinen.functional.data.db.entity.TodoList
 import com.github.jnuutinen.functional.presentation.TodoAdapter
 import com.github.jnuutinen.functional.presentation.TodoItemDivider
 import com.github.jnuutinen.functional.presentation.viewmodel.TodosViewModel
@@ -62,7 +62,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         setSupportActionBar(toolbar)
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
-        mDefaultListName = getString(R.string.group_default_name)
+        mDefaultListName = getString(R.string.list_default_name)
 
         val factory = InjectorUtils.provideTodosViewModelFactory(this)
         mViewModel = ViewModelProviders.of(this, factory).get(TodosViewModel::class.java)
@@ -155,28 +155,28 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Check if clicked item was "Add list". Do comparison with the group id, because the list item's id can overlap
-        // with the "Add list" item's id, because all the list item's ids are the same as their TodoGroup entities' ids
+        // with the "Add list" item's id, because all the list item's ids are the same as their TodoList entities' ids
         // and the "Add list" item's id is defined in XML.
         if (item.groupId == R.id.group_add) {
             MaterialDialog(this).show {
                 message(R.string.action_add_list)
-                customView(R.layout.dialog_add_group, scrollable = true)
+                customView(R.layout.dialog_add_list, scrollable = true)
                 positiveButton(R.string.action_add_todo) { dialog ->
                     val customView = dialog.getCustomView()
-                    val name = customView?.findViewById<TextInputEditText>(R.id.edit_group_add)?.text.toString().trim()
+                    val name = customView?.findViewById<TextInputEditText>(R.id.edit_list_add)?.text.toString().trim()
                     if (name.isEmpty()) {
                         Snackbar.make(main_coordinator, R.string.alert_list_name_empty, Snackbar.LENGTH_SHORT).show()
                     } else {
-                        val group = TodoGroup(0, name, Calendar.getInstance().time.time)
-                        mViewModel.insertTodoGroup(group)
-                        // If active group is 0, then the most recent group will be set active in subscribeUi().
-                        mViewModel.activeGroup = 0
+                        val list = TodoList(0, name, Calendar.getInstance().time.time)
+                        mViewModel.insertTodoList(list)
+                        // If active list is 0, then the most recent list will be set active in subscribeUi().
+                        mViewModel.activeList = 0
                     }
                 }
                 negativeButton(android.R.string.cancel)
             }
         } else {
-            mViewModel.activeGroup = item.itemId
+            mViewModel.activeList = item.itemId
             forceViewModelLiveDataUpdate()
         }
 
@@ -209,7 +209,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 if (content.isEmpty()) {
                     Snackbar.make(main_coordinator, R.string.alert_todo_empty, Snackbar.LENGTH_SHORT).show()
                 } else {
-                    mViewModel.insertTodo(Todo(0, content, date.time, selectedColor, mViewModel.activeGroup))
+                    mViewModel.insertTodo(Todo(0, content, date.time, selectedColor, mViewModel.activeList))
                 }
             }
             negativeButton(android.R.string.cancel)
@@ -241,15 +241,15 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     private fun deleteList() {
         MaterialDialog(this).show {
             message(R.string.message_delete_list)
-            positiveButton(R.string.action_delete) { mViewModel.deleteTodoGroup(mViewModel.activeGroup) }
+            positiveButton(R.string.action_delete) { mViewModel.deleteTodoList(mViewModel.activeList) }
             negativeButton(android.R.string.cancel)
         }
     }
 
     private fun editList() {
-        val customView = layoutInflater.inflate(R.layout.dialog_edit_group, main_coordinator, false)
-        val textInput = customView.findViewById<TextInputEditText>(R.id.edit_group_edit)
-        val textLayout = customView.findViewById<TextInputLayout>(R.id.input_group_edit)
+        val customView = layoutInflater.inflate(R.layout.dialog_edit_list, main_coordinator, false)
+        val textInput = customView.findViewById<TextInputEditText>(R.id.edit_list_edit)
+        val textLayout = customView.findViewById<TextInputLayout>(R.id.input_list_edit)
         textLayout.hint = getString(R.string.hint_list_name)
         textInput.setText(title.toString())
         textInput.setSelection(title.length)
@@ -258,11 +258,11 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             customView(view = customView)
             positiveButton(R.string.action_save) { dialog ->
                 val v = dialog.getCustomView()
-                val name = v?.findViewById<TextInputEditText>(R.id.edit_group_edit)?.text.toString().trim()
+                val name = v?.findViewById<TextInputEditText>(R.id.edit_list_edit)?.text.toString().trim()
                 if (name.isEmpty()) {
                     Snackbar.make(main_coordinator, R.string.alert_list_name_empty, Snackbar.LENGTH_SHORT).show()
                 } else {
-                    mViewModel.updateTodoGroup(mViewModel.activeGroup, name)
+                    mViewModel.updateTodoList(mViewModel.activeList, name)
                 }
             }
             negativeButton(android.R.string.cancel)
@@ -298,7 +298,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 if (content.isEmpty()) {
                     Snackbar.make(main_coordinator, R.string.alert_todo_empty, Snackbar.LENGTH_SHORT).show()
                 } else {
-                    val updatedTodo = Todo(todo.id, content, todo.date, selectedColor, todo.todoGroupId)
+                    val updatedTodo = Todo(todo.id, content, todo.date, selectedColor, todo.todoListId)
                     mViewModel.insertTodo(updatedTodo)
                 }
             }
@@ -307,30 +307,30 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     }
 
     private fun forceViewModelLiveDataUpdate() {
-        mViewModel.groupsWithTodos.value = mViewModel.groupsWithTodos.value
+        mViewModel.listsWithTodos.value = mViewModel.listsWithTodos.value
     }
 
     private fun readPrefs() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         val id = prefs.getInt(PREF_KEY_ACTIVE_LIST_ID, PREF_VALUE_DOES_NOT_EXIST_INT)
-        if (id != PREF_VALUE_DOES_NOT_EXIST_INT) mViewModel.activeGroup = id
+        if (id != PREF_VALUE_DOES_NOT_EXIST_INT) mViewModel.activeList = id
 
         mDeleteBgEnabled = prefs.getBoolean(getString(R.string.pref_key_deletion_background), true)
         mDefaultListName = prefs.getString(getString(R.string.pref_key_default_list_name),
-            getString(R.string.group_default_name)) ?: "My to-do list"
+            getString(R.string.list_default_name)) ?: "My to-dos"
     }
 
-    private fun setGroup(groupWithTodos: GroupWithTodos) {
-        val group = groupWithTodos.todoGroup
-        val todos = groupWithTodos.todos
-        mViewModel.activeGroup = group.id
+    private fun setTodoList(listWithTodos: ListWithTodos) {
+        val list = listWithTodos.todoList
+        val todos = listWithTodos.todos
+        mViewModel.activeList = list.id
         mViewAdapter.setTodos(todos)
-        title = group.name
+        title = list.name
         if (todos.isEmpty()) text_no_todos.visibility = View.VISIBLE
         else text_no_todos.visibility = View.INVISIBLE
 
         // Set selected Navigation Drawer to-do list.
-        val navItem = nav_view.menu.findItem(group.id)
+        val navItem = nav_view.menu.findItem(list.id)
         navItem.isChecked = true
         val counter = navItem.actionView.findViewById<TextView>(R.id.text_counter)
 
@@ -478,43 +478,43 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     }
 
     private fun subscribeUi() {
-        mViewModel.groupsWithTodos.observe(this, Observer { groupsWithTodos ->
-            // Groups will be in date order, from oldest to newest.
+        mViewModel.listsWithTodos.observe(this, Observer { listsWithTodos ->
+            // Lists will be in date order, from oldest to newest.
 
             // The lists menu is inside the main drawer menu.
             val listsMenu = nav_view.menu[1].subMenu
             listsMenu.clear()
 
-            if (groupsWithTodos != null) {
-                if (groupsWithTodos.isNotEmpty()) {
-                    var groupIsSet = false
-                    for (i in 0 until groupsWithTodos.size) {
-                        // Handle groups.
-                        val groupWithTodos = groupsWithTodos[i]
-                        val group = groupWithTodos.todoGroup
-                        listsMenu.add(R.id.group_lists, group.id, Menu.NONE, group.name)
+            if (listsWithTodos != null) {
+                if (listsWithTodos.isNotEmpty()) {
+                    var listIsSet = false
+                    for (i in 0 until listsWithTodos.size) {
+                        // Handle lists.
+                        val listWithTodos = listsWithTodos[i]
+                        val list = listWithTodos.todoList
+                        listsMenu.add(R.id.group_lists, list.id, Menu.NONE, list.name)
                         val counter = layoutInflater.inflate(R.layout.menu_counter, drawer_layout, false)
-                        counter.findViewById<TextView>(R.id.text_counter).text = groupWithTodos.todos.size.toString()
+                        counter.findViewById<TextView>(R.id.text_counter).text = listWithTodos.todos.size.toString()
                         listsMenu[i].actionView = counter
 
-                        if (mViewModel.activeGroup == 0 && i == groupsWithTodos.size - 1) {
-                            // If active group is set to 0, then the most recent group must be set as active, in order
-                            // to activate the newly added group.
-                            setGroup(groupWithTodos)
-                            groupIsSet = true
-                        } else if (mViewModel.activeGroup == -1 || group.id == mViewModel.activeGroup) {
-                            // Alternatively, if active group is not set or it is set to this group, set it as active.
-                            setGroup(groupWithTodos)
-                            groupIsSet = true
+                        if (mViewModel.activeList == 0 && i == listsWithTodos.size - 1) {
+                            // If active list is set to 0, then the most recent list must be set as active, in order
+                            // to activate the newly added list.
+                            setTodoList(listWithTodos)
+                            listIsSet = true
+                        } else if (mViewModel.activeList == -1 || list.id == mViewModel.activeList) {
+                            // Alternatively, if active list is not set or it is set to this list, set it as active.
+                            setTodoList(listWithTodos)
+                            listIsSet = true
                         }
                     }
 
-                    // If group was not set during loop (active group was deleted), set it to the first group.
-                    if (!groupIsSet) setGroup(groupsWithTodos[0])
+                    // If list was not set during loop (active list was deleted), set it to the first list.
+                    if (!listIsSet) setTodoList(listsWithTodos[0])
                 } else {
-                    // No groups; create an empty group with the default name from preferences.
-                    val group = TodoGroup(1, mDefaultListName, Calendar.getInstance().time.time)
-                    mViewModel.insertTodoGroup(group)
+                    // No lists; create an empty list with the default name from preferences.
+                    val list = TodoList(1, mDefaultListName, Calendar.getInstance().time.time)
+                    mViewModel.insertTodoList(list)
                 }
 
                 // Finally set the created nav drawer list group as exclusively checkable.
@@ -524,10 +524,10 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     }
 
     /**
-     * Save the current active group to shared preferences, so that it will be opened when the user returns.
+     * Save the current active list to shared preferences, so that it will be opened when the user returns.
      */
     private fun writeListPrefs() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        prefs.edit { putInt(PREF_KEY_ACTIVE_LIST_ID, mViewModel.activeGroup) }
+        prefs.edit { putInt(PREF_KEY_ACTIVE_LIST_ID, mViewModel.activeList) }
     }
 }

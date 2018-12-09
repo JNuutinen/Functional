@@ -24,7 +24,6 @@
     <string name="action_about">Tietoja</string>
     <string name="text_licenses">Avoimen lähdekoodin lisenssit</string>
     <string name="menu_title_lists">Tehtävälistat</string>
-    <string name="group_default_name">Tehtävälistani</string>
     <string name="action_select_color">Väri</string>
     <string name="action_select">Valitse</string>
     <string name="message_select_color">Valitse väri</string>
@@ -47,4 +46,5 @@
     <string name="action_settings">Asetukset</string>
     <string name="title_activity_settings">Asetukset</string>
     <string name="content_description_app_image">Functional ohjelman ikoni</string>
+    <string name="list_default_name">Tehtävät</string>
 </resources>

@@ -4,62 +4,62 @@
     "contents": "First list, first to-do",
     "date": 1544072446,
     "color": -18611,
-    "todoGroupId": 2
+    "todoListId": 2
   },
   {
     "id": 2,
     "contents": "First list, second to-do",
     "date": 1544072447,
     "color": -1023342,
-    "todoGroupId": 2
+    "todoListId": 2
   },
   {
     "id": 3,
     "contents": "First list, third to-do",
     "date": 1544072448,
     "color": -1023342,
-    "todoGroupId": 2
+    "todoListId": 2
   },
   {
     "id": 4,
     "contents": "Second list, first to-do",
     "date": 1544072456,
     "color": -1023342,
-    "todoGroupId": 3
+    "todoListId": 3
   },
   {
     "id": 5,
     "contents": "Second list, second to-do",
     "date": 1544072457,
     "color": -1023342,
-    "todoGroupId": 3
+    "todoListId": 3
   },
   {
     "id": 6,
     "contents": "Second list, third to-do",
     "date": 1544072458,
     "color": -1023342,
-    "todoGroupId": 3
+    "todoListId": 3
   },
   {
     "id": 7,
     "contents": "Third list, first to-do",
     "date": 1544072466,
     "color": -10177034,
-    "todoGroupId": 4
+    "todoListId": 4
   },
   {
     "id": 8,
     "contents": "Third list, second to-do",
     "date": 1544072467,
     "color": -10177034,
-    "todoGroupId": 4
+    "todoListId": 4
   },
   {
     "id": 9,
     "contents": "Third list, third to-do",
     "date": 1544072468,
     "color": -10177034,
-    "todoGroupId": 4
+    "todoListId": 4
   }
 ]

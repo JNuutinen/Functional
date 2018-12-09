@@ -7,7 +7,7 @@
     <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/input_group_add"
+            android:id="@+id/input_list_add"
             android:layout_margin="@dimen/activity_horizontal_margin"
             android:hint="@string/hint_list_name"
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
@@ -15,7 +15,7 @@
         <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/edit_group_add"
+                android:id="@+id/edit_list_add"
                 android:inputType="textCapSentences"/>
     </com.google.android.material.textfield.TextInputLayout>
 </LinearLayout>

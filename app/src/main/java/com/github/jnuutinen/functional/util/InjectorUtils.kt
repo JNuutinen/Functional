@@ -8,7 +8,7 @@ import com.github.jnuutinen.functional.presentation.viewmodel.TodosViewModelFact
 object InjectorUtils {
     private fun getTodoRepository(context: Context): TodoRepository {
         val db = TodoDatabase.getInstance(context)
-        return TodoRepository.getInstance(db.todoDao(), db.todoGroupDao())
+        return TodoRepository.getInstance(db.todoDao(), db.todoListDao())
     }
 
     fun provideTodosViewModelFactory(context: Context): TodosViewModelFactory {

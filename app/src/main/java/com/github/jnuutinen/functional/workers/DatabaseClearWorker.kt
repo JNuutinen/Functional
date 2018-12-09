@@ -12,8 +12,8 @@ class DatabaseClearWorker(context: Context, workerParams: WorkerParameters) : Wo
     override fun doWork(): Result {
         return try {
             val database = TodoDatabase.getInstance(applicationContext)
-            database.todoDao().deleteAllTodos()
-            database.todoGroupDao().deleteAllTodoGroups()
+            database.todoDao().deleteAll()
+            database.todoListDao().deleteAll()
             Result.SUCCESS
         } catch (ex: Exception) {
             Log.e(mTAG, "Error clearing database", ex)

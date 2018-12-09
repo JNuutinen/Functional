@@ -81,7 +81,7 @@ class TodoAdapter(private val resources: Resources) : RecyclerView.Adapter<TodoA
                                 && old.contents == new.contents
                                 && old.date == new.date
                                 && old.color == new.color
-                                && old.todoGroupId == new.todoGroupId
+                                && old.todoListId == new.todoListId
                     }
                 })
                 mTodos = todos
