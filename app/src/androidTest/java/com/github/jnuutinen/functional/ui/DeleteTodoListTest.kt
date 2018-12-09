@@ -68,4 +68,31 @@ class DeleteTodoListTest {
             .check(matches(not(hasDescendant(withText("First to-do list")))))
         onView(withId(R.id.nav_view))
     }
+
+    @Test
+    fun deleteAllLists_DefaultListShouldBeCreated() {
+        // Delete all three of the test lists.
+        for (i in 1..3) {
+            openContextualActionModeOverflowMenu()
+            onView(withText("Delete list"))
+                .perform(click())
+            onView(withText("DELETE"))
+                .perform(click())
+        }
+
+        // Check the toolbar title.
+        onView(withId(R.id.toolbar))
+            .check(matches(hasDescendant(withText("To-dos"))))
+
+        // Ensure only the default list is in the Navigation drawer.
+        openNavigationDrawer(mActivityTestRule.activity)
+        onView(withId(R.id.nav_view))
+            .check(matches(hasDescendant(withText("To-dos"))))
+        onView(withId(R.id.nav_view))
+            .check(matches(not(hasDescendant(withText("First to-do list")))))
+        onView(withId(R.id.nav_view))
+            .check(matches(not(hasDescendant(withText("Second to-do list")))))
+        onView(withId(R.id.nav_view))
+            .check(matches(not(hasDescendant(withText("Third to-do list")))))
+    }
 }
