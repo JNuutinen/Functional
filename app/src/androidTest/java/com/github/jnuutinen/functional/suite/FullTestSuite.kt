@@ -12,6 +12,7 @@ import org.junit.runners.Suite
     DeleteTodoTest::class,
     EditTodoTest::class,
     EditTodoListTest::class,
-    DeleteTodoListTest::class
+    DeleteTodoListTest::class,
+    CreateTodoListTest::class
 )
 class FullTestSuite
