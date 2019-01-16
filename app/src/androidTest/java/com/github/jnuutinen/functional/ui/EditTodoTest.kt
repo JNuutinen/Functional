@@ -55,4 +55,23 @@ class EditTodoTest {
         onView(withRecyclerView(R.id.todo_recycler).atPosition(1))
             .check(matches(hasDescendant(withText("Edited to-do"))))
     }
+
+    @Test
+    fun editTodo_withEmptyContents() {
+        // Edit the second to-do.
+        onView(withRecyclerView(R.id.todo_recycler).atPosition(1))
+            .perform(click())
+        onView(withId(R.id.edit_todo_add))
+            .perform(replaceText("  "), closeSoftKeyboard())
+        onView(withText("SAVE"))
+            .perform(click())
+
+        // Info Snackbar should be visible.
+        onView(withId(R.id.main_coordinator))
+            .check(matches(hasDescendant(withText(R.string.alert_todo_empty))))
+
+        // The second to-do should NOT be updated.
+        onView(withRecyclerView(R.id.todo_recycler).atPosition(1))
+            .check(matches(hasDescendant(withText("First list, second to-do"))))
+    }
 }

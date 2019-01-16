@@ -59,6 +59,25 @@ class CreateTodoTest {
     }
 
     @Test
+    fun createTodo_WithEmptyContents() {
+        // Try to create an empty to-do.
+        onView(withId(R.id.button_add_todo))
+            .perform(click())
+        onView(withId(R.id.edit_todo_add))
+            .perform(replaceText(""), closeSoftKeyboard())
+        onView(withText("CREATE"))
+            .perform(click())
+
+        // Info Snackbar should be visible.
+        onView(withId(R.id.main_coordinator))
+            .check(matches(hasDescendant(withText(R.string.alert_todo_empty))))
+
+        // The number of to-dos should be 3.
+        onView(withId(R.id.todo_recycler))
+            .check(hasSize(3))
+    }
+
+    @Test
     fun createTodo_InAnotherList() {
         // Switch to the second test list.
         openNavigationDrawer(mActivityTestRule.activity)
