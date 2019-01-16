@@ -70,4 +70,26 @@ class EditTodoListTest {
         onView(withId(R.id.toolbar))
             .check(matches(hasDescendant(withText("Edited to-do list"))))
     }
+
+    @Test
+    fun editList_WithEmptyContents() {
+        // Edit the second list.
+        openNavigationDrawer(mActivityTestRule.activity)
+        onView(withText("Second to-do list"))
+            .perform(click())
+        onView(withId(R.id.action_edit_list))
+            .perform(click())
+        onView(withId(R.id.edit_list_edit))
+            .perform(replaceText(""), closeSoftKeyboard())
+        onView(withText("SAVE"))
+            .perform(click())
+
+        // Info Snackbar should be visible.
+        onView(withId(R.id.main_coordinator))
+            .check(matches(hasDescendant(withText(R.string.alert_list_name_empty))))
+
+        // Toolbar title should NOT have updated.
+        onView(withId(R.id.toolbar))
+            .check(matches(hasDescendant(withText("Second to-do list"))))
+    }
 }

@@ -61,4 +61,24 @@ class CreateTodoListTest {
         onView(withId(R.id.nav_view))
             .check(matches(hasDescendant(withText("A new to-do list"))))
     }
+
+    @Test
+    fun createList_WithEmptyContents() {
+        // Try to create a new to-do list with empty name.
+        openNavigationDrawer(mActivityTestRule.activity)
+        onView(withText("Create a to-do list"))
+            .perform(click())
+        onView(withId(R.id.edit_list_add))
+            .perform(replaceText(" "), closeSoftKeyboard())
+        onView(withText("CREATE"))
+            .perform(click())
+
+        // Info Snackbar should be visible.
+        onView(withId(R.id.main_coordinator))
+            .check(matches(hasDescendant(withText(R.string.alert_list_name_empty))))
+
+        // The active to-do list should not change.
+        onView(withId(R.id.toolbar))
+            .check(matches(hasDescendant(withText("First to-do list"))))
+    }
 }
