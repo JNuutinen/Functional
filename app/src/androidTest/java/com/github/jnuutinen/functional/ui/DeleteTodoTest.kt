@@ -240,7 +240,7 @@ class DeleteTodoTest {
         deleteTodo(0)
 
         // Undo the deletion of the first to-do.
-        onView(withText("UNDO"))
+        onView(withText(R.string.action_undo))
             .perform(click())
 
         // The first and third to-do should remain.

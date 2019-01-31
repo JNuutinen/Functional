@@ -45,11 +45,11 @@ class CreateTodoListTest {
     fun createList() {
         // Create a new to-do list.
         openNavigationDrawer(mActivityTestRule.activity)
-        onView(withText("Create a to-do list"))
+        onView(withText(R.string.action_add_list))
             .perform(click())
         onView(withId(R.id.edit_list_add))
             .perform(replaceText("A new to-do list"), closeSoftKeyboard())
-        onView(withText("CREATE"))
+        onView(withText(R.string.action_add_todo))
             .perform(click())
 
         // The created to-do list should be active (toolbar title should have changed).
@@ -66,11 +66,11 @@ class CreateTodoListTest {
     fun createList_WithEmptyContents() {
         // Try to create a new to-do list with empty name.
         openNavigationDrawer(mActivityTestRule.activity)
-        onView(withText("Create a to-do list"))
+        onView(withText(R.string.action_add_list))
             .perform(click())
         onView(withId(R.id.edit_list_add))
             .perform(replaceText(" "), closeSoftKeyboard())
-        onView(withText("CREATE"))
+        onView(withText(R.string.action_add_todo))
             .perform(click())
 
         // Info Snackbar should be visible.

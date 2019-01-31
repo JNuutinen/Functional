@@ -48,7 +48,7 @@ class EditTodoTest {
             .perform(click())
         onView(withId(R.id.edit_todo_add))
             .perform(replaceText("Edited to-do"), closeSoftKeyboard())
-        onView(withText("SAVE"))
+        onView(withText(R.string.action_save))
             .perform(click())
 
         // The second to-do should be updated.
@@ -63,7 +63,7 @@ class EditTodoTest {
             .perform(click())
         onView(withId(R.id.edit_todo_add))
             .perform(replaceText("  "), closeSoftKeyboard())
-        onView(withText("SAVE"))
+        onView(withText(R.string.action_save))
             .perform(click())
 
         // Info Snackbar should be visible.

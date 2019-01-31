@@ -50,7 +50,7 @@ class CreateTodoTest {
             .perform(click())
         onView(withId(R.id.edit_todo_add))
             .perform(replaceText("New to-do"), closeSoftKeyboard())
-        onView(withText("CREATE"))
+        onView(withText(R.string.action_add_todo))
             .perform(click())
 
         // The new to-do should be appended to the end of the to-dos list.
@@ -65,7 +65,7 @@ class CreateTodoTest {
             .perform(click())
         onView(withId(R.id.edit_todo_add))
             .perform(replaceText(""), closeSoftKeyboard())
-        onView(withText("CREATE"))
+        onView(withText(R.string.action_add_todo))
             .perform(click())
 
         // Info Snackbar should be visible.
@@ -89,7 +89,7 @@ class CreateTodoTest {
             .perform(click())
         onView(withId(R.id.edit_todo_add))
             .perform(replaceText("New to-do"), closeSoftKeyboard())
-        onView(withText("CREATE"))
+        onView(withText(R.string.action_add_todo))
             .perform(click())
 
         // The new to-do should be appended to the end of the to-dos list.

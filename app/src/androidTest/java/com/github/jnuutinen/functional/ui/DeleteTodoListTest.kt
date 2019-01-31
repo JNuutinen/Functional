@@ -49,9 +49,9 @@ class DeleteTodoListTest {
     fun deleteList() {
         // Delete the first to-do list.
         openContextualActionModeOverflowMenu()
-        onView(withText("Delete list"))
+        onView(withText(R.string.action_delete_list))
             .perform(click())
-        onView(withText("DELETE"))
+        onView(withText(R.string.action_delete))
             .perform(click())
 
         // Ensure current to-do list changed to "Second to-do list".
@@ -74,9 +74,9 @@ class DeleteTodoListTest {
         // Delete all three of the test lists.
         for (i in 1..3) {
             openContextualActionModeOverflowMenu()
-            onView(withText("Delete list"))
+            onView(withText(R.string.action_delete_list))
                 .perform(click())
-            onView(withText("DELETE"))
+            onView(withText(R.string.action_delete))
                 .perform(click())
         }
 

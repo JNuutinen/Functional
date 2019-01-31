@@ -51,7 +51,7 @@ class EditTodoListTest {
             .perform(click())
         onView(withId(R.id.edit_list_edit))
             .perform(replaceText("Edited to-do list"), closeSoftKeyboard())
-        onView(withText("SAVE"))
+        onView(withText(R.string.action_save))
             .perform(click())
 
         // Toolbar title should have updated.
@@ -81,7 +81,7 @@ class EditTodoListTest {
             .perform(click())
         onView(withId(R.id.edit_list_edit))
             .perform(replaceText(""), closeSoftKeyboard())
-        onView(withText("SAVE"))
+        onView(withText(R.string.action_save))
             .perform(click())
 
         // Info Snackbar should be visible.
