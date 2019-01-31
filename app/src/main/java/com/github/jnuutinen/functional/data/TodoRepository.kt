@@ -28,8 +28,26 @@ class TodoRepository private constructor(
         runOnIoThread { mTodoListDao.insert(todoList) }
     }
 
+    fun onTodoDelete(positionsToUpdate: List<Todo>, deletedTodo: Todo) {
+        runOnIoThread {
+            mTodoDao.updateAll(positionsToUpdate)
+            mTodoDao.delete(deletedTodo)
+        }
+    }
+
+    fun onTodoDeleteUndo(positionsToUpdate: List<Todo>, insertedTodo: Todo) {
+        runOnIoThread {
+            mTodoDao.updateAll(positionsToUpdate)
+            mTodoDao.insert(insertedTodo)
+        }
+    }
+
     fun updateTodoList(listId: Int, updatedName: String) {
         runOnIoThread { mTodoListDao.update(listId, updatedName) }
+    }
+
+    fun updateTodos(todos: List<Todo>) {
+        runOnIoThread { mTodoDao.updateAll(todos) }
     }
 
     companion object {

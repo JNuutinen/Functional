@@ -34,7 +34,19 @@ class TodosViewModel internal constructor(private val mTodoRepository: TodoRepos
         mTodoRepository.insertTodoList(todoList)
     }
 
+    fun onTodoDelete(positionsToUpdate: List<Todo>, deletedTodo: Todo) {
+        mTodoRepository.onTodoDelete(positionsToUpdate, deletedTodo)
+    }
+
+    fun onTodoDeleteUndo(positionsToUpdate: List<Todo>, insertedTodo: Todo) {
+        mTodoRepository.onTodoDeleteUndo(positionsToUpdate, insertedTodo)
+    }
+
     fun updateTodoList(listId: Int, updatedName: String) {
         mTodoRepository.updateTodoList(listId, updatedName)
+    }
+
+    fun updateTodos(todos: List<Todo>) {
+        mTodoRepository.updateTodos(todos)
     }
 }

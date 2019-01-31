@@ -22,6 +22,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_DRAG
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
@@ -55,6 +56,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     private lateinit var mColorValues: IntArray
     private var mDeleteBgEnabled = true
     private lateinit var mDefaultListName: String
+    private var mDragging = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -210,7 +212,8 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 if (content.isEmpty()) {
                     Snackbar.make(main_coordinator, R.string.alert_todo_empty, Snackbar.LENGTH_SHORT).show()
                 } else {
-                    mViewModel.insertTodo(Todo(0, content, date.time, selectedColor, mViewModel.activeList))
+                    mViewModel.insertTodo(Todo(0, content, date.time, selectedColor, mViewAdapter.itemCount,
+                        mViewModel.activeList))
                 }
             }
             .negativeButton(android.R.string.cancel)
@@ -299,7 +302,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 if (content.isEmpty()) {
                     Snackbar.make(main_coordinator, R.string.alert_todo_empty, Snackbar.LENGTH_SHORT).show()
                 } else {
-                    val updatedTodo = Todo(todo.id, content, todo.date, selectedColor, todo.todoListId)
+                    val updatedTodo = Todo(todo.id, content, todo.date, selectedColor, todo.order, todo.todoListId)
                     mViewModel.insertTodo(updatedTodo)
                 }
             }
@@ -325,7 +328,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         val list = listWithTodos.todoList
         val todos = listWithTodos.todos
         mViewModel.activeList = list.id
-        mViewAdapter.setTodos(todos)
+        mViewAdapter.setTodos(todos.toMutableList())
         title = list.name
         if (todos.isEmpty()) text_no_todos.visibility = View.VISIBLE
         else text_no_todos.visibility = View.INVISIBLE
@@ -347,10 +350,18 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
      * https://github.com/nemanja-kovacevic/recycler-view-swipe-to-delete/
      */
     private fun setUpItemTouchHelper() {
-        val simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT.or(ItemTouchHelper.RIGHT)) {
+        // TODO: move this to it's own module
+        val simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP.or(ItemTouchHelper.DOWN),
+            ItemTouchHelper.LEFT.or(ItemTouchHelper.RIGHT)) {
             private val deletionBackground = ColorDrawable(ContextCompat.getColor(this@TodosActivity, R.color.negativeColor))
             private val deleteIcon = ContextCompat.getDrawable(this@TodosActivity, R.drawable.ic_delete_white_24dp)
             private val deleteIconMargin = resources.getDimension(R.dimen.item_background_delete_icon_margin).toInt()
+
+            override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+                super.clearView(recyclerView, viewHolder)
+                mDragging = false
+                mViewModel.updateTodos(mViewAdapter.getItems())
+            }
 
             override fun onChildDraw(
                 c: Canvas,
@@ -361,7 +372,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 actionState: Int,
                 isCurrentlyActive: Boolean
             ) {
-                if (mDeleteBgEnabled) {
+                if (mDeleteBgEnabled && !mDragging) {
                     val itemView = viewHolder.itemView
                     val itemHeight = itemView.height
                     val intrinsicWidth = deleteIcon?.intrinsicWidth ?: 0
@@ -399,14 +410,27 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 viewHolder: RecyclerView.ViewHolder,
                 target: RecyclerView.ViewHolder
             ): Boolean {
+                mViewAdapter.swap(viewHolder.adapterPosition, target.adapterPosition)
                 return true
+            }
+
+            override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+                super.onSelectedChanged(viewHolder, actionState)
+                if (actionState == ACTION_STATE_DRAG) {
+                    mDragging = true
+                }
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val deletedTodo = mViewAdapter.getItem(viewHolder.adapterPosition)
-                mViewModel.deleteTodo(deletedTodo)
+                mViewAdapter.onDelete(deletedTodo.order)
+                mViewModel.onTodoDelete(mViewAdapter.getItems(), deletedTodo)
+
                 val undoSnackbar = Snackbar.make(main_coordinator, R.string.alert_todo_deleted, Snackbar.LENGTH_LONG)
-                undoSnackbar.setAction(R.string.action_undo) { mViewModel.insertTodo(deletedTodo) }
+                undoSnackbar.setAction(R.string.action_undo) {
+                    mViewAdapter.onDeleteUndo(deletedTodo.order)
+                    mViewModel.onTodoDeleteUndo(mViewAdapter.getItems(), deletedTodo)
+                }
                 undoSnackbar.show()
             }
         }
@@ -424,7 +448,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             private val background = ColorDrawable(ContextCompat.getColor(this@TodosActivity, R.color.negativeColor))
 
             override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
-                if (parent.itemAnimator?.isRunning == true && mDeleteBgEnabled) {
+                if (parent.itemAnimator?.isRunning == true && mDeleteBgEnabled && !mDragging) {
                     var lastViewComingDown: View? = null
                     var firstViewComingUp: View? = null
 

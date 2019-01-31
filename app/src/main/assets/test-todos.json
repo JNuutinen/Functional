@@ -4,6 +4,7 @@
     "contents": "First list, first to-do",
     "date": 1544072446,
     "color": -18611,
+    "order": 0,
     "todoListId": 2
   },
   {
@@ -11,6 +12,7 @@
     "contents": "First list, second to-do",
     "date": 1544072447,
     "color": -1023342,
+    "order": 1,
     "todoListId": 2
   },
   {
@@ -18,6 +20,7 @@
     "contents": "First list, third to-do",
     "date": 1544072448,
     "color": -1023342,
+    "order": 2,
     "todoListId": 2
   },
   {
@@ -25,6 +28,7 @@
     "contents": "Second list, first to-do",
     "date": 1544072456,
     "color": -1023342,
+    "order": 0,
     "todoListId": 3
   },
   {
@@ -32,6 +36,7 @@
     "contents": "Second list, second to-do",
     "date": 1544072457,
     "color": -1023342,
+    "order": 1,
     "todoListId": 3
   },
   {
@@ -39,6 +44,7 @@
     "contents": "Second list, third to-do",
     "date": 1544072458,
     "color": -1023342,
+    "order": 2,
     "todoListId": 3
   },
   {
@@ -46,6 +52,7 @@
     "contents": "Third list, first to-do",
     "date": 1544072466,
     "color": -10177034,
+    "order": 0,
     "todoListId": 4
   },
   {
@@ -53,6 +60,7 @@
     "contents": "Third list, second to-do",
     "date": 1544072467,
     "color": -10177034,
+    "order": 1,
     "todoListId": 4
   },
   {
@@ -60,6 +68,7 @@
     "contents": "Third list, third to-do",
     "date": 1544072468,
     "color": -10177034,
+    "order": 2,
     "todoListId": 4
   }
 ]

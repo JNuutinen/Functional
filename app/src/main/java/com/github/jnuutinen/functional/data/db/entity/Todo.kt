@@ -17,7 +17,13 @@ data class Todo(
     @ColumnInfo(name = "todo_contents") var contents: String,
     @ColumnInfo(name = "todo_date") val date: Long,
     @ColumnInfo(name = "todo_color") var color: Int,
-    @ColumnInfo(name = "todo_group_id") val todoListId: Int)
+    @ColumnInfo(name = "todo_order") var order: Int = 0,
+    @ColumnInfo(name = "todo_group_id") val todoListId: Int) : Comparable<Todo>
 {
+    override fun compareTo(other: Todo): Int {
+        if (order == other.order) return 0
+        if (order < other.order) return -1
+        return 1
+    }
     override fun toString() = contents
 }

@@ -2,6 +2,7 @@ package com.github.jnuutinen.functional.helper
 
 import android.content.Context
 import android.util.Log
+import androidx.work.ListenableWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.github.jnuutinen.functional.data.db.TodoDatabase
@@ -16,7 +17,7 @@ import com.google.gson.stream.JsonReader
 class TestDbPopulateWorker(context: Context, workerParams: WorkerParameters): Worker(context, workerParams) {
     private val mTAG by lazy { TestDbPopulateWorker::class.java.simpleName }
 
-    override fun doWork():Result {
+    override fun doWork(): ListenableWorker.Result {
         val todoType = object : TypeToken<List<Todo>>() {}.type
         val listType = object : TypeToken<List<TodoList>>() {}.type
         var jsonReader: JsonReader? = null
@@ -33,10 +34,10 @@ class TestDbPopulateWorker(context: Context, workerParams: WorkerParameters): Wo
             val database = TodoDatabase.getInstance(applicationContext)
             database.todoListDao().insertAll(lists)
             database.todoDao().insertAll(todos)
-            Result.SUCCESS
+            ListenableWorker.Result.success()
         } catch (ex: Exception) {
             Log.e(mTAG, "Error seeding test to-dos to database", ex)
-            Result.FAILURE
+            ListenableWorker.Result.failure()
         } finally {
             jsonReader?.close()
         }

@@ -59,8 +59,8 @@ class DatabaseTest {
         val calendar = Calendar.getInstance()
 
         val myList = TodoList(1, "My list", calendar.time.time)
-        val todo1 = Todo(1, "Todo 1", calendar.time.time, 0, 1)
-        val todo2 = Todo(2, "Todo 2", calendar.time.time, 0, 1)
+        val todo1 = Todo(1, "Todo 1", calendar.time.time, 0, 0, 1)
+        val todo2 = Todo(2, "Todo 2", calendar.time.time, 0, 1, 1)
 
         mTodoListDao.insert(myList)
         mTodoDao.insert(todo1)

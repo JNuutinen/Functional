@@ -1,0 +1,108 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "ddc6c7744475ba7900078d4fe5d6fac7",
+    "entities": [
+      {
+        "tableName": "todo",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`todo_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `todo_contents` TEXT NOT NULL, `todo_date` INTEGER NOT NULL, `todo_color` INTEGER NOT NULL, `todo_order` INTEGER NOT NULL, `todo_group_id` INTEGER NOT NULL, FOREIGN KEY(`todo_group_id`) REFERENCES `todo_group`(`group_id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "todo_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "contents",
+            "columnName": "todo_contents",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "todo_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "color",
+            "columnName": "todo_color",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "order",
+            "columnName": "todo_order",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "todoListId",
+            "columnName": "todo_group_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "todo_id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "todo_group",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "todo_group_id"
+            ],
+            "referencedColumns": [
+              "group_id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "todo_group",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`group_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `group_name` TEXT NOT NULL, `group_date` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "group_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "group_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "group_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "group_id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"ddc6c7744475ba7900078d4fe5d6fac7\")"
+    ]
+  }
+}

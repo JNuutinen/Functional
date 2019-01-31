@@ -12,18 +12,22 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.jnuutinen.functional.R
 import com.github.jnuutinen.functional.data.db.entity.Todo
 import kotlinx.android.synthetic.main.item_todo.view.*
+import java.util.*
 
 class TodoAdapter(private val resources: Resources) : RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
     @Suppress("PrivatePropertyName", "unused")
     private val mTAG by lazy { TodoAdapter::class.java.simpleName }
-    private var mTodos: List<Todo>? = null
+    private lateinit var mTodos: MutableList<Todo>
+    private var mTodosInitialized = false
     var onItemClick: ((Todo) -> Unit)? = null
 
     inner class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         init {
             itemView.setOnClickListener {
-                val todo = mTodos?.get(adapterPosition)
-                if (todo != null) onItemClick?.invoke(todo)
+                if (mTodosInitialized) {
+                    val todo = mTodos[adapterPosition]
+                    onItemClick?.invoke(todo)
+                }
             }
         }
     }
@@ -34,8 +38,8 @@ class TodoAdapter(private val resources: Resources) : RecyclerView.Adapter<TodoA
     }
 
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
-        val todo = mTodos?.get(position)
-        if (todo != null) {
+        if (mTodosInitialized) {
+            val todo = mTodos[position]
             val circle = ResourcesCompat.getDrawable(resources, R.drawable.circle, null)
             val color = todo.color
 
@@ -51,41 +55,71 @@ class TodoAdapter(private val resources: Resources) : RecyclerView.Adapter<TodoA
         }
     }
 
-
-    override fun getItemCount() = mTodos?.size ?: 0
+    override fun getItemCount() = if (mTodosInitialized) mTodos.size else 0
 
     fun getItem(position: Int): Todo {
-        return mTodos?.get(position) ?: Todo(0, "", 0, 0, 1)
+        return if (mTodosInitialized) mTodos[position] else Todo(0, "", 0, 0, 0, 1)
     }
 
-    fun setTodos(todos: List<Todo>) {
-        if (mTodos == null) {
+    fun getItems() = mTodos
+
+    fun onDelete(position: Int) {
+        if (mTodosInitialized) {
+            for (i in (position + 1) until mTodos.size) {
+                val todo = mTodos[i]
+                todo.order = todo.order - 1
+            }
+        }
+    }
+
+    fun onDeleteUndo(position: Int) {
+        if (mTodosInitialized) {
+            for (i in position until mTodos.size) {
+                val todo = mTodos[i]
+                todo.order = todo.order + 1
+            }
+        }
+    }
+
+    fun setTodos(todos: MutableList<Todo>) {
+        todos.sort()
+        if (!mTodosInitialized) {
             mTodos = todos
+            mTodosInitialized = true
             notifyItemRangeInserted(0, todos.size)
         } else {
             val oldTodos = mTodos
-            if (oldTodos != null) {
-                val result = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-                    override fun getOldListSize() = oldTodos.size
+            val result = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+                override fun getOldListSize() = oldTodos.size
 
-                    override fun getNewListSize() = todos.size
+                override fun getNewListSize() = todos.size
 
-                    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                        return oldTodos[oldItemPosition].id == todos[newItemPosition].id
-                    }
+                override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                    return oldTodos[oldItemPosition].id == todos[newItemPosition].id
+                }
 
-                    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                        val old = oldTodos[oldItemPosition]
-                        val new = todos[newItemPosition]
-                        return old.id == new.id
-                                && old.contents == new.contents
-                                && old.date == new.date
-                                && old.color == new.color
-                                && old.todoListId == new.todoListId
-                    }
-                })
-                mTodos = todos
-                result.dispatchUpdatesTo(this)
+                override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                    val old = oldTodos[oldItemPosition]
+                    val new = todos[newItemPosition]
+                    return old.id == new.id
+                            && old.contents == new.contents
+                            && old.date == new.date
+                            && old.color == new.color
+                            && old.todoListId == new.todoListId
+                }
+            })
+            mTodos = todos
+            result.dispatchUpdatesTo(this)
+        }
+    }
+
+    fun swap(from: Int, to: Int) {
+        // FIXME suboptimal, no need to update all indices on swap
+        if (mTodosInitialized) {
+            Collections.swap(mTodos, from, to)
+            notifyItemMoved(from, to)
+            for ((i, todo) in mTodos.withIndex()) {
+                todo.order = i
             }
         }
     }

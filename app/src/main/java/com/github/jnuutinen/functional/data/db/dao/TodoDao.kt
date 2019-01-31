@@ -1,11 +1,8 @@
 package com.github.jnuutinen.functional.data.db.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
+import androidx.room.*
 import androidx.room.OnConflictStrategy.REPLACE
-import androidx.room.Query
 import com.github.jnuutinen.functional.data.db.entity.Todo
 
 @Dao
@@ -27,4 +24,7 @@ interface TodoDao {
 
     @Delete
     fun delete(todo: Todo)
+
+    @Update
+    fun updateAll(todos: List<Todo>)
 }
