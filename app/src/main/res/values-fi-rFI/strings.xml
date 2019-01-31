@@ -5,12 +5,12 @@
     <string name="message_add_todo">Luo uusi tehtävä</string>
     <string name="alert_todo_deleted">Tehtävä poistettiin</string>
     <string name="action_undo">Kumoa</string>
-    <string name="action_add_list">Luo tehtävälista</string>
+    <string name="action_add_list">Luo uusi lista</string>
     <string name="message_delete_list">Haluatko poistaa tämän tehtävälistan?</string>
     <string name="action_delete">Poista</string>
     <string name="action_edit_list">Muokkaa listaa</string>
     <string name="action_delete_list">Poista lista</string>
-    <string name="message_edit_list">Muokkaa tehtävälistaa</string>
+    <string name="message_edit_list">Nimeä lista uudelleen</string>
     <string name="action_save">Tallenna</string>
     <string name="alert_list_name_empty">Listan nimi ei voi olla tyhjä</string>
     <string name="alert_todo_empty">Tehtävä ei voi olla tyhjä</string>
@@ -30,16 +30,15 @@
     <string name="message_edit_todo">Muokkaa tehtävää</string>
     <string name="action_help">Ohjeet</string>
     <string name="intro_title_add_todo">Luo tehtäviä</string>
-    <string name="intro_message_add_todo">Klikkaa + luodaksesi tehtävän</string>
+    <string name="intro_message_add_todo">Paina + luodaksesi tehtävän</string>
     <string name="intro_title_delete_todo">Poista tehtäviä</string>
-    <string name="intro_message_delete_todo">Pyyhkäise tehtävä vasemmalle tai oikealle poistaaksesi sen</string>
+    <string name="intro_message_delete_todo">Poista tehtävä pyyhkäisemällä</string>
     <string name="intro_title_edit_todo">Muokkaa tehtäviä</string>
-    <string name="intro_message_edit_todo">Klikkaa tehtävää muokataksesi sitä</string>
+    <string name="intro_message_edit_todo">Napauta tehtävää muokataksesi sitä</string>
     <string name="intro_title_manage_lists">Järjestele tehtäväsi listoihin</string>
-    <string name="intro_message_manage_lists">Voit luoda tai valita listoja vetovalikossa</string>
     <string name="pref_title_deletion_background">Punainen tausta tehtävää poistettaessa</string>
     <string name="pref_description_deletion_background">Kun tehtävää poistetaan, näytä punainen tausta ja poistoikoni</string>
-    <string name="pref_title_default_list_name">Tehtävälistan vakionimi</string>
+    <string name="pref_title_default_list_name">Oletusnimi tehtävälistalle</string>
     <string name="pref_description_default_list_name">Aseta nimi tehtävälistalle, joka luodaan kun viimeinen lista
         poistetaan
     </string>
@@ -47,4 +46,6 @@
     <string name="title_activity_settings">Asetukset</string>
     <string name="content_description_app_image">Functional ohjelman ikoni</string>
     <string name="list_default_name">Tehtävät</string>
+    <string name="action_copy_list">Kopioi lista</string>
+    <string name="intro_message_manage_lists">Pääset käsiksi tehtävälistoihisi vetovalikossa</string>
 </resources>

@@ -8,12 +8,12 @@
     <string name="action_add_todo">Create</string>
     <string name="message_add_todo">Create a to-do</string>
     <string name="action_undo">Undo</string>
-    <string name="action_add_list">Create a to-do list</string>
+    <string name="action_add_list">Create a new list</string>
     <string name="action_edit_list">Edit list</string>
     <string name="action_delete_list">Delete list</string>
     <string name="message_delete_list">Delete this to-do list?</string>
     <string name="action_delete">Delete</string>
-    <string name="message_edit_list">Edit to-do list</string>
+    <string name="message_edit_list">Rename this list</string>
     <string name="action_save">Save</string>
     <string name="alert_list_name_empty">List name cannot be empty</string>
     <string name="alert_todo_empty">To-do cannot be empty</string>
@@ -30,13 +30,13 @@
     <string name="action_select">Select</string>
     <string name="message_select_color">Select a color</string>
     <string name="message_edit_todo">Edit to-do</string>
-    <string name="intro_message_add_todo">Click + to create a new to-do</string>
+    <string name="intro_message_add_todo">Tap + to create a new to-do</string>
     <string name="intro_title_add_todo">Create to-dos</string>
-    <string name="intro_message_delete_todo">Swipe a to-do to the left or right to delete it</string>
+    <string name="intro_message_delete_todo">Swipe a to-do to delete it</string>
     <string name="intro_title_delete_todo">Delete to-dos</string>
-    <string name="intro_message_edit_todo">Click a to-do to edit it</string>
+    <string name="intro_message_edit_todo">Tap a to-do to edit it</string>
     <string name="intro_title_edit_todo">Edit to-dos</string>
-    <string name="intro_message_manage_lists">You can create and select lists from the navigation drawer</string>
+    <string name="intro_message_manage_lists">Access your to-do lists from the navigation drawer</string>
     <string name="action_help">Help</string>
     <string name="intro_title_manage_lists">Organize your to-dos with lists</string>
     <string name="pref_title_deletion_background">Red to-do dismiss background</string>
@@ -53,6 +53,7 @@
     <string name="pref_key_default_list_name" translatable="false">defaultListName</string>
     <string name="content_description_app_image">Functional application icon</string>
     <string name="list_default_name">To-dos</string>
+    <string name="action_copy_list">Copy list</string>
 
     <!-- Example settings for Notifications -->
 
