@@ -82,7 +82,8 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         val viewManager = LinearLayoutManager(this)
         mViewAdapter  = TodoAdapter(resources)
         mViewAdapter.onItemClick = { todo -> editTodo(todo) }
-        val dividerItemDecoration = TodoItemDivider(this)
+        val dividerItemDecoration = TodoItemDivider(ContextCompat.getColor(this, R.color.mainBackgroundColor),
+            pxFromDp(this, 1f))
         todo_recycler.apply {
             addItemDecoration(dividerItemDecoration)
             setHasFixedSize(true)
