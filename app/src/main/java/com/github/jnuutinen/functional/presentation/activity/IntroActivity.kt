@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.github.jnuutinen.functional.R
+import com.github.jnuutinen.functional.util.EXTRA_NAME_INTRO_SLIDE
+import com.github.jnuutinen.functional.util.EXTRA_VALUE_INTRO_DRAG_DROP
 import com.github.paolorotolo.appintro.AppIntro2
 import com.github.paolorotolo.appintro.AppIntroFragment
 import com.github.paolorotolo.appintro.model.SliderPage
@@ -12,13 +14,25 @@ class IntroActivity : AppIntro2() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        addSlide(AppIntroFragment.newInstance(createAddTodoSlide()))
-        addSlide(AppIntroFragment.newInstance(createEditTodoSlide()))
-        addSlide(AppIntroFragment.newInstance(createDeleteTodoSlide()))
-        addSlide(AppIntroFragment.newInstance(createManageListsSlide()))
-
         showSkipButton(true)
         showStatusBar(false)
+
+        val extras = intent.extras
+        val slideToShow = extras?.getString(EXTRA_NAME_INTRO_SLIDE)
+        if (slideToShow == EXTRA_VALUE_INTRO_DRAG_DROP) {
+            val version = applicationContext.packageManager.getPackageInfo(applicationContext.packageName, 0).versionName
+            addSlide(AppIntroFragment.newInstance(createMoveTodoSlide(
+                resources.getString(R.string.intro_title_whats_new, version),
+                resources.getString(R.string.intro_message_move_todo)
+            )))
+            showPagerIndicator(false)
+        } else {
+            addSlide(AppIntroFragment.newInstance(createAddTodoSlide()))
+            addSlide(AppIntroFragment.newInstance(createEditTodoSlide()))
+            addSlide(AppIntroFragment.newInstance(createDeleteTodoSlide()))
+            addSlide(AppIntroFragment.newInstance(createMoveTodoSlide()))
+            addSlide(AppIntroFragment.newInstance(createManageListsSlide()))
+        }
     }
 
     override fun onDonePressed(currentFragment: Fragment?) {
@@ -65,6 +79,19 @@ class IntroActivity : AppIntro2() {
             bgColor = ContextCompat.getColor(this@IntroActivity, R.color.circleBlueGrey700)
             title = resources.getString(R.string.intro_message_manage_lists)
             imageDrawable = R.drawable.intro_lists
+        }
+        return sliderPage
+    }
+
+    private fun createMoveTodoSlide(titleStr: String = resources.getString(R.string.intro_message_move_todo),
+                                    descriptionStr: String = ""): SliderPage {
+        val sliderPage = SliderPage()
+        sliderPage.apply {
+            bgColor = ContextCompat.getColor(this@IntroActivity, R.color.circleBrown300)
+            title = titleStr
+            imageDrawable = R.drawable.intro_move_todos
+            description = descriptionStr
+
         }
         return sliderPage
     }

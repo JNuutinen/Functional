@@ -54,6 +54,9 @@
     <string name="content_description_app_image">Functional application icon</string>
     <string name="list_default_name">To-dos</string>
     <string name="action_copy_list">Copy list</string>
+    <string name="intro_title_move_todo">Rearrange to-dos</string>
+    <string name="intro_message_move_todo">Drag and drop to rearrange</string>
+    <string name="intro_title_whats_new">New in version %1$s</string>
 
     <!-- Example settings for Notifications -->
 

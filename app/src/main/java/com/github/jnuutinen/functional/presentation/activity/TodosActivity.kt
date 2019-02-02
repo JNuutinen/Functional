@@ -236,6 +236,11 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 if (savedVersionCode == 1) {
                     // Show the introduction, if updating from version 1 (release 0.1.0).
                     startActivity(Intent(this, IntroActivity::class.java))
+                } else if (savedVersionCode < 6) {
+                    // Show the drag & drop slide, if updating from version <= 5 (release 0.2.3 or earlier).
+                    val intent = Intent(this, IntroActivity::class.java)
+                    intent.putExtra(EXTRA_NAME_INTRO_SLIDE, EXTRA_VALUE_INTRO_DRAG_DROP)
+                    startActivity(intent)
                 }
             }
         }

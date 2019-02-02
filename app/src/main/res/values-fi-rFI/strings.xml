@@ -48,4 +48,7 @@
     <string name="list_default_name">Tehtävät</string>
     <string name="action_copy_list">Kopioi lista</string>
     <string name="intro_message_manage_lists">Pääset käsiksi tehtävälistoihisi vetovalikossa</string>
+    <string name="intro_title_move_todo">Järjestele tehtäviä</string>
+    <string name="intro_message_move_todo">Siirrä tehtäviä painamalla pitkään ja raahaamalla</string>
+    <string name="intro_title_whats_new">Uutta versiossa %1$s</string>
 </resources>
