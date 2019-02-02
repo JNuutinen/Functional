@@ -39,9 +39,7 @@
     <string name="pref_title_deletion_background">Punainen tausta tehtävää poistettaessa</string>
     <string name="pref_description_deletion_background">Kun tehtävää poistetaan, näytä punainen tausta ja poistoikoni</string>
     <string name="pref_title_default_list_name">Oletusnimi tehtävälistalle</string>
-    <string name="pref_description_default_list_name">Aseta nimi tehtävälistalle, joka luodaan kun viimeinen lista
-        poistetaan
-    </string>
+    <string name="pref_description_default_list_name">"Aseta nimi tehtävälistalle, joka luodaan kun viimeinen lista poistetaan"</string>
     <string name="action_settings">Asetukset</string>
     <string name="title_activity_settings">Asetukset</string>
     <string name="content_description_app_image">Functional ohjelman ikoni</string>
