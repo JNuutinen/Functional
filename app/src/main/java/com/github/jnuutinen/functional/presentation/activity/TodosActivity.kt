@@ -350,7 +350,6 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
      * https://github.com/nemanja-kovacevic/recycler-view-swipe-to-delete/
      */
     private fun setUpItemTouchHelper() {
-        // TODO: move this to it's own module
         val simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP.or(ItemTouchHelper.DOWN),
             ItemTouchHelper.LEFT.or(ItemTouchHelper.RIGHT)) {
             private val deletionBackground = ColorDrawable(ContextCompat.getColor(this@TodosActivity, R.color.negativeColor))
