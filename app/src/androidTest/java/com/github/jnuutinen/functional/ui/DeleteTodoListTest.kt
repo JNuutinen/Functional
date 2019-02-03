@@ -82,12 +82,12 @@ class DeleteTodoListTest {
 
         // Check the toolbar title.
         onView(withId(R.id.toolbar))
-            .check(matches(hasDescendant(withText("To-dos"))))
+            .check(matches(hasDescendant(withText(R.string.list_default_name))))
 
         // Ensure only the default list is in the Navigation drawer.
         openNavigationDrawer(mActivityTestRule.activity)
         onView(withId(R.id.nav_view))
-            .check(matches(hasDescendant(withText("To-dos"))))
+            .check(matches(hasDescendant(withText(R.string.list_default_name))))
         onView(withId(R.id.nav_view))
             .check(matches(not(hasDescendant(withText("First to-do list")))))
         onView(withId(R.id.nav_view))
