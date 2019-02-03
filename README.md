@@ -9,11 +9,11 @@
         src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" />
 </a>
 
-## Functional is a simple, no non-sense to-do (task) app for Android.
+## Functional is a clean & simple task list for Android.
 
-* Quickly add new to-dos
-* Organize your to-dos with lists
-* Swipe a to-do off-screen to delete it
+* Organize your tasks with lists
+* Swipe a task off-screen to delete it
+* Drag & drop to prioritize your tasks
 
 <img align="center" src="assets/screenshots.png" alt="screenshots">
 
@@ -37,4 +37,3 @@
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-
