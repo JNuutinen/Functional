@@ -9,7 +9,7 @@
         src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" />
 </a>
 
-## Functional is a clean & simple task list for Android.
+## Functional is a clean & simple task list app for Android.
 
 * Organize your tasks with lists
 * Swipe a task off-screen to delete it
