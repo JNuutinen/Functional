@@ -14,6 +14,10 @@
     <color name="mainBackgroundColor">#0d000000</color>
     <color name="negativeColor">#b00020</color>
 
+    <!-- Text colors. -->
+    <color name="itemOverLineColor">#666666</color>
+    <color name="itemTextColor">#212121</color>
+
     <!-- Letter circle colors. -->
     <color name="circleRed700">#d32f2f</color>
     <color name="circleRed300">#e57373</color>
