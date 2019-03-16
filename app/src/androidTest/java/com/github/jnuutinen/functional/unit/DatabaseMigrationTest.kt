@@ -4,7 +4,6 @@ import androidx.room.testing.MigrationTestHelper
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.work.impl.WorkDatabaseMigrations.MIGRATION_1_2
 import com.github.jnuutinen.functional.data.db.TodoDatabase
 import com.github.jnuutinen.functional.util.DB_NAME
 import org.hamcrest.CoreMatchers.`is`
@@ -27,8 +26,6 @@ class DatabaseMigrationTest {
     @Test
     @Throws(IOException::class)
     fun migrate1To2() {
-        // FIXME: Does not work, see:
-        // https://stackoverflow.com/questions/54390911/what-causes-no-such-table-alarminfo-in-room-database-migration-tests
         helper.createDatabase(DB_NAME, 1).apply {
             execSQL("INSERT INTO todo_group VALUES (1, 'list1', 42)")
             execSQL("INSERT INTO todo VALUES (1, 'todo1', 42, 42, 1)")
@@ -36,7 +33,7 @@ class DatabaseMigrationTest {
             close()
         }
 
-        helper.runMigrationsAndValidate(DB_NAME, 2, true, MIGRATION_1_2).apply {
+        helper.runMigrationsAndValidate(DB_NAME, 2, true, TodoDatabase.MIGRATION_1_2).apply {
             // Check to-do list.
             var cursor = query("SELECT * FROM todo_group")
             assertThat(cursor.columnCount, `is`(3))
@@ -70,16 +67,16 @@ class DatabaseMigrationTest {
             assertThat(cursor.getString(1), `is`("todo1"))
             assertThat(cursor.getLong(2), `is`(42L))
             assertThat(cursor.getInt(3), `is`(42))
-            assertThat(cursor.getInt(4), `is`(0)) // the added order column
-            assertThat(cursor.getInt(5), `is`(1))
+            assertThat(cursor.getInt(4), `is`(1))
+            assertThat(cursor.getInt(5), `is`(0)) // the added order column
 
             cursor.moveToNext()
             assertThat(cursor.getInt(0), `is`(2))
             assertThat(cursor.getString(1), `is`("todo2"))
             assertThat(cursor.getLong(2), `is`(75L))
             assertThat(cursor.getInt(3), `is`(42))
-            assertThat(cursor.getInt(4), `is`(1)) // the added order column
-            assertThat(cursor.getInt(5), `is`(1))
+            assertThat(cursor.getInt(4), `is`(1))
+            assertThat(cursor.getInt(5), `is`(0)) // the added order column
             close()
         }
     }
