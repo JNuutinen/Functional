@@ -1,18 +1,18 @@
 package com.github.jnuutinen.functional.util
 
 import android.content.Context
-import com.github.jnuutinen.functional.data.TodoRepository
-import com.github.jnuutinen.functional.data.db.TodoDatabase
-import com.github.jnuutinen.functional.presentation.viewmodel.TodosViewModelFactory
+import com.github.jnuutinen.functional.data.TaskRepository
+import com.github.jnuutinen.functional.data.db.TaskDatabase
+import com.github.jnuutinen.functional.presentation.viewmodel.TasksViewModelFactory
 
 object InjectorUtils {
-    private fun getTodoRepository(context: Context): TodoRepository {
-        val db = TodoDatabase.getInstance(context)
-        return TodoRepository.getInstance(db.todoDao(), db.todoListDao())
+    private fun getTaskRepository(context: Context): TaskRepository {
+        val db = TaskDatabase.getInstance(context)
+        return TaskRepository.getInstance(db.taskDao(), db.taskListDao())
     }
 
-    fun provideTodosViewModelFactory(context: Context): TodosViewModelFactory {
-        val repository = getTodoRepository(context)
-        return TodosViewModelFactory(repository)
+    fun provideTasksViewModelFactory(context: Context): TasksViewModelFactory {
+        val repository = getTaskRepository(context)
+        return TasksViewModelFactory(repository)
     }
 }

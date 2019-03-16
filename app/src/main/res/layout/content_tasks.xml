@@ -6,15 +6,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:showIn="@layout/app_bar_todos"
-        tools:context=".presentation.activity.TodosActivity"
+        tools:showIn="@layout/app_bar_tasks"
+        tools:context=".presentation.activity.TasksActivity"
         android:background="@color/mainBackgroundColor">
 
     <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/text_no_todos"
-            android:text="@string/text_no_todos"
+            android:id="@+id/text_no_tasks"
+            android:text="@string/text_no_tasks"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -27,10 +27,10 @@
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/todo_recycler"
+            android:id="@+id/task_recycler"
             android:scrollbars="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:listitem="@layout/item_todo"
+            tools:listitem="@layout/item_task"
             tools:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

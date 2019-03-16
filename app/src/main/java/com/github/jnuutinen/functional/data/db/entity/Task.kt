@@ -7,20 +7,32 @@ import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "todo", foreignKeys = [ForeignKey(
-    entity = TodoList::class,
+    entity = TaskList::class,
     parentColumns = ["group_id"],
     childColumns = ["todo_group_id"],
     onUpdate = CASCADE,
     onDelete = CASCADE)])
-data class Todo(
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "todo_id") val id: Int,
-    @ColumnInfo(name = "todo_contents") var contents: String,
-    @ColumnInfo(name = "todo_date") val date: Long,
-    @ColumnInfo(name = "todo_color") var color: Int,
-    @ColumnInfo(name = "todo_order") var order: Int = 0,
-    @ColumnInfo(name = "todo_group_id") val todoListId: Int) : Comparable<Todo>
+data class Task(
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "todo_id")
+    val id: Int,
+
+    @ColumnInfo(name = "todo_contents")
+    var contents: String,
+
+    @ColumnInfo(name = "todo_date")
+    val date: Long,
+
+    @ColumnInfo(name = "todo_color")
+    var color: Int,
+
+    @ColumnInfo(name = "todo_order")
+    var order: Int = 0,
+
+    @ColumnInfo(name = "todo_group_id")
+    val taskListId: Int) : Comparable<Task>
 {
-    override fun compareTo(other: Todo): Int {
+    override fun compareTo(other: Task): Int {
         if (order == other.order) return 0
         if (order < other.order) return -1
         return 1

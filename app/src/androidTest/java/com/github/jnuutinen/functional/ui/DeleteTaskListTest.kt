@@ -15,7 +15,7 @@ import com.github.jnuutinen.functional.helper.RecyclerViewMatcher.Companion.with
 import com.github.jnuutinen.functional.helper.TestDatabaseHelper.Companion.repopulateDb
 import com.github.jnuutinen.functional.helper.TestDatabaseHelper.Companion.setActiveListSharedPref
 import com.github.jnuutinen.functional.helper.UiTestHelper.Companion.openNavigationDrawer
-import com.github.jnuutinen.functional.presentation.activity.TodosActivity
+import com.github.jnuutinen.functional.presentation.activity.TasksActivity
 import org.hamcrest.CoreMatchers.not
 import org.junit.Before
 import org.junit.Rule
@@ -24,12 +24,12 @@ import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class DeleteTodoListTest {
+class DeleteTaskListTest {
 
     @Rule
     @JvmField
-    val mActivityTestRule = object : ActivityTestRule<TodosActivity>(
-        TodosActivity::class.java, false, false
+    val mActivityTestRule = object : ActivityTestRule<TasksActivity>(
+        TasksActivity::class.java, false, false
     ) {
         override fun beforeActivityLaunched() {
             setActiveListSharedPref(InstrumentationRegistry.getInstrumentation().targetContext, 2)
@@ -47,25 +47,25 @@ class DeleteTodoListTest {
 
     @Test
     fun deleteList() {
-        // Delete the first to-do list.
+        // Delete the first task list.
         openContextualActionModeOverflowMenu()
         onView(withText(R.string.action_delete_list))
             .perform(click())
         onView(withText(R.string.action_delete))
             .perform(click())
 
-        // Ensure current to-do list changed to "Second to-do list".
+        // Ensure current task list changed to "Second task list".
         onView(withId(R.id.toolbar))
-            .check(matches(hasDescendant(withText("Second to-do list"))))
-        onView(withId(R.id.todo_recycler))
+            .check(matches(hasDescendant(withText("Second task list"))))
+        onView(withId(R.id.task_recycler))
             .check(hasSize(3))
-        onView(withRecyclerView(R.id.todo_recycler).atPosition(0))
-            .check(matches(hasDescendant(withText("Second list, first to-do"))))
+        onView(withRecyclerView(R.id.task_recycler).atPosition(0))
+            .check(matches(hasDescendant(withText("Second list, first task"))))
 
         // Ensure deleted list is no longer in the Navigation drawer.
         openNavigationDrawer(mActivityTestRule.activity)
         onView(withId(R.id.nav_view))
-            .check(matches(not(hasDescendant(withText("First to-do list")))))
+            .check(matches(not(hasDescendant(withText("First task list")))))
         onView(withId(R.id.nav_view))
     }
 
@@ -89,10 +89,10 @@ class DeleteTodoListTest {
         onView(withId(R.id.nav_view))
             .check(matches(hasDescendant(withText(R.string.list_default_name))))
         onView(withId(R.id.nav_view))
-            .check(matches(not(hasDescendant(withText("First to-do list")))))
+            .check(matches(not(hasDescendant(withText("First task list")))))
         onView(withId(R.id.nav_view))
-            .check(matches(not(hasDescendant(withText("Second to-do list")))))
+            .check(matches(not(hasDescendant(withText("Second task list")))))
         onView(withId(R.id.nav_view))
-            .check(matches(not(hasDescendant(withText("Third to-do list")))))
+            .check(matches(not(hasDescendant(withText("Third task list")))))
     }
 }

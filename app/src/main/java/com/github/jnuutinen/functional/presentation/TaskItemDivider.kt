@@ -6,7 +6,7 @@ import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
-class TodoItemDivider(color: Int, width: Float) : RecyclerView.ItemDecoration() {
+class TaskItemDivider(color: Int, width: Float) : RecyclerView.ItemDecoration() {
     private val mPaint = Paint()
     private val mAlpha: Int
 

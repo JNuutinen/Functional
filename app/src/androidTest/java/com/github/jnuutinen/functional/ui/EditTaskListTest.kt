@@ -12,7 +12,7 @@ import com.github.jnuutinen.functional.R
 import com.github.jnuutinen.functional.helper.TestDatabaseHelper.Companion.repopulateDb
 import com.github.jnuutinen.functional.helper.TestDatabaseHelper.Companion.setActiveListSharedPref
 import com.github.jnuutinen.functional.helper.UiTestHelper.Companion.openNavigationDrawer
-import com.github.jnuutinen.functional.presentation.activity.TodosActivity
+import com.github.jnuutinen.functional.presentation.activity.TasksActivity
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -20,12 +20,12 @@ import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class CreateTodoListTest {
+class EditTaskListTest {
 
     @Rule
     @JvmField
-    val mActivityTestRule = object : ActivityTestRule<TodosActivity>(
-        TodosActivity::class.java, false, false
+    val mActivityTestRule = object : ActivityTestRule<TasksActivity>(
+        TasksActivity::class.java, false, false
     ) {
         override fun beforeActivityLaunched() {
             setActiveListSharedPref(InstrumentationRegistry.getInstrumentation().targetContext, 2)
@@ -42,43 +42,54 @@ class CreateTodoListTest {
     }
 
     @Test
-    fun createList() {
-        // Create a new to-do list.
+    fun editList() {
+        // Edit the second list.
         openNavigationDrawer(mActivityTestRule.activity)
-        onView(withText(R.string.action_add_list))
+        onView(withText("Second task list"))
             .perform(click())
-        onView(withId(R.id.edit_list_add))
-            .perform(replaceText("A new to-do list"), closeSoftKeyboard())
-        onView(withText(R.string.action_add_todo))
+        onView(withId(R.id.action_edit_list))
+            .perform(click())
+        onView(withId(R.id.edit_list_edit))
+            .perform(replaceText("Edited task list"), closeSoftKeyboard())
+        onView(withText(R.string.action_save))
             .perform(click())
 
-        // The created to-do list should be active (toolbar title should have changed).
+        // Toolbar title should have updated.
         onView(withId(R.id.toolbar))
-            .check(matches(hasDescendant(withText("A new to-do list"))))
+            .check(matches(hasDescendant(withText("Edited task list"))))
 
-        // The created to-do list should exist in the Navigation Drawer.
+        // Visit another list and come back to check that the navigation drawer text is updated.
         openNavigationDrawer(mActivityTestRule.activity)
-        onView(withId(R.id.nav_view))
-            .check(matches(hasDescendant(withText("A new to-do list"))))
+        onView(withText("First task list"))
+            .perform(click())
+        onView(withId(R.id.toolbar))
+            .check(matches(hasDescendant(withText("First task list"))))
+        openNavigationDrawer(mActivityTestRule.activity)
+        onView(withText("Edited task list"))
+            .perform(click())
+        onView(withId(R.id.toolbar))
+            .check(matches(hasDescendant(withText("Edited task list"))))
     }
 
     @Test
-    fun createList_WithEmptyContents() {
-        // Try to create a new to-do list with empty name.
+    fun editList_WithEmptyContents() {
+        // Edit the second list.
         openNavigationDrawer(mActivityTestRule.activity)
-        onView(withText(R.string.action_add_list))
+        onView(withText("Second task list"))
             .perform(click())
-        onView(withId(R.id.edit_list_add))
-            .perform(replaceText(" "), closeSoftKeyboard())
-        onView(withText(R.string.action_add_todo))
+        onView(withId(R.id.action_edit_list))
+            .perform(click())
+        onView(withId(R.id.edit_list_edit))
+            .perform(replaceText(""), closeSoftKeyboard())
+        onView(withText(R.string.action_save))
             .perform(click())
 
         // Info Snackbar should be visible.
         onView(withId(R.id.main_coordinator))
             .check(matches(hasDescendant(withText(R.string.alert_list_name_empty))))
 
-        // The active to-do list should not change.
+        // Toolbar title should NOT have updated.
         onView(withId(R.id.toolbar))
-            .check(matches(hasDescendant(withText("First to-do list"))))
+            .check(matches(hasDescendant(withText("Second task list"))))
     }
 }

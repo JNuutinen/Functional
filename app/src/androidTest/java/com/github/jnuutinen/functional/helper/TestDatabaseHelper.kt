@@ -18,7 +18,7 @@ class TestDatabaseHelper {
          * Call this before launching the Activity under test.
          *
          * @param context The application target context.
-         * @param id The id of the to-do list to be set as active.
+         * @param id The id of the task list to be set as active.
          */
         fun setActiveListSharedPref(context: Context, id: Int) {
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)

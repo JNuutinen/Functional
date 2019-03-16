@@ -31,28 +31,27 @@ import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
 import com.github.jnuutinen.functional.BuildConfig
 import com.github.jnuutinen.functional.R
-import com.github.jnuutinen.functional.data.db.dao.ListWithTodos
-import com.github.jnuutinen.functional.data.db.entity.Todo
-import com.github.jnuutinen.functional.data.db.entity.TodoList
-import com.github.jnuutinen.functional.presentation.TodoAdapter
-import com.github.jnuutinen.functional.presentation.TodoItemDivider
-import com.github.jnuutinen.functional.presentation.viewmodel.TodosViewModel
+import com.github.jnuutinen.functional.data.db.dao.ListWithTasks
+import com.github.jnuutinen.functional.data.db.entity.Task
+import com.github.jnuutinen.functional.data.db.entity.TaskList
+import com.github.jnuutinen.functional.presentation.TaskAdapter
+import com.github.jnuutinen.functional.presentation.TaskItemDivider
+import com.github.jnuutinen.functional.presentation.viewmodel.TasksViewModel
 import com.github.jnuutinen.functional.util.*
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import kotlinx.android.synthetic.main.activity_todos.*
-import kotlinx.android.synthetic.main.app_bar_todos.*
-import kotlinx.android.synthetic.main.content_todos.*
+import kotlinx.android.synthetic.main.activity_tasks.*
+import kotlinx.android.synthetic.main.app_bar_tasks.*
+import kotlinx.android.synthetic.main.content_tasks.*
 import java.util.*
 
-class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
-    @Suppress("PrivatePropertyName", "PrivatePropertyName", "unused")
-    private val mTAG by lazy { TodosActivity::class.java.simpleName }
-    private lateinit var mViewModel: TodosViewModel
-    private lateinit var mViewAdapter: TodoAdapter
+class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+    private val mTAG by lazy { TasksActivity::class.java.simpleName }
+    private lateinit var mViewModel: TasksViewModel
+    private lateinit var mViewAdapter: TaskAdapter
     private lateinit var mColorValues: IntArray
     private var mDeleteBgEnabled = true
     private lateinit var mDefaultListName: String
@@ -60,16 +59,16 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_todos)
+        setContentView(R.layout.activity_tasks)
         setSupportActionBar(toolbar)
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
         mDefaultListName = getString(R.string.list_default_name)
 
-        val factory = InjectorUtils.provideTodosViewModelFactory(this)
-        mViewModel = ViewModelProviders.of(this, factory).get(TodosViewModel::class.java)
+        val factory = InjectorUtils.provideTasksViewModelFactory(this)
+        mViewModel = ViewModelProviders.of(this, factory).get(TasksViewModel::class.java)
 
-        button_add_todo.setOnClickListener { addTodo() }
+        button_add_task.setOnClickListener { addTask() }
 
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar,
@@ -82,11 +81,11 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         nav_view.setNavigationItemSelectedListener(this)
 
         val viewManager = LinearLayoutManager(this)
-        mViewAdapter  = TodoAdapter(resources)
-        mViewAdapter.onItemClick = { todo -> editTodo(todo) }
-        val dividerItemDecoration = TodoItemDivider(ContextCompat.getColor(this, R.color.mainBackgroundColor),
+        mViewAdapter  = TaskAdapter(resources)
+        mViewAdapter.onItemClick = { task -> editTask(task) }
+        val dividerItemDecoration = TaskItemDivider(ContextCompat.getColor(this, R.color.mainBackgroundColor),
             pxFromDp(this, 1f))
-        todo_recycler.apply {
+        task_recycler.apply {
             addItemDecoration(dividerItemDecoration)
             setHasFixedSize(true)
             layoutManager = viewManager
@@ -117,7 +116,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_todos, menu)
+        menuInflater.inflate(R.menu.menu_tasks, menu)
         return true
     }
 
@@ -158,20 +157,20 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Check if clicked item was "Add list". Do comparison with the group id, because the list item's id can overlap
-        // with the "Add list" item's id, because all the list item's ids are the same as their TodoList entities' ids
+        // with the "Add list" item's id, because all the list item's ids are the same as their TaskList entities' ids
         // and the "Add list" item's id is defined in XML.
         if (item.groupId == R.id.group_add) {
             MaterialDialog(this)
                 .message(R.string.action_add_list)
                 .customView(R.layout.dialog_add_list, scrollable = true)
-                .positiveButton(R.string.action_add_todo) { dialog ->
+                .positiveButton(R.string.action_add_task) { dialog ->
                     val customView = dialog.getCustomView()
                     val name = customView?.findViewById<TextInputEditText>(R.id.edit_list_add)?.text.toString().trim()
                     if (name.isEmpty()) {
                         Snackbar.make(main_coordinator, R.string.alert_list_name_empty, Snackbar.LENGTH_SHORT).show()
                     } else {
-                        val list = TodoList(0, name, Calendar.getInstance().time.time)
-                        mViewModel.insertTodoList(list)
+                        val list = TaskList(0, name, Calendar.getInstance().time.time)
+                        mViewModel.insertTaskList(list)
                         // If active list is 0, then the most recent list will be set active in subscribeUi().
                         mViewModel.activeList = 0
                     }
@@ -187,8 +186,8 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         return true
     }
 
-    private fun addTodo() {
-        val customView = layoutInflater.inflate(R.layout.dialog_add_todo, main_coordinator, false)
+    private fun addTask() {
+        val customView = layoutInflater.inflate(R.layout.dialog_add_task, main_coordinator, false)
         val colorButton = customView.findViewById<MaterialButton>(R.id.button_select_color)
         var selectedColor = ContextCompat.getColor(this, getRandomColor())
         setVersionAwareDrawableTint(colorButton.icon, selectedColor)
@@ -203,16 +202,16 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 .show()
         }
         MaterialDialog(this)
-            .message(R.string.message_add_todo)
+            .message(R.string.message_add_task)
             .customView(view = customView, scrollable = true)
-            .positiveButton(R.string.action_add_todo) { dialog ->
+            .positiveButton(R.string.action_add_task) { dialog ->
                 val v = dialog.getCustomView()
                 val date = Calendar.getInstance().time
-                val content = v?.findViewById<TextInputEditText>(R.id.edit_todo_add)?.text.toString().trim()
+                val content = v?.findViewById<TextInputEditText>(R.id.edit_task_add)?.text.toString().trim()
                 if (content.isEmpty()) {
-                    Snackbar.make(main_coordinator, R.string.alert_todo_empty, Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(main_coordinator, R.string.alert_task_empty, Snackbar.LENGTH_SHORT).show()
                 } else {
-                    mViewModel.insertTodo(Todo(0, content, date.time, selectedColor, mViewAdapter.itemCount,
+                    mViewModel.insertTask(Task(0, content, date.time, selectedColor, mViewAdapter.itemCount,
                         mViewModel.activeList))
                 }
             }
@@ -250,7 +249,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     private fun deleteList() {
         MaterialDialog(this)
             .message(R.string.message_delete_list)
-            .positiveButton(R.string.action_delete) { mViewModel.deleteTodoList(mViewModel.activeList) }
+            .positiveButton(R.string.action_delete) { mViewModel.deleteTaskList(mViewModel.activeList) }
             .negativeButton(android.R.string.cancel)
             .show()
     }
@@ -271,22 +270,22 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 if (name.isEmpty()) {
                     Snackbar.make(main_coordinator, R.string.alert_list_name_empty, Snackbar.LENGTH_SHORT).show()
                 } else {
-                    mViewModel.updateTodoList(mViewModel.activeList, name)
+                    mViewModel.updateTaskList(mViewModel.activeList, name)
                 }
             }
             .negativeButton(android.R.string.cancel)
             .show()
     }
 
-    private fun editTodo(todo: Todo) {
-        val customView = layoutInflater.inflate(R.layout.dialog_add_todo, main_coordinator, false)
-        val textInput = customView.findViewById<TextInputEditText>(R.id.edit_todo_add)
-        val textLayout = customView.findViewById<TextInputLayout>(R.id.input_todo_add)
-        textLayout.hint = getString(R.string.hint_todo)
-        textInput.setText(todo.contents)
-        textInput.setSelection(todo.contents.length)
+    private fun editTask(task: Task) {
+        val customView = layoutInflater.inflate(R.layout.dialog_add_task, main_coordinator, false)
+        val textInput = customView.findViewById<TextInputEditText>(R.id.edit_task_add)
+        val textLayout = customView.findViewById<TextInputLayout>(R.id.input_task_add)
+        textLayout.hint = getString(R.string.hint_task)
+        textInput.setText(task.contents)
+        textInput.setSelection(task.contents.length)
         val colorButton = customView.findViewById<MaterialButton>(R.id.button_select_color)
-        var selectedColor = todo.color
+        var selectedColor = task.color
         setVersionAwareDrawableTint(colorButton.icon, selectedColor)
         colorButton.setOnClickListener {
             MaterialDialog(this)
@@ -299,16 +298,16 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 .show()
         }
         MaterialDialog(this)
-            .message(R.string.message_edit_todo)
+            .message(R.string.message_edit_task)
             .customView(view = customView, scrollable = true)
             .positiveButton(R.string.action_save) { dialog ->
                 val v = dialog.getCustomView()
-                val content = v?.findViewById<TextInputEditText>(R.id.edit_todo_add)?.text.toString().trim()
+                val content = v?.findViewById<TextInputEditText>(R.id.edit_task_add)?.text.toString().trim()
                 if (content.isEmpty()) {
-                    Snackbar.make(main_coordinator, R.string.alert_todo_empty, Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(main_coordinator, R.string.alert_task_empty, Snackbar.LENGTH_SHORT).show()
                 } else {
-                    val updatedTodo = Todo(todo.id, content, todo.date, selectedColor, todo.order, todo.todoListId)
-                    mViewModel.insertTodo(updatedTodo)
+                    val updatedTask = Task(task.id, content, task.date, selectedColor, task.order, task.taskListId)
+                    mViewModel.insertTask(updatedTask)
                 }
             }
             .negativeButton(android.R.string.cancel)
@@ -316,7 +315,7 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     }
 
     private fun forceViewModelLiveDataUpdate() {
-        mViewModel.listsWithTodos.value = mViewModel.listsWithTodos.value
+        mViewModel.listsWithTasks.value = mViewModel.listsWithTasks.value
     }
 
     private fun readPrefs() {
@@ -326,19 +325,19 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
         mDeleteBgEnabled = prefs.getBoolean(getString(R.string.pref_key_deletion_background), true)
         mDefaultListName = prefs.getString(getString(R.string.pref_key_default_list_name),
-            getString(R.string.list_default_name)) ?: "My to-dos"
+            getString(R.string.list_default_name)) ?: "My tasks"
     }
 
-    private fun setTodoList(listWithTodos: ListWithTodos) {
-        val list = listWithTodos.todoList
-        val todos = listWithTodos.todos
+    private fun setTaskList(listWithTasks: ListWithTasks) {
+        val list = listWithTasks.taskList
+        val tasks = listWithTasks.tasks
         mViewModel.activeList = list.id
-        mViewAdapter.setTodos(todos.toMutableList())
+        mViewAdapter.setTasks(tasks.toMutableList())
         title = list.name
-        if (todos.isEmpty()) text_no_todos.visibility = View.VISIBLE
-        else text_no_todos.visibility = View.INVISIBLE
+        if (tasks.isEmpty()) text_no_tasks.visibility = View.VISIBLE
+        else text_no_tasks.visibility = View.INVISIBLE
 
-        // Set selected Navigation Drawer to-do list.
+        // Set selected Navigation Drawer task list.
         val navItem = nav_view.menu.findItem(list.id)
         navItem.isChecked = true
         val counter = navItem.actionView.findViewById<TextView>(R.id.text_counter)
@@ -357,14 +356,14 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     private fun setUpItemTouchHelper() {
         val simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP.or(ItemTouchHelper.DOWN),
             ItemTouchHelper.LEFT.or(ItemTouchHelper.RIGHT)) {
-            private val deletionBackground = ColorDrawable(ContextCompat.getColor(this@TodosActivity, R.color.negativeColor))
-            private val deleteIcon = ContextCompat.getDrawable(this@TodosActivity, R.drawable.ic_delete_white_24dp)
+            private val deletionBackground = ColorDrawable(ContextCompat.getColor(this@TasksActivity, R.color.negativeColor))
+            private val deleteIcon = ContextCompat.getDrawable(this@TasksActivity, R.drawable.ic_delete_white_24dp)
             private val deleteIconMargin = resources.getDimension(R.dimen.item_background_delete_icon_margin).toInt()
 
             override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
                 super.clearView(recyclerView, viewHolder)
                 mDragging = false
-                mViewModel.updateTodos(mViewAdapter.getItems())
+                mViewModel.updateTasks(mViewAdapter.getItems())
             }
 
             override fun onChildDraw(
@@ -426,19 +425,19 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val deletedTodo = mViewAdapter.getItem(viewHolder.adapterPosition)
-                mViewAdapter.onDelete(deletedTodo.order)
-                mViewModel.onTodoDelete(mViewAdapter.getItems(), deletedTodo)
+                val deletedTask = mViewAdapter.getItem(viewHolder.adapterPosition)
+                mViewAdapter.onDelete(deletedTask.order)
+                mViewModel.onTaskDelete(mViewAdapter.getItems(), deletedTask)
 
-                val undoSnackbar = Snackbar.make(main_coordinator, R.string.alert_todo_deleted, Snackbar.LENGTH_LONG)
+                val undoSnackbar = Snackbar.make(main_coordinator, R.string.alert_task_deleted, Snackbar.LENGTH_LONG)
                 undoSnackbar.setAction(R.string.action_undo) {
-                    mViewAdapter.onDeleteUndo(deletedTodo.order)
-                    mViewModel.onTodoDeleteUndo(mViewAdapter.getItems(), deletedTodo)
+                    mViewAdapter.onDeleteUndo(deletedTask.order)
+                    mViewModel.onTaskDeleteUndo(mViewAdapter.getItems(), deletedTask)
                 }
                 undoSnackbar.show()
             }
         }
-        ItemTouchHelper(simpleItemTouchCallback).attachToRecyclerView(todo_recycler)
+        ItemTouchHelper(simpleItemTouchCallback).attachToRecyclerView(task_recycler)
     }
 
     /**
@@ -448,8 +447,8 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
      * https://github.com/nemanja-kovacevic/recycler-view-swipe-to-delete/
      */
     private fun setUpAnimationDecoratorHelper() {
-        todo_recycler.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            private val background = ColorDrawable(ContextCompat.getColor(this@TodosActivity, R.color.negativeColor))
+        task_recycler.addItemDecoration(object : RecyclerView.ItemDecoration() {
+            private val background = ColorDrawable(ContextCompat.getColor(this@TasksActivity, R.color.negativeColor))
 
             override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
                 if (parent.itemAnimator?.isRunning == true && mDeleteBgEnabled && !mDragging) {
@@ -507,43 +506,43 @@ class TodosActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     }
 
     private fun subscribeUi() {
-        mViewModel.listsWithTodos.observe(this, Observer { listsWithTodos ->
+        mViewModel.listsWithTasks.observe(this, Observer { listsWithTasks ->
             // Lists will be in date order, from oldest to newest.
 
             // The lists menu is inside the main drawer menu.
             val listsMenu = nav_view.menu[1].subMenu
             listsMenu.clear()
 
-            if (listsWithTodos != null) {
-                if (listsWithTodos.isNotEmpty()) {
+            if (listsWithTasks != null) {
+                if (listsWithTasks.isNotEmpty()) {
                     var listIsSet = false
-                    for (i in 0 until listsWithTodos.size) {
+                    for (i in 0 until listsWithTasks.size) {
                         // Handle lists.
-                        val listWithTodos = listsWithTodos[i]
-                        val list = listWithTodos.todoList
+                        val listWithTasks = listsWithTasks[i]
+                        val list = listWithTasks.taskList
                         listsMenu.add(R.id.group_lists, list.id, Menu.NONE, list.name)
                         val counter = layoutInflater.inflate(R.layout.menu_counter, drawer_layout, false)
-                        counter.findViewById<TextView>(R.id.text_counter).text = listWithTodos.todos.size.toString()
+                        counter.findViewById<TextView>(R.id.text_counter).text = listWithTasks.tasks.size.toString()
                         listsMenu[i].actionView = counter
 
-                        if (mViewModel.activeList == 0 && i == listsWithTodos.size - 1) {
+                        if (mViewModel.activeList == 0 && i == listsWithTasks.size - 1) {
                             // If active list is set to 0, then the most recent list must be set as active, in order
                             // to activate the newly added list.
-                            setTodoList(listWithTodos)
+                            setTaskList(listWithTasks)
                             listIsSet = true
                         } else if (mViewModel.activeList == -1 || list.id == mViewModel.activeList) {
                             // Alternatively, if active list is not set or it is set to this list, set it as active.
-                            setTodoList(listWithTodos)
+                            setTaskList(listWithTasks)
                             listIsSet = true
                         }
                     }
 
                     // If list was not set during loop (active list was deleted), set it to the first list.
-                    if (!listIsSet) setTodoList(listsWithTodos[0])
+                    if (!listIsSet) setTaskList(listsWithTasks[0])
                 } else {
                     // No lists; create an empty list with the default name from preferences.
-                    val list = TodoList(1, mDefaultListName, Calendar.getInstance().time.time)
-                    mViewModel.insertTodoList(list)
+                    val list = TaskList(1, mDefaultListName, Calendar.getInstance().time.time)
+                    mViewModel.insertTaskList(list)
                 }
 
                 // Finally set the created nav drawer list group as exclusively checkable.

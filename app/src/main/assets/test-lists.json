@@ -1,17 +1,17 @@
 [
   {
     "id": 2,
-    "name": "First to-do list",
+    "name": "First task list",
     "date": 1544072412
   },
   {
     "id": 3,
-    "name": "Second to-do list",
+    "name": "Second task list",
     "date": 1544072424
   },
   {
     "id": 4,
-    "name": "Third to-do list",
+    "name": "Third task list",
     "date": 1544072446
   }
 ]

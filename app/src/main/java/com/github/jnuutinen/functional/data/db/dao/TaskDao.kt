@@ -3,28 +3,28 @@ package com.github.jnuutinen.functional.data.db.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.room.OnConflictStrategy.REPLACE
-import com.github.jnuutinen.functional.data.db.entity.Todo
+import com.github.jnuutinen.functional.data.db.entity.Task
 
 @Dao
-interface TodoDao {
+interface TaskDao {
     @Query("SELECT * FROM todo ORDER BY todo_date")
-    fun getAll(): LiveData<List<Todo>>
+    fun getAll(): LiveData<List<Task>>
 
     @Query("SELECT * FROM todo WHERE todo_group_id = :listId ORDER BY todo_date")
-    fun getAllInList(listId: Int): LiveData<List<Todo>>
+    fun getAllInList(listId: Int): LiveData<List<Task>>
 
     @Insert(onConflict = REPLACE)
-    fun insert(todo: Todo)
+    fun insert(task: Task)
 
     @Insert(onConflict = REPLACE)
-    fun insertAll(todos: List<Todo>)
+    fun insertAll(tasks: List<Task>)
 
     @Query("DELETE FROM todo")
     fun deleteAll()
 
     @Delete
-    fun delete(todo: Todo)
+    fun delete(task: Task)
 
     @Update
-    fun updateAll(todos: List<Todo>)
+    fun updateAll(tasks: List<Task>)
 }

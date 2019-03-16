@@ -9,5 +9,5 @@ const val SETTINGS_REQUEST = 1
 const val EXTRA_NAME_INTRO_SLIDE = "introSlideName"
 const val EXTRA_VALUE_INTRO_DRAG_DROP = "introSlideDragDrop"
 
-const val TEST_TODO_DATA_FILENAME = "test-todos.json"
+const val TEST_TASK_DATA_FILENAME = "test-tasks.json"
 const val TEST_LIST_DATA_FILENAME = "test-lists.json"

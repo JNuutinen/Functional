@@ -21,16 +21,16 @@ class IntroActivity : AppIntro2() {
         val slideToShow = extras?.getString(EXTRA_NAME_INTRO_SLIDE)
         if (slideToShow == EXTRA_VALUE_INTRO_DRAG_DROP) {
             val version = applicationContext.packageManager.getPackageInfo(applicationContext.packageName, 0).versionName
-            addSlide(AppIntroFragment.newInstance(createMoveTodoSlide(
+            addSlide(AppIntroFragment.newInstance(createMoveTaskSlide(
                 resources.getString(R.string.intro_title_whats_new, version),
-                resources.getString(R.string.intro_message_move_todo)
+                resources.getString(R.string.intro_message_move_task)
             )))
             showPagerIndicator(false)
         } else {
-            addSlide(AppIntroFragment.newInstance(createAddTodoSlide()))
-            addSlide(AppIntroFragment.newInstance(createEditTodoSlide()))
-            addSlide(AppIntroFragment.newInstance(createDeleteTodoSlide()))
-            addSlide(AppIntroFragment.newInstance(createMoveTodoSlide()))
+            addSlide(AppIntroFragment.newInstance(createAddTaskSlide()))
+            addSlide(AppIntroFragment.newInstance(createEditTaskSlide()))
+            addSlide(AppIntroFragment.newInstance(createDeleteTaskSlide()))
+            addSlide(AppIntroFragment.newInstance(createMoveTaskSlide()))
             addSlide(AppIntroFragment.newInstance(createManageListsSlide()))
         }
     }
@@ -43,32 +43,32 @@ class IntroActivity : AppIntro2() {
         finish()
     }
 
-    private fun createAddTodoSlide(): SliderPage {
+    private fun createAddTaskSlide(): SliderPage {
         val sliderPage = SliderPage()
         sliderPage.apply {
             bgColor = ContextCompat.getColor(this@IntroActivity, R.color.circleIndigo300)
-            title = resources.getString(R.string.intro_message_add_todo)
-            imageDrawable = R.drawable.intro_add_todo
+            title = resources.getString(R.string.intro_message_add_task)
+            imageDrawable = R.drawable.intro_add_task
         }
         return sliderPage
     }
 
-    private fun createDeleteTodoSlide(): SliderPage {
+    private fun createDeleteTaskSlide(): SliderPage {
         val sliderPage = SliderPage()
         sliderPage.apply {
             bgColor = ContextCompat.getColor(this@IntroActivity, R.color.circleRed300)
-            title = resources.getString(R.string.intro_message_delete_todo)
-            imageDrawable = R.drawable.intro_delete_todo
+            title = resources.getString(R.string.intro_message_delete_task)
+            imageDrawable = R.drawable.intro_delete_task
         }
         return sliderPage
     }
 
-    private fun createEditTodoSlide(): SliderPage {
+    private fun createEditTaskSlide(): SliderPage {
         val sliderPage = SliderPage()
         sliderPage.apply {
             bgColor = ContextCompat.getColor(this@IntroActivity, R.color.circleTeal300)
-            title = resources.getString(R.string.intro_message_edit_todo)
-            imageDrawable = R.drawable.intro_edit_todo
+            title = resources.getString(R.string.intro_message_edit_task)
+            imageDrawable = R.drawable.intro_edit_task
         }
         return sliderPage
     }
@@ -83,13 +83,13 @@ class IntroActivity : AppIntro2() {
         return sliderPage
     }
 
-    private fun createMoveTodoSlide(titleStr: String = resources.getString(R.string.intro_message_move_todo),
+    private fun createMoveTaskSlide(titleStr: String = resources.getString(R.string.intro_message_move_task),
                                     descriptionStr: String = ""): SliderPage {
         val sliderPage = SliderPage()
         sliderPage.apply {
             bgColor = ContextCompat.getColor(this@IntroActivity, R.color.circleBrown300)
             title = titleStr
-            imageDrawable = R.drawable.intro_move_todos
+            imageDrawable = R.drawable.intro_move_tasks
             description = descriptionStr
 
         }

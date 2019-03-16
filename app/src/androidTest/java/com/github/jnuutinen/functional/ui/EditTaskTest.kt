@@ -12,7 +12,7 @@ import com.github.jnuutinen.functional.R
 import com.github.jnuutinen.functional.helper.RecyclerViewMatcher.Companion.withRecyclerView
 import com.github.jnuutinen.functional.helper.TestDatabaseHelper.Companion.repopulateDb
 import com.github.jnuutinen.functional.helper.TestDatabaseHelper.Companion.setActiveListSharedPref
-import com.github.jnuutinen.functional.presentation.activity.TodosActivity
+import com.github.jnuutinen.functional.presentation.activity.TasksActivity
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -20,12 +20,12 @@ import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class EditTodoTest {
+class EditTaskTest {
 
     @Rule
     @JvmField
-    val mActivityTestRule = object : ActivityTestRule<TodosActivity>(
-        TodosActivity::class.java, false, false
+    val mActivityTestRule = object : ActivityTestRule<TasksActivity>(
+        TasksActivity::class.java, false, false
     ) {
         override fun beforeActivityLaunched() {
             setActiveListSharedPref(InstrumentationRegistry.getInstrumentation().targetContext, 2)
@@ -42,36 +42,36 @@ class EditTodoTest {
     }
 
     @Test
-    fun editTodo() {
-        // Edit the second to-do.
-        onView(withRecyclerView(R.id.todo_recycler).atPosition(1))
+    fun editTask() {
+        // Edit the second task.
+        onView(withRecyclerView(R.id.task_recycler).atPosition(1))
             .perform(click())
-        onView(withId(R.id.edit_todo_add))
-            .perform(replaceText("Edited to-do"), closeSoftKeyboard())
+        onView(withId(R.id.edit_task_add))
+            .perform(replaceText("Edited task"), closeSoftKeyboard())
         onView(withText(R.string.action_save))
             .perform(click())
 
-        // The second to-do should be updated.
-        onView(withRecyclerView(R.id.todo_recycler).atPosition(1))
-            .check(matches(hasDescendant(withText("Edited to-do"))))
+        // The second task should be updated.
+        onView(withRecyclerView(R.id.task_recycler).atPosition(1))
+            .check(matches(hasDescendant(withText("Edited task"))))
     }
 
     @Test
-    fun editTodo_withEmptyContents() {
-        // Edit the second to-do.
-        onView(withRecyclerView(R.id.todo_recycler).atPosition(1))
+    fun editTask_withEmptyContents() {
+        // Edit the second task.
+        onView(withRecyclerView(R.id.task_recycler).atPosition(1))
             .perform(click())
-        onView(withId(R.id.edit_todo_add))
+        onView(withId(R.id.edit_task_add))
             .perform(replaceText("  "), closeSoftKeyboard())
         onView(withText(R.string.action_save))
             .perform(click())
 
         // Info Snackbar should be visible.
         onView(withId(R.id.main_coordinator))
-            .check(matches(hasDescendant(withText(R.string.alert_todo_empty))))
+            .check(matches(hasDescendant(withText(R.string.alert_task_empty))))
 
-        // The second to-do should NOT be updated.
-        onView(withRecyclerView(R.id.todo_recycler).atPosition(1))
-            .check(matches(hasDescendant(withText("First list, second to-do"))))
+        // The second task should NOT be updated.
+        onView(withRecyclerView(R.id.task_recycler).atPosition(1))
+            .check(matches(hasDescendant(withText("First list, second task"))))
     }
 }

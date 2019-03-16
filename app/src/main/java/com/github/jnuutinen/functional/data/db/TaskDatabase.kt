@@ -6,20 +6,20 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.github.jnuutinen.functional.data.db.dao.TodoDao
-import com.github.jnuutinen.functional.data.db.dao.TodoListDao
-import com.github.jnuutinen.functional.data.db.entity.Todo
-import com.github.jnuutinen.functional.data.db.entity.TodoList
+import com.github.jnuutinen.functional.data.db.dao.TaskDao
+import com.github.jnuutinen.functional.data.db.dao.TaskListDao
+import com.github.jnuutinen.functional.data.db.entity.Task
+import com.github.jnuutinen.functional.data.db.entity.TaskList
 import com.github.jnuutinen.functional.util.DB_NAME
 
-@Database(entities = [Todo::class, TodoList::class], version = 2)
-abstract class TodoDatabase : RoomDatabase() {
-    abstract fun todoDao(): TodoDao
-    abstract fun todoListDao(): TodoListDao
+@Database(entities = [Task::class, TaskList::class], version = 2)
+abstract class TaskDatabase : RoomDatabase() {
+    abstract fun taskDao(): TaskDao
+    abstract fun taskListDao(): TaskListDao
 
     companion object {
         @Volatile
-        private var mInstance: TodoDatabase? = null
+        private var mInstance: TaskDatabase? = null
 
         val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
@@ -27,14 +27,14 @@ abstract class TodoDatabase : RoomDatabase() {
             }
         }
 
-        fun getInstance(context: Context): TodoDatabase {
+        fun getInstance(context: Context): TaskDatabase {
             return mInstance ?: synchronized(this) {
                 mInstance ?: buildDatabase(context).also { mInstance = it }
             }
         }
 
-        private fun buildDatabase(context: Context): TodoDatabase {
-            return Room.databaseBuilder(context, TodoDatabase::class.java, DB_NAME)
+        private fun buildDatabase(context: Context): TaskDatabase {
+            return Room.databaseBuilder(context, TaskDatabase::class.java, DB_NAME)
                 .addMigrations(MIGRATION_1_2)
                 .build()
         }

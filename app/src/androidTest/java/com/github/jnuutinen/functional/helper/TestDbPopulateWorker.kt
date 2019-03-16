@@ -5,11 +5,11 @@ import android.util.Log
 import androidx.work.ListenableWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.github.jnuutinen.functional.data.db.TodoDatabase
-import com.github.jnuutinen.functional.data.db.entity.Todo
-import com.github.jnuutinen.functional.data.db.entity.TodoList
+import com.github.jnuutinen.functional.data.db.TaskDatabase
+import com.github.jnuutinen.functional.data.db.entity.Task
+import com.github.jnuutinen.functional.data.db.entity.TaskList
 import com.github.jnuutinen.functional.util.TEST_LIST_DATA_FILENAME
-import com.github.jnuutinen.functional.util.TEST_TODO_DATA_FILENAME
+import com.github.jnuutinen.functional.util.TEST_TASK_DATA_FILENAME
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
@@ -18,25 +18,25 @@ class TestDbPopulateWorker(context: Context, workerParams: WorkerParameters): Wo
     private val mTAG by lazy { TestDbPopulateWorker::class.java.simpleName }
 
     override fun doWork(): ListenableWorker.Result {
-        val todoType = object : TypeToken<List<Todo>>() {}.type
-        val listType = object : TypeToken<List<TodoList>>() {}.type
+        val taskType = object : TypeToken<List<Task>>() {}.type
+        val listType = object : TypeToken<List<TaskList>>() {}.type
         var jsonReader: JsonReader? = null
 
         return try {
             var inputStream = applicationContext.assets.open(TEST_LIST_DATA_FILENAME)
             jsonReader = JsonReader(inputStream.reader())
-            val lists: List<TodoList> = Gson().fromJson(jsonReader, listType)
+            val lists: List<TaskList> = Gson().fromJson(jsonReader, listType)
 
-            inputStream = applicationContext.assets.open(TEST_TODO_DATA_FILENAME)
+            inputStream = applicationContext.assets.open(TEST_TASK_DATA_FILENAME)
             jsonReader = JsonReader(inputStream.reader())
-            val todos: List<Todo> = Gson().fromJson(jsonReader, todoType)
+            val tasks: List<Task> = Gson().fromJson(jsonReader, taskType)
 
-            val database = TodoDatabase.getInstance(applicationContext)
-            database.todoListDao().insertAll(lists)
-            database.todoDao().insertAll(todos)
+            val database = TaskDatabase.getInstance(applicationContext)
+            database.taskListDao().insertAll(lists)
+            database.taskDao().insertAll(tasks)
             ListenableWorker.Result.success()
         } catch (ex: Exception) {
-            Log.e(mTAG, "Error seeding test to-dos to database", ex)
+            Log.e(mTAG, "Error seeding test tasks to database", ex)
             ListenableWorker.Result.failure()
         } finally {
             jsonReader?.close()

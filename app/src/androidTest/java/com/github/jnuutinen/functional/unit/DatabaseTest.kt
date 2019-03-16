@@ -8,11 +8,11 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
-import com.github.jnuutinen.functional.data.db.TodoDatabase
-import com.github.jnuutinen.functional.data.db.dao.TodoDao
-import com.github.jnuutinen.functional.data.db.dao.TodoListDao
-import com.github.jnuutinen.functional.data.db.entity.Todo
-import com.github.jnuutinen.functional.data.db.entity.TodoList
+import com.github.jnuutinen.functional.data.db.TaskDatabase
+import com.github.jnuutinen.functional.data.db.dao.TaskDao
+import com.github.jnuutinen.functional.data.db.dao.TaskListDao
+import com.github.jnuutinen.functional.data.db.entity.Task
+import com.github.jnuutinen.functional.data.db.entity.TaskList
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.collection.IsEmptyCollection.empty
@@ -28,9 +28,9 @@ import java.util.concurrent.TimeUnit
 @SmallTest
 @RunWith(AndroidJUnit4::class)
 class DatabaseTest {
-    private lateinit var mTodoDatabase: TodoDatabase
-    private lateinit var mTodoDao: TodoDao
-    private lateinit var mTodoListDao: TodoListDao
+    private lateinit var mTaskDatabase: TaskDatabase
+    private lateinit var mTaskDao: TaskDao
+    private lateinit var mTaskListDao: TaskListDao
 
     @Rule
     @JvmField
@@ -52,69 +52,69 @@ class DatabaseTest {
     @Before
     fun createDb() {
         val context = ApplicationProvider.getApplicationContext<Context>()
-        mTodoDatabase = Room.inMemoryDatabaseBuilder(context, TodoDatabase::class.java).build()
-        mTodoDao = mTodoDatabase.todoDao()
-        mTodoListDao = mTodoDatabase.todoListDao()
+        mTaskDatabase = Room.inMemoryDatabaseBuilder(context, TaskDatabase::class.java).build()
+        mTaskDao = mTaskDatabase.taskDao()
+        mTaskListDao = mTaskDatabase.taskListDao()
 
         val calendar = Calendar.getInstance()
 
-        val myList = TodoList(1, "My list", calendar.time.time)
-        val todo1 = Todo(1, "Todo 1", calendar.time.time, 0, 0, 1)
-        val todo2 = Todo(2, "Todo 2", calendar.time.time, 0, 1, 1)
+        val myList = TaskList(1, "My list", calendar.time.time)
+        val task1 = Task(1, "Task 1", calendar.time.time, 0, 0, 1)
+        val task2 = Task(2, "Task 2", calendar.time.time, 0, 1, 1)
 
-        mTodoListDao.insert(myList)
-        mTodoDao.insert(todo1)
-        mTodoDao.insert(todo2)
+        mTaskListDao.insert(myList)
+        mTaskDao.insert(task1)
+        mTaskDao.insert(task2)
     }
 
     @After
     fun closeDb() {
-        mTodoDatabase.close()
+        mTaskDatabase.close()
     }
 
     @Test
     fun deleteList() {
-        mTodoListDao.delete(mTodoListDao.getAll().getValueBlocking()!![0])
+        mTaskListDao.delete(mTaskListDao.getAll().getValueBlocking()!![0])
 
-        val lists = mTodoListDao.getAll().getValueBlocking()!!
+        val lists = mTaskListDao.getAll().getValueBlocking()!!
         assertThat(lists, empty())
 
-        val listsWithTodos = mTodoListDao.getAllListsWithTodos().getValueBlocking()!!
-        assertThat(listsWithTodos, empty())
+        val listsWithTasks = mTaskListDao.getAllListsWithTasks().getValueBlocking()!!
+        assertThat(listsWithTasks, empty())
 
-        val todos = mTodoDao.getAll().getValueBlocking()!!
-        assertThat(todos, empty())
+        val tasks = mTaskDao.getAll().getValueBlocking()!!
+        assertThat(tasks, empty())
     }
 
     @Test
-    fun deleteTodo() {
-        var todos = mTodoDao.getAll().getValueBlocking()!!
-        assertThat(todos.size, `is`(2))
+    fun deleteTask() {
+        var tasks = mTaskDao.getAll().getValueBlocking()!!
+        assertThat(tasks.size, `is`(2))
 
-        var todo = todos[0]
-        assertThat(todo.contents, `is`("Todo 1"))
+        var task = tasks[0]
+        assertThat(task.contents, `is`("Task 1"))
 
-        mTodoDao.delete(todo)
+        mTaskDao.delete(task)
 
-        todos = mTodoDao.getAll().getValueBlocking()!!
-        assertThat(todos.size, `is`(1))
+        tasks = mTaskDao.getAll().getValueBlocking()!!
+        assertThat(tasks.size, `is`(1))
 
-        todo = todos[0]
-        assertThat(todo.contents, `is`("Todo 2"))
+        task = tasks[0]
+        assertThat(task.contents, `is`("Task 2"))
     }
 
     @Test
     fun editList() {
-        var list = mTodoListDao.getAll().getValueBlocking()!![0]
+        var list = mTaskListDao.getAll().getValueBlocking()!![0]
         assertThat(list.name, `is`("My list"))
         list.name = "Edited"
-        mTodoListDao.update(list)
+        mTaskListDao.update(list)
 
-        list = mTodoListDao.getAll().getValueBlocking()!![0]
+        list = mTaskListDao.getAll().getValueBlocking()!![0]
         assertThat(list.name, `is`("Edited"))
 
-        val listWithTodos = mTodoListDao.getAllListsWithTodos().getValueBlocking()!![0]
-        assertThat(listWithTodos.todoList.name, `is`("Edited"))
-        assertThat(listWithTodos.todos.size, `is`(2))
+        val listWithTasks = mTaskListDao.getAllListsWithTasks().getValueBlocking()!![0]
+        assertThat(listWithTasks.taskList.name, `is`("Edited"))
+        assertThat(listWithTasks.tasks.size, `is`(2))
     }
 }

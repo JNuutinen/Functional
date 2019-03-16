@@ -2,34 +2,34 @@ package com.github.jnuutinen.functional.data.db.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.github.jnuutinen.functional.data.db.entity.TodoList
+import com.github.jnuutinen.functional.data.db.entity.TaskList
 
 @Dao
-interface TodoListDao {
+interface TaskListDao {
     @Transaction
     @Query("SELECT * FROM todo_group ORDER BY group_date")
-    fun getAllListsWithTodos(): LiveData<List<ListWithTodos>>
+    fun getAllListsWithTasks(): LiveData<List<ListWithTasks>>
 
     @Query("SELECT * FROM todo_group ORDER BY group_date")
-    fun getAll(): LiveData<List<TodoList>>
+    fun getAll(): LiveData<List<TaskList>>
 
     @Insert
-    fun insert(todoList: TodoList)
+    fun insert(taskList: TaskList)
 
     @Insert
-    fun insertAll(todoLists: List<TodoList>)
+    fun insertAll(taskLists: List<TaskList>)
 
     @Query("DELETE FROM todo_group")
     fun deleteAll()
 
     @Delete
-    fun delete(todoList: TodoList)
+    fun delete(taskList: TaskList)
 
     @Query("DELETE FROM todo_group WHERE group_id = :listId")
     fun delete(listId: Int)
 
     @Update
-    fun update(todoList: TodoList)
+    fun update(taskList: TaskList)
 
     @Query("UPDATE todo_group SET group_name = :updatedName WHERE group_id = :listId")
     fun update(listId: Int, updatedName: String)

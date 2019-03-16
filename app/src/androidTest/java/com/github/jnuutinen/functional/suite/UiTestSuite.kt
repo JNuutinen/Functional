@@ -6,11 +6,11 @@ import org.junit.runners.Suite
 
 @RunWith(Suite::class)
 @Suite.SuiteClasses(
-    CreateTodoTest::class,
-    DeleteTodoTest::class,
-    EditTodoTest::class,
-    EditTodoListTest::class,
-    DeleteTodoListTest::class,
-    CreateTodoListTest::class
+    CreateTaskTest::class,
+    DeleteTaskTest::class,
+    EditTaskTest::class,
+    EditTaskListTest::class,
+    DeleteTaskListTest::class,
+    CreateTaskListTest::class
 )
 class UiTestSuite

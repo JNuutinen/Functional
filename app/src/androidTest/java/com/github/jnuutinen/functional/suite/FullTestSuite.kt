@@ -10,11 +10,11 @@ import org.junit.runners.Suite
 @Suite.SuiteClasses(
     DatabaseTest::class,
     DatabaseMigrationTest::class,
-    CreateTodoTest::class,
-    DeleteTodoTest::class,
-    EditTodoTest::class,
-    EditTodoListTest::class,
-    DeleteTodoListTest::class,
-    CreateTodoListTest::class
+    CreateTaskTest::class,
+    DeleteTaskTest::class,
+    EditTaskTest::class,
+    EditTaskListTest::class,
+    DeleteTaskListTest::class,
+    CreateTaskListTest::class
 )
 class FullTestSuite

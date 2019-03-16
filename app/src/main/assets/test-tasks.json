@@ -1,74 +1,74 @@
 [
   {
     "id": 1,
-    "contents": "First list, first to-do",
+    "contents": "First list, first task",
     "date": 1544072446,
     "color": -18611,
     "order": 0,
-    "todoListId": 2
+    "taskListId": 2
   },
   {
     "id": 2,
-    "contents": "First list, second to-do",
+    "contents": "First list, second task",
     "date": 1544072447,
     "color": -1023342,
     "order": 1,
-    "todoListId": 2
+    "taskListId": 2
   },
   {
     "id": 3,
-    "contents": "First list, third to-do",
+    "contents": "First list, third task",
     "date": 1544072448,
     "color": -1023342,
     "order": 2,
-    "todoListId": 2
+    "taskListId": 2
   },
   {
     "id": 4,
-    "contents": "Second list, first to-do",
+    "contents": "Second list, first task",
     "date": 1544072456,
     "color": -1023342,
     "order": 0,
-    "todoListId": 3
+    "taskListId": 3
   },
   {
     "id": 5,
-    "contents": "Second list, second to-do",
+    "contents": "Second list, second task",
     "date": 1544072457,
     "color": -1023342,
     "order": 1,
-    "todoListId": 3
+    "taskListId": 3
   },
   {
     "id": 6,
-    "contents": "Second list, third to-do",
+    "contents": "Second list, third task",
     "date": 1544072458,
     "color": -1023342,
     "order": 2,
-    "todoListId": 3
+    "taskListId": 3
   },
   {
     "id": 7,
-    "contents": "Third list, first to-do",
+    "contents": "Third list, first task",
     "date": 1544072466,
     "color": -10177034,
     "order": 0,
-    "todoListId": 4
+    "taskListId": 4
   },
   {
     "id": 8,
-    "contents": "Third list, second to-do",
+    "contents": "Third list, second task",
     "date": 1544072467,
     "color": -10177034,
     "order": 1,
-    "todoListId": 4
+    "taskListId": 4
   },
   {
     "id": 9,
-    "contents": "Third list, third to-do",
+    "contents": "Third list, third task",
     "date": 1544072468,
     "color": -10177034,
     "order": 2,
-    "todoListId": 4
+    "taskListId": 4
   }
 ]

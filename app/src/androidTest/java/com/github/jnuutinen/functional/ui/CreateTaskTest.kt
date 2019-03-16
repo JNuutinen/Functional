@@ -14,7 +14,7 @@ import com.github.jnuutinen.functional.helper.RecyclerViewMatcher.Companion.with
 import com.github.jnuutinen.functional.helper.TestDatabaseHelper.Companion.repopulateDb
 import com.github.jnuutinen.functional.helper.TestDatabaseHelper.Companion.setActiveListSharedPref
 import com.github.jnuutinen.functional.helper.UiTestHelper.Companion.openNavigationDrawer
-import com.github.jnuutinen.functional.presentation.activity.TodosActivity
+import com.github.jnuutinen.functional.presentation.activity.TasksActivity
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -22,12 +22,12 @@ import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class CreateTodoTest {
+class CreateTaskTest {
 
     @Rule
     @JvmField
-    val mActivityTestRule = object : ActivityTestRule<TodosActivity>(
-        TodosActivity::class.java, false, false
+    val mActivityTestRule = object : ActivityTestRule<TasksActivity>(
+        TasksActivity::class.java, false, false
     ) {
         override fun beforeActivityLaunched() {
             setActiveListSharedPref(InstrumentationRegistry.getInstrumentation().targetContext, 2)
@@ -44,80 +44,80 @@ class CreateTodoTest {
     }
 
     @Test
-    fun createTodo() {
-        // Create a new to-do.
-        onView(withId(R.id.button_add_todo))
+    fun createTask() {
+        // Create a new task.
+        onView(withId(R.id.button_add_task))
             .perform(click())
-        onView(withId(R.id.edit_todo_add))
-            .perform(replaceText("New to-do"), closeSoftKeyboard())
-        onView(withText(R.string.action_add_todo))
+        onView(withId(R.id.edit_task_add))
+            .perform(replaceText("New task"), closeSoftKeyboard())
+        onView(withText(R.string.action_add_task))
             .perform(click())
 
-        // The new to-do should be appended to the end of the to-dos list.
-        onView(withRecyclerView(R.id.todo_recycler).atPosition(3))
-            .check(matches(hasDescendant(withText("New to-do"))))
+        // The new task should be appended to the end of the tasks list.
+        onView(withRecyclerView(R.id.task_recycler).atPosition(3))
+            .check(matches(hasDescendant(withText("New task"))))
     }
 
     @Test
-    fun createTodo_WithEmptyContents() {
-        // Try to create an empty to-do.
-        onView(withId(R.id.button_add_todo))
+    fun createTask_WithEmptyContents() {
+        // Try to create an empty task.
+        onView(withId(R.id.button_add_task))
             .perform(click())
-        onView(withId(R.id.edit_todo_add))
+        onView(withId(R.id.edit_task_add))
             .perform(replaceText(""), closeSoftKeyboard())
-        onView(withText(R.string.action_add_todo))
+        onView(withText(R.string.action_add_task))
             .perform(click())
 
         // Info Snackbar should be visible.
         onView(withId(R.id.main_coordinator))
-            .check(matches(hasDescendant(withText(R.string.alert_todo_empty))))
+            .check(matches(hasDescendant(withText(R.string.alert_task_empty))))
 
-        // The number of to-dos should be 3.
-        onView(withId(R.id.todo_recycler))
+        // The number of tasks should be 3.
+        onView(withId(R.id.task_recycler))
             .check(hasSize(3))
     }
 
     @Test
-    fun createTodo_InAnotherList() {
+    fun createTask_InAnotherList() {
         // Switch to the second test list.
         openNavigationDrawer(mActivityTestRule.activity)
-        onView(withText("Second to-do list"))
+        onView(withText("Second task list"))
             .perform(click())
 
-        // Create a new to-do
-        onView(withId(R.id.button_add_todo))
+        // Create a new task
+        onView(withId(R.id.button_add_task))
             .perform(click())
-        onView(withId(R.id.edit_todo_add))
-            .perform(replaceText("New to-do"), closeSoftKeyboard())
-        onView(withText(R.string.action_add_todo))
+        onView(withId(R.id.edit_task_add))
+            .perform(replaceText("New task"), closeSoftKeyboard())
+        onView(withText(R.string.action_add_task))
             .perform(click())
 
-        // The new to-do should be appended to the end of the to-dos list.
-        onView(withRecyclerView(R.id.todo_recycler).atPosition(3))
-            .check(matches(hasDescendant(withText("New to-do"))))
+        // The new task should be appended to the end of the tasks list.
+        onView(withRecyclerView(R.id.task_recycler).atPosition(3))
+            .check(matches(hasDescendant(withText("New task"))))
 
-        // There should now be 4 to-dos.
-        onView(withId(R.id.todo_recycler))
+        // There should now be 4 tasks.
+        onView(withId(R.id.task_recycler))
             .check(hasSize(4))
 
         // Go back to the first test list.
         openNavigationDrawer(mActivityTestRule.activity)
-        onView(withText("First to-do list"))
+        onView(withText("First task list"))
             .perform(click())
 
         // The first test list should be unaffected.
-        onView(withId(R.id.todo_recycler))
+        onView(withId(R.id.task_recycler))
             .check(hasSize(3))
 
         // Return to the second list.
         openNavigationDrawer(mActivityTestRule.activity)
-        onView(withText("Second to-do list"))
+        onView(withText("Second task list"))
             .perform(click())
 
-        // Check that the new to-do still exists.
-        onView(withRecyclerView(R.id.todo_recycler).atPosition(3))
-            .check(matches(hasDescendant(withText("New to-do"))))
-        onView(withId(R.id.todo_recycler))
+        // Check that the new task still exists.
+        onView(withRecyclerView(R.id.task_recycler).atPosition(3))
+            .check(matches(hasDescendant(withText("New task"))))
+        onView(withId(R.id.task_recycler))
             .check(hasSize(4))
     }
 }

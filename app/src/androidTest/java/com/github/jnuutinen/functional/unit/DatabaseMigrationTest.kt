@@ -4,7 +4,7 @@ import androidx.room.testing.MigrationTestHelper
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.github.jnuutinen.functional.data.db.TodoDatabase
+import com.github.jnuutinen.functional.data.db.TaskDatabase
 import com.github.jnuutinen.functional.util.DB_NAME
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
@@ -19,7 +19,7 @@ class DatabaseMigrationTest {
     @get:Rule
     val helper: MigrationTestHelper = MigrationTestHelper(
         InstrumentationRegistry.getInstrumentation(),
-        TodoDatabase::class.java.canonicalName,
+        TaskDatabase::class.java.canonicalName,
         FrameworkSQLiteOpenHelperFactory()
     )
 
@@ -33,7 +33,7 @@ class DatabaseMigrationTest {
             close()
         }
 
-        helper.runMigrationsAndValidate(DB_NAME, 2, true, TodoDatabase.MIGRATION_1_2).apply {
+        helper.runMigrationsAndValidate(DB_NAME, 2, true, TaskDatabase.MIGRATION_1_2).apply {
             // Check to-do list.
             var cursor = query("SELECT * FROM todo_group")
             assertThat(cursor.columnCount, `is`(3))

@@ -10,7 +10,7 @@
         tools:openDrawer="start">
 
     <include
-            layout="@layout/app_bar_todos"
+            layout="@layout/app_bar_tasks"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:fitsSystemWindows="true"
-            app:headerLayout="@layout/nav_header_todos"
-            app:menu="@menu/activity_todos_drawer"/>
+            app:headerLayout="@layout/nav_header_tasks"
+            app:menu="@menu/activity_tasks_drawer"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>
