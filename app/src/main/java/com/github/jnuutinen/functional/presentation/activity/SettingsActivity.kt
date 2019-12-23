@@ -2,6 +2,7 @@ package com.github.jnuutinen.functional.presentation.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.github.jnuutinen.functional.R
 import kotlinx.android.synthetic.main.activity_settings.*
@@ -26,8 +27,11 @@ class SettingsActivity : AppCompatActivity() {
             override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
                 addPreferencesFromResource(R.xml.preferences)
                 // Disallow empty default list name.
-                val listNamePreference = preferenceScreen.findPreference(getString(R.string.pref_key_default_list_name))
-                listNamePreference.setOnPreferenceChangeListener { _, newValue -> newValue.toString().isNotBlank() }
+                val listNamePreference = preferenceScreen.findPreference<Preference>(
+                    getString(R.string.pref_key_default_list_name))
+                listNamePreference?.setOnPreferenceChangeListener { _, newValue ->
+                    newValue.toString().isNotBlank()
+                }
             }
         }
     }
