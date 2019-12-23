@@ -11,7 +11,8 @@ class UiTestHelper {
 
     companion object {
         fun openNavigationDrawer(activity: Activity) {
-            val navContDesc = activity.findViewById<Toolbar>(R.id.toolbar).navigationContentDescription as String
+            val navContDesc = activity.findViewById<Toolbar>(R.id.toolbar)
+                .navigationContentDescription as String
             onView(withContentDescription(navContDesc))
                 .perform(click())
         }

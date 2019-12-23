@@ -30,8 +30,8 @@ data class Task(
     var order: Int = 0,
 
     @ColumnInfo(name = "todo_group_id")
-    val taskListId: Int) : Comparable<Task>
-{
+    val taskListId: Int
+) : Comparable<Task> {
     override fun compareTo(other: Task): Int {
         if (order == other.order) return 0
         if (order < other.order) return -1

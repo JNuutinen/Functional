@@ -14,7 +14,7 @@ data class TaskList(
     var name: String,
 
     @ColumnInfo(name = "group_date")
-    val date: Long)
-{
+    val date: Long
+) {
     override fun toString() = name
 }

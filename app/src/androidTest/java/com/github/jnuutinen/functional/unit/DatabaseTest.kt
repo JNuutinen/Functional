@@ -13,6 +13,9 @@ import com.github.jnuutinen.functional.data.db.dao.TaskDao
 import com.github.jnuutinen.functional.data.db.dao.TaskListDao
 import com.github.jnuutinen.functional.data.db.entity.Task
 import com.github.jnuutinen.functional.data.db.entity.TaskList
+import java.util.Calendar
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.collection.IsEmptyCollection.empty
@@ -21,9 +24,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.*
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
 
 @SmallTest
 @RunWith(AndroidJUnit4::class)

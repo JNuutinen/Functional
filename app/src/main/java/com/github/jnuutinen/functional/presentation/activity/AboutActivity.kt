@@ -5,7 +5,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.github.jnuutinen.functional.R
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
-import kotlinx.android.synthetic.main.activity_about.*
+import kotlinx.android.synthetic.main.activity_about.button_licences
+import kotlinx.android.synthetic.main.activity_about.text_app_version
+import kotlinx.android.synthetic.main.activity_about.toolbar
 
 class AboutActivity : AppCompatActivity() {
 
@@ -15,9 +17,14 @@ class AboutActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val version = applicationContext.packageManager.getPackageInfo(applicationContext.packageName, 0).versionName
+        val version = applicationContext.packageManager.getPackageInfo(
+            applicationContext.packageName,
+            0
+        ).versionName
         text_app_version.text = getString(R.string.text_app_version, version)
 
-        button_licences.setOnClickListener { startActivity(Intent(this, OssLicensesMenuActivity::class.java)) }
+        button_licences.setOnClickListener {
+            startActivity(Intent(this, OssLicensesMenuActivity::class.java))
+        }
     }
 }

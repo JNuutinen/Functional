@@ -5,7 +5,7 @@ import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.github.jnuutinen.functional.util.PREF_KEY_ACTIVE_LIST_ID
+import com.github.jnuutinen.functional.util.Constants
 import com.github.jnuutinen.functional.workers.DatabaseClearWorker
 
 class TestDatabaseHelper {
@@ -22,7 +22,7 @@ class TestDatabaseHelper {
          */
         fun setActiveListSharedPref(context: Context, id: Int) {
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-            prefs.edit { putInt(PREF_KEY_ACTIVE_LIST_ID, id) }
+            prefs.edit { putInt(Constants.PREF_KEY_ACTIVE_LIST_ID, id) }
         }
 
         /**

@@ -16,7 +16,12 @@ class TaskItemDivider(color: Int, width: Float) : RecyclerView.ItemDecoration() 
         mAlpha = mPaint.alpha
     }
 
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+    override fun getItemOffsets(
+        outRect: Rect,
+        view: View,
+        parent: RecyclerView,
+        state: RecyclerView.State
+    ) {
         val params = view.layoutParams as RecyclerView.LayoutParams
         val position = params.viewAdapterPosition
         if (position < state.itemCount) {

@@ -37,19 +37,25 @@ import com.github.jnuutinen.functional.data.db.entity.TaskList
 import com.github.jnuutinen.functional.presentation.TaskAdapter
 import com.github.jnuutinen.functional.presentation.TaskItemDivider
 import com.github.jnuutinen.functional.presentation.viewmodel.TasksViewModel
-import com.github.jnuutinen.functional.util.*
+import com.github.jnuutinen.functional.util.ColorUtil
+import com.github.jnuutinen.functional.util.Constants
+import com.github.jnuutinen.functional.util.InjectorUtils
+import com.github.jnuutinen.functional.util.MiscUtil
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import kotlinx.android.synthetic.main.activity_tasks.*
-import kotlinx.android.synthetic.main.app_bar_tasks.*
-import kotlinx.android.synthetic.main.content_tasks.*
-import java.util.*
+import java.util.Calendar
+import kotlinx.android.synthetic.main.activity_tasks.drawer_layout
+import kotlinx.android.synthetic.main.activity_tasks.nav_view
+import kotlinx.android.synthetic.main.app_bar_tasks.button_add_task
+import kotlinx.android.synthetic.main.app_bar_tasks.main_coordinator
+import kotlinx.android.synthetic.main.app_bar_tasks.toolbar
+import kotlinx.android.synthetic.main.content_tasks.task_recycler
+import kotlinx.android.synthetic.main.content_tasks.text_no_tasks
 
 class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
-    private val mTAG by lazy { TasksActivity::class.java.simpleName }
     private lateinit var mViewModel: TasksViewModel
     private lateinit var mViewAdapter: TaskAdapter
     private lateinit var mColorValues: IntArray
@@ -81,10 +87,12 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         nav_view.setNavigationItemSelectedListener(this)
 
         val viewManager = LinearLayoutManager(this)
-        mViewAdapter  = TaskAdapter(resources)
+        mViewAdapter = TaskAdapter(resources)
         mViewAdapter.onItemClick = { task -> editTask(task) }
-        val dividerItemDecoration = TaskItemDivider(ContextCompat.getColor(this, R.color.mainBackgroundColor),
-            pxFromDp(this, 1f))
+        val dividerItemDecoration = TaskItemDivider(
+            ContextCompat.getColor(this, R.color.mainBackgroundColor),
+            MiscUtil.pxFromDp(this, 1f)
+        )
         task_recycler.apply {
             addItemDecoration(dividerItemDecoration)
             setHasFixedSize(true)
@@ -99,7 +107,9 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         subscribeUi()
 
         // Build an IntArray with all available circle colors as int values.
-        mColorValues = IntArray(colors.size) { i -> ContextCompat.getColor(this, colors[i]) }
+        mColorValues = IntArray(ColorUtil.colors.size) { i ->
+            ContextCompat.getColor(this, ColorUtil.colors[i])
+        }
     }
 
     override fun onDestroy() {
@@ -131,7 +141,10 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 true
             }
             R.id.action_settings -> {
-                startActivityForResult(Intent(this, SettingsActivity::class.java), SETTINGS_REQUEST)
+                startActivityForResult(
+                    Intent(this, SettingsActivity::class.java),
+                    Constants.SETTINGS_REQUEST
+                )
                 true
             }
             R.id.action_help -> {
@@ -147,8 +160,9 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-            SETTINGS_REQUEST -> {
+            Constants.SETTINGS_REQUEST -> {
                 writeListPrefs()
                 readPrefs()
             }
@@ -156,22 +170,28 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // Check if clicked item was "Add list". Do comparison with the group id, because the list item's id can overlap
-        // with the "Add list" item's id, because all the list item's ids are the same as their TaskList entities' ids
-        // and the "Add list" item's id is defined in XML.
+        // Check if clicked item was "Add list". Do comparison with the group id, because the list
+        // item's id can overlap with the "Add list" item's id, because all the list item's ids are
+        // the same as their TaskList entities' ids and the "Add list" item's id is defined in XML.
         if (item.groupId == R.id.group_add) {
             MaterialDialog(this)
                 .message(R.string.action_add_list)
                 .customView(R.layout.dialog_add_list, scrollable = true)
                 .positiveButton(R.string.action_add_task) { dialog ->
                     val customView = dialog.getCustomView()
-                    val name = customView?.findViewById<TextInputEditText>(R.id.edit_list_add)?.text.toString().trim()
+                    val name = customView?.findViewById<TextInputEditText>(R.id.edit_list_add)
+                        ?.text.toString().trim()
                     if (name.isEmpty()) {
-                        Snackbar.make(main_coordinator, R.string.alert_list_name_empty, Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(
+                            main_coordinator,
+                            R.string.alert_list_name_empty,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
                     } else {
                         val list = TaskList(0, name, Calendar.getInstance().time.time)
                         mViewModel.insertTaskList(list)
-                        // If active list is 0, then the most recent list will be set active in subscribeUi().
+                        // If active list is 0, then the most recent list will be set active in
+                        // subscribeUi().
                         mViewModel.activeList = 0
                     }
                 }
@@ -189,7 +209,7 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     private fun addTask() {
         val customView = layoutInflater.inflate(R.layout.dialog_add_task, main_coordinator, false)
         val colorButton = customView.findViewById<MaterialButton>(R.id.button_select_color)
-        var selectedColor = ContextCompat.getColor(this, getRandomColor())
+        var selectedColor = ContextCompat.getColor(this, ColorUtil.getRandomColor())
         setVersionAwareDrawableTint(colorButton.icon, selectedColor)
         colorButton.setOnClickListener {
             MaterialDialog(this)
@@ -207,12 +227,23 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             .positiveButton(R.string.action_add_task) { dialog ->
                 val v = dialog.getCustomView()
                 val date = Calendar.getInstance().time
-                val content = v?.findViewById<TextInputEditText>(R.id.edit_task_add)?.text.toString().trim()
+                val content = v?.findViewById<TextInputEditText>(R.id.edit_task_add)
+                    ?.text.toString().trim()
                 if (content.isEmpty()) {
-                    Snackbar.make(main_coordinator, R.string.alert_task_empty, Snackbar.LENGTH_SHORT).show()
+                    Snackbar
+                        .make(main_coordinator, R.string.alert_task_empty, Snackbar.LENGTH_SHORT)
+                        .show()
                 } else {
-                    mViewModel.insertTask(Task(0, content, date.time, selectedColor, mViewAdapter.itemCount,
-                        mViewModel.activeList))
+                    mViewModel.insertTask(
+                        Task(
+                            0,
+                            content,
+                            date.time,
+                            selectedColor,
+                            mViewAdapter.itemCount,
+                            mViewModel.activeList
+                        )
+                    )
                 }
             }
             .negativeButton(android.R.string.cancel)
@@ -221,12 +252,15 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     private fun checkFirstRun() {
         val currentVersionCode = BuildConfig.VERSION_CODE
-        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val savedVersionCode = prefs.getInt(PREF_KEY_VERSION_CODE, PREF_VALUE_DOES_NOT_EXIST_INT)
+        val prefs = getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE)
+        val savedVersionCode = prefs.getInt(
+            Constants.PREF_KEY_VERSION_CODE,
+            Constants.PREF_VALUE_DOES_NOT_EXIST_INT
+        )
 
         when {
             currentVersionCode == savedVersionCode -> return
-            savedVersionCode == PREF_VALUE_DOES_NOT_EXIST_INT -> {
+            savedVersionCode == Constants.PREF_VALUE_DOES_NOT_EXIST_INT -> {
                 // First install, show the introduction.
                 startActivity(Intent(this, IntroActivity::class.java))
             }
@@ -236,20 +270,26 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                     // Show the introduction, if updating from version 1 (release 0.1.0).
                     startActivity(Intent(this, IntroActivity::class.java))
                 } else if (savedVersionCode < 6) {
-                    // Show the drag & drop slide, if updating from version <= 5 (release 0.2.3 or earlier).
+                    // Show the drag & drop slide, if updating from version <= 5
+                    // (release 0.2.3 or earlier).
                     val intent = Intent(this, IntroActivity::class.java)
-                    intent.putExtra(EXTRA_NAME_INTRO_SLIDE, EXTRA_VALUE_INTRO_DRAG_DROP)
+                    intent.putExtra(
+                        Constants.EXTRA_NAME_INTRO_SLIDE,
+                        Constants.EXTRA_VALUE_INTRO_DRAG_DROP
+                    )
                     startActivity(intent)
                 }
             }
         }
-        prefs.edit().putInt(PREF_KEY_VERSION_CODE, currentVersionCode).apply()
+        prefs.edit().putInt(Constants.PREF_KEY_VERSION_CODE, currentVersionCode).apply()
     }
 
     private fun deleteList() {
         MaterialDialog(this)
             .message(R.string.message_delete_list)
-            .positiveButton(R.string.action_delete) { mViewModel.deleteTaskList(mViewModel.activeList) }
+            .positiveButton(R.string.action_delete) {
+                mViewModel.deleteTaskList(mViewModel.activeList)
+            }
             .negativeButton(android.R.string.cancel)
             .show()
     }
@@ -266,9 +306,16 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             .customView(view = customView)
             .positiveButton(R.string.action_save) { dialog ->
                 val v = dialog.getCustomView()
-                val name = v?.findViewById<TextInputEditText>(R.id.edit_list_edit)?.text.toString().trim()
+                val name = v
+                    ?.findViewById<TextInputEditText>(R.id.edit_list_edit)
+                    ?.text
+                    .toString()
+                    .trim()
                 if (name.isEmpty()) {
-                    Snackbar.make(main_coordinator, R.string.alert_list_name_empty, Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(
+                        main_coordinator, R.string.alert_list_name_empty,
+                        Snackbar.LENGTH_SHORT
+                    ).show()
                 } else {
                     mViewModel.updateTaskList(mViewModel.activeList, name)
                 }
@@ -302,11 +349,26 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             .customView(view = customView, scrollable = true)
             .positiveButton(R.string.action_save) { dialog ->
                 val v = dialog.getCustomView()
-                val content = v?.findViewById<TextInputEditText>(R.id.edit_task_add)?.text.toString().trim()
+                val content = v
+                    ?.findViewById<TextInputEditText>(R.id.edit_task_add)
+                    ?.text
+                    .toString()
+                    .trim()
                 if (content.isEmpty()) {
-                    Snackbar.make(main_coordinator, R.string.alert_task_empty, Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(
+                        main_coordinator,
+                        R.string.alert_task_empty,
+                        Snackbar.LENGTH_SHORT
+                    ).show()
                 } else {
-                    val updatedTask = Task(task.id, content, task.date, selectedColor, task.order, task.taskListId)
+                    val updatedTask = Task(
+                        task.id,
+                        content,
+                        task.date,
+                        selectedColor,
+                        task.order,
+                        task.taskListId
+                    )
                     mViewModel.insertTask(updatedTask)
                 }
             }
@@ -320,12 +382,17 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     private fun readPrefs() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val id = prefs.getInt(PREF_KEY_ACTIVE_LIST_ID, PREF_VALUE_DOES_NOT_EXIST_INT)
-        if (id != PREF_VALUE_DOES_NOT_EXIST_INT) mViewModel.activeList = id
+        val id = prefs.getInt(
+            Constants.PREF_KEY_ACTIVE_LIST_ID,
+            Constants.PREF_VALUE_DOES_NOT_EXIST_INT
+        )
+        if (id != Constants.PREF_VALUE_DOES_NOT_EXIST_INT) mViewModel.activeList = id
 
         mDeleteBgEnabled = prefs.getBoolean(getString(R.string.pref_key_deletion_background), true)
-        mDefaultListName = prefs.getString(getString(R.string.pref_key_default_list_name),
-            getString(R.string.list_default_name)) ?: "My tasks"
+        mDefaultListName = prefs.getString(
+            getString(R.string.pref_key_default_list_name),
+            getString(R.string.list_default_name)
+        ) ?: "My tasks"
     }
 
     private fun setTaskList(listWithTasks: ListWithTasks) {
@@ -342,8 +409,8 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         navItem.isChecked = true
         val counter = navItem.actionView.findViewById<TextView>(R.id.text_counter)
 
-        // The list name color is automatically set to primaryColor when isChecked == true, but the counter ActionView
-        // must be set manually.
+        // The list name color is automatically set to primaryColor when isChecked == true, but the
+        // counter ActionView must be set manually.
         counter.setTextColor(ContextCompat.getColor(this, R.color.primaryColor))
     }
 
@@ -354,13 +421,28 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
      * https://github.com/nemanja-kovacevic/recycler-view-swipe-to-delete/
      */
     private fun setUpItemTouchHelper() {
-        val simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP.or(ItemTouchHelper.DOWN),
-            ItemTouchHelper.LEFT.or(ItemTouchHelper.RIGHT)) {
-            private val deletionBackground = ColorDrawable(ContextCompat.getColor(this@TasksActivity, R.color.negativeColor))
-            private val deleteIcon = ContextCompat.getDrawable(this@TasksActivity, R.drawable.ic_delete_white_24dp)
-            private val deleteIconMargin = resources.getDimension(R.dimen.item_background_delete_icon_margin).toInt()
+        val simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.UP.or(ItemTouchHelper.DOWN),
+            ItemTouchHelper.LEFT.or(ItemTouchHelper.RIGHT)
+        ) {
+            private val deletionBackground = ColorDrawable(
+                ContextCompat.getColor(
+                    this@TasksActivity,
+                    R.color.negativeColor
+                )
+            )
+            private val deleteIcon = ContextCompat.getDrawable(
+                this@TasksActivity,
+                R.drawable.ic_delete_white_24dp
+            )
+            private val deleteIconMargin = resources.getDimension(
+                R.dimen.item_background_delete_icon_margin
+            ).toInt()
 
-            override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+            override fun clearView(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ) {
                 super.clearView(recyclerView, viewHolder)
                 mDragging = false
                 mViewModel.updateTasks(mViewAdapter.getItems())
@@ -387,15 +469,26 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                         val deleteIconRight = itemView.right - deleteIconMargin
                         val deleteIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
                         val deleteIconBottom = deleteIconTop + intrinsicHeight
-                        deleteIcon?.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
+                        deleteIcon?.setBounds(
+                            deleteIconLeft,
+                            deleteIconTop,
+                            deleteIconRight,
+                            deleteIconBottom
+                        )
                     } else {
                         // Item is being dragged to the right.
                         val deleteIconLeft = itemView.left + deleteIconMargin
                         val deleteIconRight = itemView.left + deleteIconMargin + intrinsicWidth
                         val deleteIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
                         val deleteIconBottom = deleteIconTop + intrinsicHeight
-                        deleteIcon?.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
+                        deleteIcon?.setBounds(
+                            deleteIconLeft,
+                            deleteIconTop,
+                            deleteIconRight,
+                            deleteIconBottom
+                        )
                     }
+
                     deletionBackground.setBounds(
                         itemView.left,
                         itemView.top,
@@ -405,7 +498,14 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                     deletionBackground.draw(c)
                     deleteIcon?.draw(c)
                 }
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                super.onChildDraw(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX, dY,
+                    actionState,
+                    isCurrentlyActive
+                )
             }
 
             override fun onMove(
@@ -429,7 +529,11 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 mViewAdapter.onDelete(deletedTask.order)
                 mViewModel.onTaskDelete(mViewAdapter.getItems(), deletedTask)
 
-                val undoSnackbar = Snackbar.make(main_coordinator, R.string.alert_task_deleted, Snackbar.LENGTH_LONG)
+                val undoSnackbar = Snackbar.make(
+                    main_coordinator,
+                    R.string.alert_task_deleted,
+                    Snackbar.LENGTH_LONG
+                )
                 undoSnackbar.setAction(R.string.action_undo) {
                     mViewAdapter.onDeleteUndo(deletedTask.order)
                     mViewModel.onTaskDeleteUndo(mViewAdapter.getItems(), deletedTask)
@@ -448,7 +552,9 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
      */
     private fun setUpAnimationDecoratorHelper() {
         task_recycler.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            private val background = ColorDrawable(ContextCompat.getColor(this@TasksActivity, R.color.negativeColor))
+            private val background = ColorDrawable(
+                ContextCompat.getColor(this@TasksActivity, R.color.negativeColor)
+            )
 
             override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
                 if (parent.itemAnimator?.isRunning == true && mDeleteBgEnabled && !mDragging) {
@@ -516,28 +622,37 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             if (listsWithTasks != null) {
                 if (listsWithTasks.isNotEmpty()) {
                     var listIsSet = false
-                    for (i in 0 until listsWithTasks.size) {
+                    for (i in listsWithTasks.indices) {
                         // Handle lists.
                         val listWithTasks = listsWithTasks[i]
                         val list = listWithTasks.taskList
                         listsMenu.add(R.id.group_lists, list.id, Menu.NONE, list.name)
-                        val counter = layoutInflater.inflate(R.layout.menu_counter, drawer_layout, false)
-                        counter.findViewById<TextView>(R.id.text_counter).text = listWithTasks.tasks.size.toString()
+                        val counter = layoutInflater.inflate(
+                            R.layout.menu_counter,
+                            drawer_layout,
+                            false
+                        )
+                        counter.findViewById<TextView>(R.id.text_counter)
+                            .text = listWithTasks.tasks.size.toString()
                         listsMenu[i].actionView = counter
 
                         if (mViewModel.activeList == 0 && i == listsWithTasks.size - 1) {
-                            // If active list is set to 0, then the most recent list must be set as active, in order
-                            // to activate the newly added list.
+                            // If active list is set to 0, then the most recent list must be set as
+                            // active, in order to activate the newly added list.
                             setTaskList(listWithTasks)
                             listIsSet = true
-                        } else if (mViewModel.activeList == -1 || list.id == mViewModel.activeList) {
-                            // Alternatively, if active list is not set or it is set to this list, set it as active.
+                        } else if (mViewModel.activeList == -1 ||
+                            list.id == mViewModel.activeList
+                        ) {
+                            // Alternatively, if active list is not set or it is set to this list,
+                            // set it as active.
                             setTaskList(listWithTasks)
                             listIsSet = true
                         }
                     }
 
-                    // If list was not set during loop (active list was deleted), set it to the first list.
+                    // If list was not set during loop (active list was deleted), set it to the
+                    // first list.
                     if (!listIsSet) setTaskList(listsWithTasks[0])
                 } else {
                     // No lists; create an empty list with the default name from preferences.
@@ -552,10 +667,11 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     }
 
     /**
-     * Save the current active list to shared preferences, so that it will be opened when the user returns.
+     * Save the current active list to shared preferences, so that it will be opened when the user
+     * returns.
      */
     private fun writeListPrefs() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        prefs.edit { putInt(PREF_KEY_ACTIVE_LIST_ID, mViewModel.activeList) }
+        prefs.edit { putInt(Constants.PREF_KEY_ACTIVE_LIST_ID, mViewModel.activeList) }
     }
 }
