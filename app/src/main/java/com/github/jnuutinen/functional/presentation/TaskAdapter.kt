@@ -11,11 +11,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.github.jnuutinen.functional.R
 import com.github.jnuutinen.functional.data.db.entity.Task
-import kotlinx.android.synthetic.main.item_task.view.*
-import java.util.*
+import java.util.Collections
+import kotlinx.android.synthetic.main.item_task.view.item_letter
+import kotlinx.android.synthetic.main.item_task.view.item_text
 
-class TaskAdapter(private val resources: Resources) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
-    private val mTAG by lazy { TaskAdapter::class.java.simpleName }
+class TaskAdapter(
+    private val resources: Resources
+) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
     private lateinit var mTasks: MutableList<Task>
     private var mTasksInitialized = false
     var onItemClick: ((Task) -> Unit)? = null
@@ -32,7 +34,11 @@ class TaskAdapter(private val resources: Resources) : RecyclerView.Adapter<TaskA
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_task, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(
+            R.layout.item_task,
+            parent,
+            false
+        )
         return TaskViewHolder(itemView)
     }
 
@@ -57,7 +63,8 @@ class TaskAdapter(private val resources: Resources) : RecyclerView.Adapter<TaskA
     override fun getItemCount() = if (mTasksInitialized) mTasks.size else 0
 
     fun getItem(position: Int): Task {
-        return if (mTasksInitialized) mTasks[position] else Task(0, "", 0, 0, 0, 1)
+        return if (mTasksInitialized) mTasks[position]
+        else Task(0, "", 0, 0, 0, 1)
     }
 
     fun getItems() = mTasks
@@ -97,14 +104,17 @@ class TaskAdapter(private val resources: Resources) : RecyclerView.Adapter<TaskA
                     return oldTasks[oldItemPosition].id == tasks[newItemPosition].id
                 }
 
-                override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                override fun areContentsTheSame(
+                    oldItemPosition: Int,
+                    newItemPosition: Int
+                ): Boolean {
                     val old = oldTasks[oldItemPosition]
                     val new = tasks[newItemPosition]
-                    return old.id == new.id
-                            && old.contents == new.contents
-                            && old.date == new.date
-                            && old.color == new.color
-                            && old.taskListId == new.taskListId
+                    return old.id == new.id &&
+                        old.contents == new.contents &&
+                        old.date == new.date &&
+                        old.color == new.color &&
+                        old.taskListId == new.taskListId
                 }
             })
             mTasks = tasks

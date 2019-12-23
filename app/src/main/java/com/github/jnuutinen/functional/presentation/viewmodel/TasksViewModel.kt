@@ -6,16 +6,21 @@ import com.github.jnuutinen.functional.data.TaskRepository
 import com.github.jnuutinen.functional.data.db.dao.ListWithTasks
 import com.github.jnuutinen.functional.data.db.entity.Task
 import com.github.jnuutinen.functional.data.db.entity.TaskList
-import com.github.jnuutinen.functional.util.PREF_VALUE_DOES_NOT_EXIST_INT
+import com.github.jnuutinen.functional.util.Constants
 
-class TasksViewModel internal constructor(private val mTaskRepository: TaskRepository) : ViewModel() {
+class TasksViewModel internal constructor(
+    private val mTaskRepository: TaskRepository
+) : ViewModel() {
 
-    // Use MediatorLiveData so that we can force update it from TasksActivity with setValue(getValue).
+    // Use MediatorLiveData so that we can force update it from TasksActivity with
+    // setValue(getValue).
     val listsWithTasks = MediatorLiveData<List<ListWithTasks>>()
-    var activeList = PREF_VALUE_DOES_NOT_EXIST_INT
+    var activeList = Constants.PREF_VALUE_DOES_NOT_EXIST_INT
 
     init {
-        listsWithTasks.addSource(mTaskRepository.getListsWithTasks()) { value -> listsWithTasks.value = value }
+        listsWithTasks.addSource(mTaskRepository.getListsWithTasks()) { value ->
+            listsWithTasks.value = value
+        }
     }
 
     fun deleteTaskList(listId: Int) {

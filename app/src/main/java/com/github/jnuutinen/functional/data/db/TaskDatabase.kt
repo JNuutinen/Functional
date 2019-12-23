@@ -10,7 +10,7 @@ import com.github.jnuutinen.functional.data.db.dao.TaskDao
 import com.github.jnuutinen.functional.data.db.dao.TaskListDao
 import com.github.jnuutinen.functional.data.db.entity.Task
 import com.github.jnuutinen.functional.data.db.entity.TaskList
-import com.github.jnuutinen.functional.util.DB_NAME
+import com.github.jnuutinen.functional.util.Constants.DB_NAME
 
 @Database(entities = [Task::class, TaskList::class], version = 2)
 abstract class TaskDatabase : RoomDatabase() {

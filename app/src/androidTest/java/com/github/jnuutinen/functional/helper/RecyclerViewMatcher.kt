@@ -16,7 +16,7 @@ class RecyclerViewMatcher(private val viewId: Int) {
     fun atPosition(position: Int) = atPositionOnView(position, -1)
 
     private fun atPositionOnView(position: Int, targetViewId: Int): Matcher<View> {
-        return object: TypeSafeMatcher<View>() {
+        return object : TypeSafeMatcher<View>() {
             var resources: Resources? = null
             var childView: View? = null
 
@@ -30,7 +30,9 @@ class RecyclerViewMatcher(private val viewId: Int) {
                         "$viewId (resource name not found)"
                     }
                 }
-                description?.appendText("RecyclerView with id: $idDescription at position $position")
+                description?.appendText(
+                    "RecyclerView with id: $idDescription at position $position"
+                )
             }
 
             override fun matchesSafely(item: View): Boolean {
