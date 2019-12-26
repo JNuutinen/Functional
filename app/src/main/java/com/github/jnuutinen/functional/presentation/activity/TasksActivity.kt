@@ -143,21 +143,6 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 deleteList()
                 true
             }
-            R.id.action_settings -> {
-                startActivityForResult(
-                    Intent(this, SettingsActivity::class.java),
-                    Constants.SETTINGS_REQUEST
-                )
-                true
-            }
-            R.id.action_help -> {
-                startActivity(Intent(this, IntroActivity::class.java))
-                true
-            }
-            R.id.action_about -> {
-                startActivity(Intent(this, AboutActivity::class.java))
-                true
-            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -200,6 +185,21 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 }
                 .negativeButton(android.R.string.cancel)
                 .show()
+        } else if (item.groupId == R.id.group_menu) {
+            when (item.itemId) {
+                R.id.menu_settings -> {
+                    startActivityForResult(
+                        Intent(this, SettingsActivity::class.java),
+                        Constants.SETTINGS_REQUEST
+                    )
+                }
+                R.id.menu_help -> {
+                    startActivity(Intent(this, IntroActivity::class.java))
+                }
+                R.id.menu_about -> {
+                    startActivity(Intent(this, AboutActivity::class.java))
+                }
+            }
         } else {
             mViewModel.activeList = item.itemId
             forceViewModelLiveDataUpdate()
