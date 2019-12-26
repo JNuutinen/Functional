@@ -46,7 +46,6 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import java.util.Calendar
 import kotlinx.android.synthetic.main.activity_tasks.drawer_layout
 import kotlinx.android.synthetic.main.activity_tasks.nav_view
 import kotlinx.android.synthetic.main.app_bar_tasks.button_add_task
@@ -136,6 +135,10 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 editList()
                 true
             }
+            R.id.action_copy_list -> {
+                copyList()
+                true
+            }
             R.id.action_delete_list -> {
                 deleteList()
                 true
@@ -188,11 +191,11 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                             Snackbar.LENGTH_SHORT
                         ).show()
                     } else {
-                        val list = TaskList(0, name, Calendar.getInstance().time.time)
-                        mViewModel.insertTaskList(list)
                         // If active list is 0, then the most recent list will be set active in
                         // subscribeUi().
                         mViewModel.activeList = 0
+                        val list = TaskList(0, name, MiscUtil.getCurrentTime())
+                        mViewModel.insertTaskList(list)
                     }
                 }
                 .negativeButton(android.R.string.cancel)
@@ -226,7 +229,6 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             .customView(view = customView, scrollable = true)
             .positiveButton(R.string.action_add_task) { dialog ->
                 val v = dialog.getCustomView()
-                val date = Calendar.getInstance().time
                 val content = v?.findViewById<TextInputEditText>(R.id.edit_task_add)
                     ?.text.toString().trim()
                 if (content.isEmpty()) {
@@ -238,7 +240,7 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                         Task(
                             0,
                             content,
-                            date.time,
+                            MiscUtil.getCurrentTime(),
                             selectedColor,
                             mViewAdapter.itemCount,
                             mViewModel.activeList
@@ -248,6 +250,13 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             }
             .negativeButton(android.R.string.cancel)
             .show()
+    }
+
+    private fun copyList() {
+        val currentListId = mViewModel.activeList
+        val newListName = getString(R.string.text_copied_list_name, title)
+        mViewModel.activeList = 0
+        mViewModel.copyTaskList(currentListId, newListName)
     }
 
     private fun checkFirstRun() {
@@ -656,7 +665,7 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                     if (!listIsSet) setTaskList(listsWithTasks[0])
                 } else {
                     // No lists; create an empty list with the default name from preferences.
-                    val list = TaskList(1, mDefaultListName, Calendar.getInstance().time.time)
+                    val list = TaskList(1, mDefaultListName, MiscUtil.getCurrentTime())
                     mViewModel.insertTaskList(list)
                 }
 
