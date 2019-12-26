@@ -254,9 +254,9 @@ class TasksActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     private fun copyList() {
         val currentListId = mViewModel.activeList
-        val newListName = getString(R.string.text_copied_list_name, title)
         mViewModel.activeList = 0
-        mViewModel.copyTaskList(currentListId, newListName)
+        mViewModel.copyTaskList(currentListId, title.toString())
+        Snackbar.make(main_coordinator, R.string.alert_list_copied, Snackbar.LENGTH_SHORT).show()
     }
 
     private fun checkFirstRun() {
