@@ -53,4 +53,5 @@
     <string name="intro_title_move_task">Rearrange tasks</string>
     <string name="intro_message_move_task">Drag and drop to rearrange tasks</string>
     <string name="intro_title_whats_new">New in version %1$s</string>
+    <string name="text_copied_list_name">Copy of %1$s</string>
 </resources>

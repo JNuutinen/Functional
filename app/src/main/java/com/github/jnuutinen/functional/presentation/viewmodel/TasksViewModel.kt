@@ -23,6 +23,10 @@ class TasksViewModel internal constructor(
         }
     }
 
+    fun copyTaskList(listId: Int, newListName: String) {
+        mTaskRepository.copyTaskList(listId, newListName)
+    }
+
     fun deleteTaskList(listId: Int) {
         mTaskRepository.deleteTaskList(listId)
     }
