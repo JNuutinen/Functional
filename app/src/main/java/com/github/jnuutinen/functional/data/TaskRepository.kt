@@ -10,6 +10,10 @@ class TaskRepository private constructor(
     private val mTaskDao: TaskDao,
     private val mTaskListDao: TaskListDao
 ) {
+    fun copyTaskList(listId: Int, newListName: String) {
+        runOnIoThread { mTaskListDao.createCopy(listId, newListName) }
+    }
+
     fun getListsWithTasks() = mTaskListDao.getAllListsWithTasks()
 
     fun deleteTaskList(listId: Int) {
